@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS Shelf (
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
 );
 
--- ShelfBook Table (MEMBER 1&2: Prevents duplicates in same shelf + Reading Status)
+-- ShelfBook Table (MEMBER 1&2: Prevents adding same book + Reading Status)
 CREATE TABLE IF NOT EXISTS ShelfBook (
     shelf_id INTEGER NOT NULL,
     book_id INTEGER NOT NULL,
