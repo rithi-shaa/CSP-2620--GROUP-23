@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, render_template_string
+from flask import Flask, render_template, request, redirect, url_for, session, render_template_string
 import sqlite3
 
 app = Flask(__name__)
@@ -9,6 +9,10 @@ def connect_db() :
     conn = sqlite3.connect('booksession.db')
     conn.row_factory = sqlite3.Row
     return conn
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 #catalog
 books = [
@@ -95,6 +99,40 @@ def register():
     return render_template('register.html')
 
 #login page
+@app.route('/login',methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        conn = connect_db()
+        cursor = conn.cursor()
+        cursor.execute(
+            'SELECT * FROM User WHERE email = ? AND password_hash = ?',
+            (email, password)
+        )
+        user = cursor.fetchone()
+        conn.close()
+
+        if user: 
+            session ['user_id'] = user['user_id']
+            session['username'] = user['username']
+            return redirect(url_for('shelves'))
+
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('home'))
+
+
+
+
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
 
