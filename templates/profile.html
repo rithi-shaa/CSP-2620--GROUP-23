@@ -16,14 +16,19 @@
 
         <div class="bio-section">
             <h3>Bio</h3>
-            <p class="bio-text">{{ user['bio'] if user['bio'] else 'No bio added yet.' }}</p>
+            
+            {% if request.args.get('edit') == 'true' %}
+                <form action="/profile" method="POST">
+                    <textarea name="bio" rows="4" placeholder="Write something about yourself here...">{{ user.bio if user.bio else ''}}</textarea>
+                    <button type="submit">Save Bio</button>
+                </form>
+            {% else %}
+                <p class="bio-text">
+                    {{ user.bio if user.bio else "No bio written yet."}}
+                </p>
+                <a href="/profile?edit=true" class="edit-btn">Edit Bio</a>
+            {% endif %}
         </div>
-
-        <form action="/update_bio" methods="POST">
-            <h3>Update Bio</h3>
-            <textarea name="bio" rows="4" placeholder="Write something about yourself...">{{ user['bio'] if user['bio'] else '' }}</textarea>
-            <button type="submit">Save Bio</button>
-        </form>
 
         <div class="nav-links">
             <a href="/shelves">Back to Shelves</a>
