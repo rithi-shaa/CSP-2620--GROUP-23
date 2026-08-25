@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile,css') }}">
+</head>
+<body>
+    <div class"profile-card">
+        <h2>Your Profile</h2>
+
+        <div class="user-info">
+            <p><strong>Username:</strong> {{ user['username'] }}</p>
+            <p><strong>Email:</strong> {{ user['email'] }}</p>
+        </div>
+
+        <div class="bio-section">
+            <h3>Bio</h3>
+            <p class="bio-text">{{ user['bio'] if user['bio'] else 'No bio added yet.' }}</p>
+        </div>
+
+        <form action="/update_bio" methods="POST">
+            <h3>Update Bio</h3>
+            <textarea name="bio" rows="4" placeholder="Write something about yourself...">{{ user['bio'] if user['bio'] else '' }}</textarea>
+            <button type="submit">Save Bio</button>
+        </form>
+
+        <div class="nav-links">
+            <a href="/shelves">Back to Shelves</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+</body>
+</html>
