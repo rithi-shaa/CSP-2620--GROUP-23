@@ -185,14 +185,35 @@ def add_to_shelf():
         conn.close()
     return redirect(url_for('shelves'))
 
+#profile
+@app.route('/profile')
+def profile():
+    if 'user_id' not in session:
+        return redirect('/login')
 
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute(
+        'SELECT username, email, bio FROM User WHERE user_id = ?', (session['user_id'],))
+    user = cursor.fetchone()
+    conn.close()
+    return render_template('profile.html', user=user)
 
+#update bio
+@app.route('/update.bio', methods=['POST'])
+def update_bio():
+    if 'user_id' not in session:
+        return redirect('/login')
 
+    bio_text = request.form.get('bio', '').strip()
 
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE User SET bio = ? WHERE user_id = ?', (bio_text, session['user_id']))
+    conn.commit()
+    conn.close()
 
-
-
-
+    return redirect(url_for('profile'))
 
 if __name__ == "__main__":
     app.run(debug=True)
