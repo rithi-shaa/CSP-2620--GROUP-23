@@ -117,7 +117,7 @@ def login():
         if user: 
             session ['user_id'] = user['user_id']
             session['username'] = user['username']
-            return redirect(url_for('shelves'))
+            return redirect(url_for('home'))
 
     return render_template('login.html')
 
@@ -125,6 +125,67 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('home'))
+
+#shelf
+@app.route('/shelves')
+def shelves():
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Shelf WHERE user_id = ?' , (session['user_id'], ))
+    my_shelves = cursor.fetchall()
+    conn.close()
+
+    return render_template('shelves.html', shelves=my_shelves, username=session.get('username'))
+
+#add shelf
+@app.route('/add_shelf', methods=['POST'])
+def add_shelf():
+    if 'user_id' in session:
+        shelf_name = request.form['shelf_name']
+
+        if shelf_name.strip():
+            conn = connect_db()
+            cursor = conn.cursor()
+            cursor.execute(
+                'INSERT INTO Shelf (shelf_name, user_id) VALUES (?, ?)',
+                (shelf_name.strip(), session['user_id'])
+            )
+            conn.commit()
+            conn.close()
+
+            return redirect(url_for('shelves'))
+
+#adding book to shelf
+@app.route('/add_to_shelf', methods=['POST'])
+def add_to_shelf():
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    shelf_id = request.form.get('shelf_id')
+    book_id = request.form.get('book_id')
+
+    if shelf_id and book_id:
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        existing = cursor.execute(
+            'SELECT * FROM ShelfBook WHERE shelf_id = ? AND book_id = ?',
+            (shelf_id, book_id)
+        ).fetchone()
+
+        if not existing:
+            cursor.execute(
+                'INSERT INTO ShelfBook (shelf_id, book_id) VALUES (?, ?)',
+                (shelf_id, book_id)
+            )
+            conn.commit()
+        conn.close()
+    return redirect(url_for('shelves'))
+
+
 
 
 
