@@ -10,6 +10,10 @@ def connect_db() :
     conn.row_factory = sqlite3.Row
     return conn
 
+@app.route('/')
+def home():
+    return render_template('index.html')
+
 #catalog
 books = [
     {
@@ -23,7 +27,7 @@ books = [
         "book_id": 2, 
         "title": "1984", 
         "author": "George Orwell", 
-        "genre": "Dystopian",
+        "genre": "Dystopian", 
         "story": "A man rebels against a totalitarian regime that watches every move of its citizens."
     },
     {
