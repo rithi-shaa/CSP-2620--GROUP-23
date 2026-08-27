@@ -4,7 +4,11 @@ CREATE TABLE IF NOT EXISTS User (
     username TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
-    bio TEXT
+    full_name TEXT,
+    bio TEXT,
+    is_verified INTEGER DEFAULT 0,
+    verification_token TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Shelf table (MEMBER 1: custom shelves)

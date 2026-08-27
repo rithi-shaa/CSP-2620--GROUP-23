@@ -1,18 +1,21 @@
-from flask import Flask, render_template, request, redirect, url_for, session, render_template_string
+from flask import Flask, render_template, request, redirect, url_for, session, render_template_string, flash
 import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
+import secrets
 
 app = Flask(__name__)
-app.secret_key = 'mysecretkey'
+app.secret_key = "my-secret-key-12345"
 
 #connecting to database
-def connect_db() :
+def get_db_connection() :
     conn = sqlite3.connect('booksession.db')
     conn.row_factory = sqlite3.Row
     return conn
 
-@app.route('/')
-def home():
+@app.route('/welcome')
+def catalog():
     return render_template('index.html')
+
 
 #catalog
 books = [
@@ -82,49 +85,59 @@ def home():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        full_name = request.form.get('full_name', '')
 
-        conn = connect_db()
-        cursor = conn.cursor()
-        cursor.execute(
-            'INSERT INTO User (username, email, password_hash) VALUES (?, ?, ?)',
-            (username, email, password)
-        )
-        conn.commit()
-        conn.close()
+        if not username or not email or not password:
+            flash("All required fields must be filled out.")
+            return redirect(url_for('register'))
 
-        return redirect('/login')
+        password_hash = generate_password_hash(password)
+        verification_token = secrets.token_urlsafe(16)
+
+        conn = get_db_connection()
+        try:
+            conn.execute(
+                """
+                INSERT INTO User (username, email, password_hash, full_name, is_verified, verification_token)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (username, email, password_hash, full_name, 0, verification_token)
+            )
+            conn.commit()
+            flash("Registration successful! Please log in.")
+            return redirect(url_for('login'))
+        except sqlite3.IntegrityError:
+            flash("Username or email already exists.")
+        finally:
+            conn.close()
+
     return render_template('register.html')
 
 #login page
-@app.route('/login',methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        username = request.form.get('username')
+        password = request.form.get('password')
 
-        conn = connect_db()
-        cursor = conn.cursor()
-        cursor.execute(
-            'SELECT * FROM User WHERE email = ? AND password_hash = ?',
-            (email, password)
-        )
-        user = cursor.fetchone()
+        conn = get_db_connection()
+        user = conn.execute(
+            "SELECT * FROM User WHERE username = ?", (username,)
+        ).fetchone()
         conn.close()
 
-        if user: 
-            session ['user_id'] = user['user_id']
+        if user and check_password_hash(user['password_hash'], password):
+            session['user_id'] = user['user_id']
             session['username'] = user['username']
-            return redirect(url_for('home'))
+            flash("Logged in successfully!")
+            return redirect(url_for('profile'))
+        else:
+            flash("Invalid username or password.")
 
     return render_template('login.html')
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('home'))
 
 #shelf
 @app.route('/shelves')
@@ -132,7 +145,7 @@ def shelves():
     if 'user_id' not in session:
         return redirect('/login')
 
-    conn = connect_db()
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Shelf WHERE user_id = ?' , (session['user_id'], ))
     my_shelves = cursor.fetchall()
@@ -147,7 +160,7 @@ def add_shelf():
         shelf_name = request.form['shelf_name']
 
         if shelf_name.strip():
-            conn = connect_db()
+            conn = get_db_connection()
             cursor = conn.cursor()
             cursor.execute(
                 'INSERT INTO Shelf (shelf_name, user_id) VALUES (?, ?)',
@@ -168,7 +181,7 @@ def add_to_shelf():
     book_id = request.form.get('book_id')
 
     if shelf_id and book_id:
-        conn = connect_db()
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         existing = cursor.execute(
@@ -186,36 +199,38 @@ def add_to_shelf():
     return redirect(url_for('shelves'))
 
 #profile
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
     if 'user_id' not in session:
-        return redirect('/login')
+        return redirect(url_for('login'))
 
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute(
-        'SELECT username, email, bio FROM User WHERE user_id = ?', (session['user_id'],))
-    user = cursor.fetchone()
+    conn = get_db_connection()
+
+    if request.method == 'POST':
+        bio = request.form.get('bio')
+        full_name = request.form.get('full_name')
+
+        conn.execute(
+            "UPDATE User SET bio = ?, full_name = ? WHERE user_id = ?",
+            (bio, full_name, session['user_id'])
+        )
+        conn.commit()
+        flash("Profile updated successfully!")
+        return redirect(url_for('profile'))
+
+    user = conn.execute(
+        "SELECT * FROM User WHERE user_id = ?", (session['user_id'],)
+    ).fetchone()
     conn.close()
+
     return render_template('profile.html', user=user)
 
-#update bio
-@app.route('/update.bio', methods=['POST'])
-def update_bio():
-    if 'user_id' not in session:
-        return redirect('/login')
+#logout page
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash("You have been logged out.")
+    return redirect(url_for('login'))
 
-    bio_text = request.form.get('bio', '').strip()
-
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute('UPDATE User SET bio = ? WHERE user_id = ?', (bio_text, session['user_id']))
-    conn.commit()
-    conn.close()
-
-    return redirect(url_for('profile'))
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
-
-        
