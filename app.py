@@ -24,6 +24,7 @@ books = [
         "title": "The Great Gatsby", 
         "author": "F. Scott Fitzgerald", 
         "genre": "Classic", 
+        "year": 1925,
         "story": "A wealthy man throws lavish parties in hopes of winning back his former lover."
     },
     {
@@ -31,6 +32,7 @@ books = [
         "title": "1984", 
         "author": "George Orwell", 
         "genre": "Dystopian", 
+        "year": 1949,
         "story": "A man rebels against a totalitarian regime that watches every move of its citizens."
     },
     {
@@ -38,6 +40,7 @@ books = [
         "title": "The Hobbit", 
         "author": "J.R.R. Tolkien", 
         "genre": "Fantasy", 
+        "year": 1937, 
         "story": "A home-loving hobbit gets dragged into an epic quest."
     },
     {
@@ -45,6 +48,7 @@ books = [
         "title": "The Shadow of the Wind", 
         "author": "Carlos Ruiz Zafón", 
         "genre": "Mystery", 
+        "year": 2001
         "story": "A boy discovers a mysterious book that pulls him into a dark secret."
     }
 ]
