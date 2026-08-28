@@ -56,14 +56,19 @@ books = [
 @app.route("/")
 def home():
     search_query = request.args.get("q", "").lower()
+    selected_genre = request.args.get("genre", "").lower()
+    selected_year = request.args.get("year", "")
+
+    filtered_books = books
     
     if search_query:
         filtered_books = [
             b for b in books 
             if search_query in b["title"].lower() or search_query in b["author"].lower()
         ]
-    else:
-        filtered_books = books
+    if selected_genre:
+        filtered_books = [
+            b for b in filtered_books
 
     html = """
     <h1>Book Catalog</h1>
