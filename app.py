@@ -17,7 +17,7 @@ def catalog():
     return render_template('index.html')
 
 
-#catalog
+#Updated catalog data structure including years and genre
 books = [
     {
         "book_id": 1, 
