@@ -38,6 +38,7 @@
                     <h2>Hello, {{ session.get('username') }}!</h2>
                     <p>Dive back into your personal collection.</p>
                     <div class="action-links">
+                        <a href="{{ url_for('catalog') }}" class="book-btn">View Book Catalog</a>
                         <a href="{{ url_for('shelves') }}" class="book-btn">My Shelves</a>
                         <a href="{{ url_for('profile') }}" class="book-btn secondary">My Profile</a>
                         <a href="{{ url_for('logout') }}" class="book-btn logout">Logout</a>
