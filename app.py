@@ -48,7 +48,7 @@ books = [
         "title": "The Shadow of the Wind", 
         "author": "Carlos Ruiz Zafón", 
         "genre": "Mystery", 
-        "year": 2001
+        "year": 2001,
         "story": "A boy discovers a mysterious book that pulls him into a dark secret."
     }
 ]
