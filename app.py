@@ -12,47 +12,6 @@ def get_db_connection() :
     conn.row_factory = sqlite3.Row
     return conn
 
-@app.route('/welcome')
-def catalog():
-    return render_template('index.html')
-
-
-#Updated catalog data structure including years and genre
-books = [
-    {
-        "book_id": 1, 
-        "title": "The Great Gatsby", 
-        "author": "F. Scott Fitzgerald", 
-        "genre": "Classic", 
-        "year": 1925,
-        "story": "A wealthy man throws lavish parties in hopes of winning back his former lover."
-    },
-    {
-        "book_id": 2, 
-        "title": "1984", 
-        "author": "George Orwell", 
-        "genre": "Dystopian", 
-        "year": 1949,
-        "story": "A man rebels against a totalitarian regime that watches every move of its citizens."
-    },
-    {
-        "book_id": 3, 
-        "title": "The Hobbit", 
-        "author": "J.R.R. Tolkien", 
-        "genre": "Fantasy", 
-        "year": 1937, 
-        "story": "A home-loving hobbit gets dragged into an epic quest."
-    },
-    {
-        "book_id": 4, 
-        "title": "The Shadow of the Wind", 
-        "author": "Carlos Ruiz Zafón", 
-        "genre": "Mystery", 
-        "year": 2001,
-        "story": "A boy discovers a mysterious book that pulls him into a dark secret."
-    }
-]
-
 @app.route("/")
 def home():
     search_query = request.args.get("q", "").lower()
@@ -69,13 +28,13 @@ def home():
     if selected_genre: 
         filtered_books = [
             b for b in filtered_books
-            if selected_genre == b.get ("genre","").lower() 
+            if selected_genre == b.get("genre", "").lower() 
         ]
 
     if selected_year:
         filtered_books = [
             b for b in filtered_books
-            if str(selected_year) == str(b.get("year",""))
+            if str(selected_year) == str(b.get("year", ""))
         ]
         
     html = """
@@ -83,15 +42,15 @@ def home():
     <form method="GET" action="/">
         <input type="text" name="q" placeholder="Search by title or author..." value="{{ request.args.get('q', '') }}">
 
-        <select name ="genre">
+        <select name="genre">
             <option value="">All Genres</option>
-            <option value="Classic" {% if.request.args.get('genre') == 'Classic' %}selected{% end if %}>Classic</option>
-            <option value="Dystopian" {% if.request.args.get('genre') == 'Dystopian' %}selected{% end if %}>Dystopian</option>
-            <option value="Fantasy" {% if.request.args.get('genre') == 'Fantasy' %}selected{% end if %}>Fantasy</option>
-            <option value="Mystery" {% if.request.args.get('genre') == ']Mystery' %}selected{% end if %}>Mystery</option>
+            <option value="Classic" {% if request.args.get('genre') == 'Classic' %}selected{% endif %}>Classic</option>
+            <option value="Dystopian" {% if request.args.get('genre') == 'Dystopian' %}selected{% endif %}>Dystopian</option>
+            <option value="Fantasy" {% if request.args.get('genre') == 'Fantasy' %}selected{% endif %}>Fantasy</option>
+            <option value="Mystery" {% if request.args.get('genre') == 'Mystery' %}selected{% endif %}>Mystery</option>
         </select>
 
-        <input type="number" name="year" placeholder="Year (e.g.1925)" value="{{ request.args.get('year', '') }}'>
+        <input type="number" name="year" placeholder="Year (e.g. 1925)" value="{{ request.args.get('year', '') }}">
 
         <button type="submit">Filter & Search</button>
         <a href="/">Reset</a>
@@ -100,7 +59,7 @@ def home():
         {% for book in filtered_books %}
             <li>
                 <strong>{{ book.title }}</strong> by {{ book.author }} 
-                ({{ book.genre }} {% if.book.year %}. {{ book.year }}{% endif %}<br>
+                ({{ book.genre }}{% if book.year %}, {{ book.year }}{% endif %})<br>
                 <em>Story: {{ book.story }}</em>
             </li>
         {% else %}
