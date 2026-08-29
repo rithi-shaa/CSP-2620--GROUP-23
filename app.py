@@ -70,18 +70,37 @@ def home():
         filtered_books = [
             b for b in filtered_books
             if selected_genre == b.get ("genre","").lower() 
+        ]
 
+    if selected_year:
+        filtered_books = [
+            b for b in filtered_books
+            if str(selected_year) == str(b.get("year",""))
+        ]
+        
     html = """
     <h1>Book Catalog</h1>
     <form method="GET" action="/">
         <input type="text" name="q" placeholder="Search by title or author..." value="{{ request.args.get('q', '') }}">
-        <button type="submit">Search</button>
+
+        <select name ="genre">
+            <option value="">All Genres</option>
+            <option value="Classic" {% if.request.args.get('genre') == 'Classic' %}selected{% end if %}>Classic</option>
+            <option value="Dystopian" {% if.request.args.get('genre') == 'Dystopian' %}selected{% end if %}>Dystopian</option>
+            <option value="Fantasy" {% if.request.args.get('genre') == 'Fantasy' %}selected{% end if %}>Fantasy</option>
+            <option value="Mystery" {% if.request.args.get('genre') == ']Mystery' %}selected{% end if %}>Mystery</option>
+        </select>
+
+        <input type="number" name="year" placeholder="Year (e.g.1925)" value="{{ request.args.get('year', '') }}'>
+
+        <button type="submit">Filter & Search</button>
         <a href="/">Reset</a>
     </form>
     <ul>
         {% for book in filtered_books %}
             <li>
-                <strong>{{ book.title }}</strong> by {{ book.author }} ({{ book.genre }})<br>
+                <strong>{{ book.title }}</strong> by {{ book.author }} 
+                ({{ book.genre }} {% if.book.year %}. {{ book.year }}{% endif %}<br>
                 <em>Story: {{ book.story }}</em>
             </li>
         {% else %}
