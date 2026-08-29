@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Booksession</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body class="book-background">
+
+        <div class="book-spread">
+            <div class="book page left-page">
+                <div class="page-content">
+                    <h1>Booksession</h1>
+                    <p class="tagline">Need to keep track over your obession over books? Here's your personal library.</p>
+                    <ul class="feature-list">
+                        <li>📚 Create custom shelves</li>
+                        <li>🔖 Track your reading journey</li>
+                        <li>👤 Manage your reader profile</li>
+                    </ul>
+                </div>
+            </div>
+
+        <div class="book-page right-page">
+            <div class="page-content">
+
+                {% with messages = get_flashed_messages() %}
+                   {% if messages %}
+                      <ul class="flash-messages">
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                    {% endwith %}
+
+                {% if session.get('user_id') %}
+                    <h2>Hello, {{ session.get('username') }}!</h2>
+                    <p>Dive back into your personal collection.</p>
+                    <div class="action-links">
+                        <a href="{{ url_for('shelves') }}" class="book-btn">My Shelves</a>
+                        <a href="{{ url_for('profile') }}" class="book-btn secondary">My Profile</a>
+                        <a href="{{ url_for('logout') }}" class="book-btn logout">Logout</a>
+                    </div>
+                {% else %}
+                    <h2>Welcome</h2>
+                    <p>Log in or register to manage your custom bookshelves.</p>
+                    <div class="action-links">
+                        <a href="{{ url_for('login') }}" class="book-btn">Login</a>
+                        <a href="{{ url_for('register') }}" class="book-btn secondary">Register</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    </body>
+</html>
