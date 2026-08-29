@@ -48,8 +48,12 @@ def get_db_connection() :
     conn.row_factory = sqlite3.Row
     return conn
 
-@app.route("/")
-def home():
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route("/catalog")
+def catalog():
     search_query = request.args.get("q", "").lower()
     selected_genre = request.args.get("genre", "").lower()
     selected_year = request.args.get("year", "")
