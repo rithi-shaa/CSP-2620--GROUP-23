@@ -66,9 +66,10 @@ def home():
             b for b in books 
             if search_query in b["title"].lower() or search_query in b["author"].lower()
         ]
-    if selected_genre:
+    if selected_genre: 
         filtered_books = [
             b for b in filtered_books
+            if selected_genre == b.get ("genre","").lower() 
 
     html = """
     <h1>Book Catalog</h1>
