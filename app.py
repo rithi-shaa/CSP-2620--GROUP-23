@@ -116,10 +116,15 @@ def register():
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
         full_name = request.form.get('full_name', '')
 
-        if not username or not email or not password:
+        if not username or not email or not password or not confirm_password:
             flash("All required fields must be filled out.")
+            return redirect(url_for('register'))
+
+        if password != confirm_password:
+            flash("Password do not match.")
             return redirect(url_for('register'))
 
         password_hash = generate_password_hash(password)
