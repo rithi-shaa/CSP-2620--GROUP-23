@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book Manually</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Add a New Book</h2>
+        <form action="{{ url_for('add_book') }}" method="POST">
+            <div class="form-group">
+                <label for="title">Book Title:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="author">Author:</label>
+                <input type="text" id="author" name="author" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="genre">Genre:</label>
+                <input type="text" id="genre" name="genre">
+            </div>
+            
+            <div class="form-group">
+                <label for="publication_year">Publication Year:</label>
+                <input type="number" id="publication_year" name="publication_year">
+            </div>
+            
+            <button type="submit" class="btn">Add Book</button>
+        </form>
+        <br>
+        <a href="{{ url_for('index') }}">Back to Home</a>
+    </div>
+</body>
+</html>

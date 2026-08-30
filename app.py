@@ -260,5 +260,31 @@ def logout():
     flash("You have been logged out.")
     return redirect(url_for('login'))
 
+@app.route('/add-book', methods=['GET', 'POST'])
+def add_book():
+    if 'user_id' not in session:
+        flash('Please log in to add a book.')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        title = request.form['title']
+        author = request.form['author']
+        genre = request.form['genre']
+        publication_year = request.form['publication_year']
+        created_by = session['user_id']
+
+        conn = get_db_connection()
+        conn.execute(
+            'INSERT INTO Book (title, author, genre, publication_year, created_by) VALUES (?, ?, ?, ?, ?)',
+            (title, author, genre, publication_year, created_by)
+        )
+        conn.commit()
+        conn.close()
+        
+        flash('Book added successfully!')
+        return redirect(url_for('index'))
+
+    return render_template('add_book.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
