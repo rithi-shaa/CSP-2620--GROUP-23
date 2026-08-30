@@ -35,7 +35,9 @@ CREATE TABLE IF NOT EXISTS Book (
     author TEXT NOT NULL,
     genre TEXT,
     publication_year INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_by INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES User(user_id) ON DELETE SET NULL
 );
 
 -- Ratings table (User ratings for books)
