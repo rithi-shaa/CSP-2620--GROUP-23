@@ -4,24 +4,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Booksession</title>
+        <link href="https://fonts.googleapis.com/css2?family=Extenda:wght@700&display=swap">
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     </head>
     <body class="book-background">
 
         <div class="book-spread">
-            <div class="book page left-page">
-                <div class="page-content">
-                    <h1>Booksession</h1>
-                    <p class="tagline">Need to keep track over your obession over books? Here's your personal library.</p>
-                    <ul class="feature-list">
-                        <li>📚 Create custom shelves</li>
-                        <li>🔖 Track your reading journey</li>
-                        <li>👤 Manage your reader profile</li>
-                    </ul>
-                </div>
-            </div>
-
-        <div class="book-page right-page">
+         <div class="book-page right-page">
             <div class="page-content">
                 <!-- flash messages -->
                 {% with messages = get_flashed_messages() %}
@@ -44,14 +33,24 @@
                         <a href="{{ url_for('logout') }}" class="book-btn logout">Logout</a>
                     </div>
                 {% else %}
-                    <h2>Welcome</h2>
-                    <p>Log in or register to manage your custom bookshelves.</p>
-                    <div class="action-links">
-                        <a href="{{ url_for('login') }}" class="book-btn">Login</a>
-                        <a href="{{ url_for('register') }}" class="book-btn secondary">Register</a>
+                    <div class="login-card">
+                        <h2>Login</h2>
+                        <form method="POST" action="{{ url_for('login') }}">
+                            <input type="text" name="username" placeholder="Username" required>
+                            <input type="password" name="password" placeholder="Password" required>
+
+                            <div class="form-options">
+                                <label><input type="checkbox" name="remember">Remember me</label>
+                                <a href="#" class="forgot-link">Forgot Password?</a>
+                            </div>
+
+                            <button type="submit" class="submit-btn">Login</button>
+                        </form>
+                        <a href="{{ url_for('register') }}" class="register-link">Don't have an account? Register.</a>
                     </div>
                 {% endif %}
             </div>
+        </div>
         </div>
     </div>
     </body>
