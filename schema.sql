@@ -27,3 +27,36 @@ CREATE TABLE IF NOT EXISTS ShelfBook (
     PRIMARY KEY (shelf_id, book_id),
     FOREIGN KEY (shelf_id) REFERENCES Shelf(shelf_id) ON DELETE CASCADE
 );
+
+-- Book table (Catalog & Metadata)
+CREATE TABLE IF NOT EXISTS Book (
+    book_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    author TEXT NOT NULL,
+    genre TEXT,
+    publication_year INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Ratings table (User ratings for books)
+CREATE TABLE IF NOT EXISTS Rating (
+    rating_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    book_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    rating_value INTEGER CHECK (rating_value BETWEEN 1 AND 5),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (book_id) REFERENCES Book(book_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+    UNIQUE (book_id, user_id)
+);
+
+-- Reviews table (User written reviews for books)
+CREATE TABLE IF NOT EXISTS Review (
+    review_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    book_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    review_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (book_id) REFERENCES Book(book_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
+);
