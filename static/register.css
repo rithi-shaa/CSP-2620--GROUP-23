@@ -1,0 +1,149 @@
+html {
+    height: 100%;
+    margin: 0;
+}
+
+body.book-background {
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Georgia', serif;
+    color: #2c2c2c;
+    background-color: #ede8dc;
+    background-image: url('background.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    overflow: hidden;
+}
+
+.book-spread {
+    display: flex;
+    width: 850px;
+    height: 520px;
+}
+
+.book-page {
+    flex: 1;
+    padding: 60px 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.left-page {
+    text-align: left;
+    padding-left: 30px;
+    padding-right: 20px;
+}
+
+.right-page {
+    text-align: left;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.page-content h1 {
+    font-family: 'Extenda 30 Deco', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    -webkit-text-stroke: 2px #666;
+    paint-order: stroke fill;
+    line-height: 0.95;
+    margin-bottom: 10px;
+    color: #3b2b1e;
+    font-size: 2rem;
+}
+
+.left-page .tagline {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.left-page .feature-list {
+    list-style: none;
+    padding: 0;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    color: #3b2b1e;
+}
+
+.left-page .feature-list li {
+    margin-bottom: 14px;
+}
+
+/* Register card (right page) */
+.login-card.register-card {
+    background: linear-gradient(135deg, #a78bfa, #4c1d95 40%, #1e1b4b);
+    border-radius: 24px;
+    padding: 35px 35px 30px;
+    max-width: 340px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.register-card h2 {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.register-card input {
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.register-card input::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+.password-error {
+    color: #ffb4b4;
+    font-size: 0.85rem;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.register-card .submit-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 25px;
+    background: white;
+    color: #1e1b4b;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.register-card .register-link {
+    color: white;
+    font-size: 0.85rem;
+    text-decoration: underline;
+}
+
+.flash-messages {
+    list-style: none;
+    padding: 10px;
+    background: #fcf8e3;
+    border: 1px solid #faebcc;
+    color: #8a6d3b;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+}

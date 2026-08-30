@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Booksession</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+</head>
+<body class="book-background">
+
+    <div class="book-spread">
+        <div class="book-page left-page">
+            <div class="page-content">
+                <h1>Join Booksession</h1>
+                <p class="tagline">Keep track of the books you read.</p>
+
+                <ul class="feature-list">
+                    <li><strong>1. Register</strong> — your username, email, full name, password</li>
+                    <li><strong>2. Manage your profile</strong> — set your bio about yourself</li>
+                    <li><strong>3. Add books to your shelves</strong> — customize your shelves based on your comfort and store your books there</li>
+                    <li><strong>4. Reading logs & analytics dashboard</strong> — view your progress and set annual goals</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="book-page right-page">
+            <div class="page-content">
+                <div class="login-card register-card">
+                    <h2>Register</h2>
+
+                    {% with messages = get_flashed_messages() %}
+                       {% if messages %}
+                          <ul class="flash-messages">
+                            {% for message in messages %}
+                            <li>{{ message }}</li>
+                            {% endfor %}
+                          </ul>
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" action="{{ url_for('register') }}" onsubmit="return checkPasswords()">
+                        <input type="text" name="username" placeholder="Username" required>
+                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="text" name="full_name" placeholder="Full Name">
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+
+                        <p id="password-error" class="password-error"></p>
+
+                        <button type="submit" class="submit-btn">Register</button>
+                    </form>
+
+                    <a href="{{ url_for('login') }}" class="register-link">Already have an account? Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkPasswords() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const errorEl = document.getElementById('password-error');
+            if (password !== confirmPassword) {
+                errorEl.textContent = "Passwords do not match.";
+                return false;
+            }
+            errorEl.textContent = "";
+            return true;
+        }
+    </script>
+
+</body>
+</html>
