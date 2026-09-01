@@ -10,7 +10,7 @@ import secrets
 app = Flask(__name__)
 app.secret_key = "my-secret-key-12345"
 
-app.config['MAIL_SERVER'] = 'stmp.gmail.com'
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
@@ -19,6 +19,12 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
 
 from flask_mail import Mail, Message
 mail = Mail(app)
+
+#connecting to database
+def get_db_connection() :
+    conn = sqlite3.connect('booksession.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 #books
 books = [
@@ -55,12 +61,6 @@ books = [
         "story": "A boy discovers a mysterious book that pulls him into a dark secret."
     }
 ]
-
-#connecting to database
-def get_db_connection() :
-    conn = sqlite3.connect('booksession.db')
-    conn.row_factory = sqlite3.Row
-    return conn
 
 @app.route('/')
 def index():
@@ -154,7 +154,16 @@ def register():
                 (username, email, password_hash, full_name, 0, verification_token)
             )
             conn.commit()
-            flash("Registration successful! Please log in.")
+
+            verify_link = url_for('verify_email', token=verification_token, _external=True)
+            msg = Message(
+                subject="Verify your Booksession account",
+                recipients=[email],
+                body=f"Welcome to Booksession! Click the link to verify your account: {verify_link}"
+            )
+            mail.send(msg)
+
+            flash("Registration successful! Check you email to verify your account before logging in.")
             return redirect(url_for('login'))
         except sqlite3.IntegrityError:
             flash("Username or email already exists.")
@@ -162,6 +171,28 @@ def register():
             conn.close()
 
     return render_template('register.html')
+
+@app.route('/verify/<token>')
+def verify_email(token):
+    conn = get_db_connection()
+    user = conn.execute(
+        "SELECT * FROM User WHERE verification_token = ?" , (token,)
+    ).fetchone()
+
+    if not user:
+        conn.close()
+        flash("Invalid or expired verification link.")
+        return redirect(url_for('login'))
+
+    conn.execute(
+        "UPDATE User SET is_verified = 1, verification_token = NULL WHERE user_id = ?",
+        (user['user_id'],)
+    )
+    conn.commit()
+    conn.close()
+
+    flash("Your account has been verified! You can now log in.")
+    return redirect(url_for('login'))
 
 #login page
 @app.route('/login', methods=['GET', 'POST'])

@@ -7,6 +7,18 @@ body.book-background {
     overflow: hidden;
 }
 
+body.book-background-plain {
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Georgia', serif;
+    color: #2c2c2c;
+    background-color: #ede8dc;
+}
+
 .book-spread {
     display: flex;
     width: 100%;
@@ -146,12 +158,19 @@ body.book-background {
 
 .flash-messages {
     list-style: none;
-    padding: 0;
+    padding: 12px 20px;
     background: #fcf8e3;
     border: 1px solid #faebcc;
     color: #8a6d3b;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    font-size: 0.85rem;
+    border-radius: 6px;
+    position: fixed;
+    font-size: 0.9rem;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    max-width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
 }

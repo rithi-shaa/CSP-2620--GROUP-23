@@ -7,7 +7,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Extenda:wght@700&display=swap">
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     </head>
-    <body class="book-background">
+    <body class="{% if session.get('user_id') %} book-background-plain {% else %} book-background{% endif %}">
 
         <div class="book-spread">
          <div class="book-page right-page">
