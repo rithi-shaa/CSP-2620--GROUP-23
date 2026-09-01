@@ -119,6 +119,22 @@ body.book-background-plain {
     color: rgba(255,255,255,0.7);
 }
 
+.login-card input[type="email"] {
+    width: 100%;
+    padding: 16px 18px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 25px;
+    background: white;
+    color: #333;
+    font-size: 1.05rem;
+    box-sizing: border-box;
+}
+
+.login-card input[type="email"]::placeholder {
+    color: #999;
+}
+
 .login-card .form-options {
     display: flex;
     justify-content: space-between;
