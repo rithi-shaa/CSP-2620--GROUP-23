@@ -194,6 +194,76 @@ def verify_email(token):
     flash("Your account has been verified! You can now log in.")
     return redirect(url_for('login'))
 
+@app.route('/reset_password', defaults={'token': None}, methods=['GET', 'POST'])
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if token is None:
+        if request.method == 'POST':
+            email = request.form.get('email')
+
+            if not email:
+                flash("Please enter your email address.")
+                return redirect(url_for('reset_password'))
+
+            conn = get_db_connection()
+            user = conn.execute(
+                "SELECT * FROM User WHERE email = ?", (email,)
+            ).fetchone()
+
+            if user:
+                reset_token = secrets.token_urlsafe(16)
+                conn.execute(
+                    "UPDATE User SET verification_token = ? WHERE email = ?",
+                    (reset_token, email)
+                )
+                conn.commit()
+
+                reset_link = url_for('reset_password', token=reset_token, _external=True)
+                msg = Message(
+                    subject="Reset your Booksession password",
+                    recipients=[email],
+                    body=f"Click the link to reset your password: {reset_link}"
+                )
+                mail.send(msg)
+
+            conn.close()
+            flash("If that email is registered, a reset link has been sent.")
+            return redirect(url_for('login'))
+
+        return render_template('reset_password.html', token=None)
+
+    conn = get_db_connection()
+    user = conn.execute(
+        "SELECT * FROM User WHERE verification_token = ?", (token,)
+    ).fetchone()
+
+    if not user:
+        conn.close()
+        flash("Invalid or expired reset link.")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        new_password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+
+        if new_password != confirm_password:
+            flash("Passwords do not match.")
+            return redirect(url_for('reset_password', token=token))
+
+        password_hash = generate_password_hash(new_password)
+        conn.execute(
+            "UPDATE User SET password_hash = ?, verification_token = NULL WHERE user_id = ?",
+            (password_hash, user['user_id'])
+        )
+        conn.commit()
+        conn.close()
+
+        flash("Password reset successful! Please log in.")
+        return redirect(url_for('login'))
+
+    conn.close()
+    return render_template('reset_password.html', token=token)
+
 #login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
