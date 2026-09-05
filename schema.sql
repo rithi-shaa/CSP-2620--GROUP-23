@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS ShelfBook (
 );
 
 -- Book table (Catalog & Metadata)
+
 CREATE TABLE IF NOT EXISTS Book (
     book_id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
@@ -39,6 +40,12 @@ CREATE TABLE IF NOT EXISTS Book (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES User(user_id) ON DELETE SET NULL
 );
+
+INSERT INTO Book (title, author, genre, publication_year) VALUES 
+('The Great Gatsby', 'F. Scott Fitzgerald', 'Classic', 1925),
+('1984', 'George Orwell', 'Dystopian', 1949),
+('The Hobbit', 'J.R.R. Tolkien', 'Fantasy', 1937),
+('The Shadow of the Wind', 'Carlos Ruiz Zafón', 'Mystery', 2001);
 
 -- Ratings table (User ratings for books)
 CREATE TABLE IF NOT EXISTS Rating (
