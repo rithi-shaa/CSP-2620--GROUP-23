@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Shelves</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='shelves.css') }}">
+</head>
+<body class="shelves-background">
+
+    <div class="shelves-header">
+        <div class="avatar-circle">{{ username[0]|upper }}</div>
+        <h2>{{ username }}</h2>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+       {% if messages %}
+          <ul class="flash-messages">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('add_shelf') }}" method="POST" class="add-shelf-form">
+        <input type="text" name="shelf_name" placeholder="New shelf name">
+        <button type="submit" class="submit-btn">Add Shelf</button>
+    </form>
+
+    <div class="shelves-list">
+    {% for shelf in shelves %}
+        <div class="shelf-card">
+            <h3>{{ shelf.shelf_name }}</h3>
+
+            {% if shelf.books %}
+                <div class="filter-tabs" data-shelf="{{ shelf.shelf_id }}">
+                    <button class="tab-btn active" data-filter="All">All</button>
+                    <button class="tab-btn" data-filter="Want to Read">Want to Read</button>
+                    <button class="tab-btn" data-filter="Currently Reading">Currently Reading</button>
+                    <button class="tab-btn" data-filter="Completed">Completed</button>
+                </div>
+
+                <div class="book-grid" id="grid-{{ shelf.shelf_id }}">
+                    {% for book in shelf.books %}
+                        <div class="book-item" data-status="{{ book['reading_status'] }}">
+                            <div class="book-cover-placeholder">{{ book['title'][0]|upper }}</div>
+                            <p class="book-title">{{ book['title'] }}</p>
+                            <p class="book-status">{{ book['reading_status'] }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-shelf">No books added yet.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+    document.querySelectorAll('.filter-tabs').forEach(tabGroup => {
+        const shelfId = tabGroup.dataset.shelf;
+        const grid = document.getElementById('grid-' + shelfId);
+
+        tabGroup.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabGroup.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.dataset.filter;
+                grid.querySelectorAll('.book-item').forEach(item => {
+                    if (filter === 'All' || item.dataset.status === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+    <a href="{{ url_for('index') }}" class="back-link">Back to Home</a>
+
+</body>
+</html>
