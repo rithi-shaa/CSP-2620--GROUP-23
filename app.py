@@ -338,7 +338,7 @@ def add_shelf():
 @app.route('/rename_shelf', methods=['POST'])
 def rename_shelf():
     if 'user_id' not in session:
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
 
     shelf_id = request.form.get('shelf_id')
     new_name = request.form.get('new_name')
@@ -352,6 +352,26 @@ def rename_shelf():
         conn.commit()
         conn.close()
         flash('Shelf renamed successfully!')
+
+    return redirect(url_for('shelves'))
+
+#delete shelf
+@app.route('/delete_shelf', methods=["POST"])
+def delete_shelf():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    shelf_id = request.form.get('shelf_id')
+
+    if shelf_id:
+        conn = get_db_connection()
+        conn.execute(
+            'DELETE FROM Shelf WHERE shelf_id = ? AND user_id = ?',
+            (shelf_id, session['user_id'])
+        )
+        conn.commit()
+        conn.close()
+        flash('Shelf deleted.')
 
     return redirect(url_for('shelves'))
 
