@@ -334,6 +334,27 @@ def add_shelf():
 
             return redirect(url_for('shelves'))
 
+#update shelf name
+@app.route('/rename_shelf', methods=['POST'])
+def rename_shelf():
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
+
+    shelf_id = request.form.get('shelf_id')
+    new_name = request.form.get('new_name')
+
+    if shelf_id and new_name and new_name.strip():
+        conn = get_db_connection()
+        conn.execute(
+            'UPDATE Shelf SET shelf_name = ? WHERE shelf_id = ? AND user_id = ?',
+            (new_name.strip(), shelf_id, session['user_id'])
+        )
+        conn.commit()
+        conn.close()
+        flash('Shelf renamed successfully!')
+
+    return redirect(url_for('shelves'))
+
 #adding book to shelf
 @app.route('/add_to_shelf', methods=['POST'])
 def add_to_shelf():
