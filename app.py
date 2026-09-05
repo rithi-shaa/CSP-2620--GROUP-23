@@ -26,48 +26,32 @@ def get_db_connection() :
     conn.row_factory = sqlite3.Row
     return conn
 
-#books
-books = [
-    {
-        "book_id": 1, 
-        "title": "The Great Gatsby", 
-        "author": "F. Scott Fitzgerald", 
-        "genre": "Classic", 
-        "year": 1925,
-        "story": "A wealthy man throws lavish parties in hopes of winning back his former lover."
-    },
-    {
-        "book_id": 2, 
-        "title": "1984", 
-        "author": "George Orwell", 
-        "genre": "Dystopian", 
-        "year": 1949,
-        "story": "A man rebels against a totalitarian regime that watches every move of its citizens."
-    },
-    {
-        "book_id": 3, 
-        "title": "The Hobbit", 
-        "author": "J.R.R. Tolkien", 
-        "genre": "Fantasy", 
-        "year": 1937, 
-        "story": "A home-loving hobbit gets dragged into an epic quest."
-    },
-    {
-        "book_id": 4, 
-        "title": "The Shadow of the Wind", 
-        "author": "Carlos Ruiz Zafón", 
-        "genre": "Mystery", 
-        "year": 2001,
-        "story": "A boy discovers a mysterious book that pulls him into a dark secret."
-    }
-]
-
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route("/catalog")
 def catalog():
+    conn = get_db_connection()
+    db_books = conn.execute("SELECT * FROM Book").fetchall()
+    conn.close()
+
+    
+    books = []
+    for row in db_books:
+        books.append({
+            "book_id": row["book_id"],
+            "title": row["title"],
+            "author": row["author"],
+            "genre": row["genre"],
+            "year": row["publication_year"],
+            "publisher": row["publisher"] if "publisher" in row.keys() else "",
+            "isbn": row["isbn"] if "isbn" in row.keys() else "",
+            "cover_image_url": row["cover_image_url"] if "cover_image_url" in row.keys() else "",
+            "created_by": row["created_by"],
+            "story": ""
+        })
+
     search_query = request.args.get("q", "").lower()
     selected_genre = request.args.get("genre", "").lower()
     selected_year = request.args.get("year", "")
@@ -76,7 +60,7 @@ def catalog():
     
     if search_query:
         filtered_books = [
-            b for b in books 
+            b for b in filtered_books 
             if search_query in b["title"].lower() or search_query in b["author"].lower()
         ]
     if selected_genre: 
@@ -93,7 +77,7 @@ def catalog():
         
     html = """
     <h1>Book Catalog</h1>
-    <form method="GET" action="/">
+    <form method="GET" action="/catalog">
         <input type="text" name="q" placeholder="Search by title or author..." value="{{ request.args.get('q', '') }}">
 
         <select name="genre">
@@ -107,21 +91,21 @@ def catalog():
         <input type="number" name="year" placeholder="Year (e.g. 1925)" value="{{ request.args.get('year', '') }}">
 
         <button type="submit">Filter & Search</button>
-        <a href="/">Reset</a>
+        <a href="/catalog">Reset</a>
     </form>
     <ul>
         {% for book in filtered_books %}
             <li>
                 <strong>{{ book.title }}</strong> by {{ book.author }} 
                 ({{ book.genre }}{% if book.year %}, {{ book.year }}{% endif %})<br>
-                <em>Story: {{ book.story }}</em>
+                {% if book.story %}<em>Story: {{ book.story }}</em>{% endif %}
             </li>
         {% else %}
             <p>No books found matching your search.</p>
         {% endfor %}
     </ul>
     """
-    return render_template_string(html, filtered_books=filtered_books)
+    return render_template('catalog.html', filtered_books=filtered_books)
 
 #register page
 @app.route('/register', methods=['GET', 'POST'])
@@ -461,6 +445,70 @@ def add_book():
         return redirect(url_for('index'))
 
     return render_template('add_book.html')
+
+@app.route('/edit-book/<int:book_id>', methods=['GET', 'POST'])
+def edit_book(book_id):
+    if 'user_id' not in session:
+        flash('Please log in to edit a book.')
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    book = conn.execute('SELECT * FROM Book WHERE book_id = ?', (book_id,)).fetchone()
+
+    if not book:
+        conn.close()
+        flash('Book not found.')
+        return redirect(url_for('catalog'))
+
+    if book['created_by'] != session['user_id']:
+        conn.close()
+        flash('You do not have permission to edit this book.')
+        return redirect(url_for('catalog'))
+
+    if request.method == 'POST':
+        title = request.form['title']
+        author = request.form['author']
+        genre = request.form['genre']
+        publication_year = request.form['publication_year']
+
+        conn.execute(
+            'UPDATE Book SET title = ?, author = ?, genre = ?, publication_year = ? WHERE book_id = ?',
+            (title, author, genre, publication_year, book_id)
+        )
+        conn.commit()
+        conn.close()
+
+        flash('Book updated successfully!')
+        return redirect(url_for('catalog'))
+
+    conn.close()
+    return render_template('edit_book.html', book=book)
+
+@app.route('/delete-book/<int:book_id>', methods=['POST'])
+def delete_book(book_id):
+    if 'user_id' not in session:
+        flash('Please log in to delete a book.')
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    book = conn.execute('SELECT * FROM Book WHERE book_id = ?', (book_id,)).fetchone()
+
+    if not book:
+        conn.close()
+        flash('Book not found.')
+        return redirect(url_for('catalog'))
+
+    if book['created_by'] != session['user_id']:
+        conn.close()
+        flash('You do not have permission to delete this book.')
+        return redirect(url_for('catalog'))
+
+    conn.execute('DELETE FROM Book WHERE book_id = ?', (book_id,))
+    conn.commit()
+    conn.close()
+
+    flash('Book deleted successfully!')
+    return redirect(url_for('catalog'))
 
 if __name__ == '__main__':
     app.run(debug=True)
