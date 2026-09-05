@@ -281,7 +281,7 @@ def login():
             session['user_id'] = user['user_id']
             session['username'] = user['username']
             flash("Logged in successfully!")
-            return redirect(url_for('profile'))
+            return redirect(url_for('index'))
         else:
             flash("Invalid username or password.")
 
@@ -297,9 +297,24 @@ def shelves():
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Shelf WHERE user_id = ?' , (session['user_id'], ))
     my_shelves = cursor.fetchall()
+
+    shelves_with_books = []
+    for shelf in my_shelves:
+        cursor.execute('''
+            SELECT Book.*, ShelfBook.reading_status
+            FROM ShelfBook
+            JOIN Book ON ShelfBook.book_id = Book.book_id
+            WHERE ShelfBook.shelf_id = ?
+            ''', (shelf['shelf_id'], ))
+        books = cursor.fetchall()
+        shelves_with_books.append({
+            'shelf_id': shelf['shelf_id'],
+            'shelf_name': shelf['shelf_name'],
+            'books': books
+        })
     conn.close()
 
-    return render_template('shelves.html', shelves=my_shelves, username=session.get('username'))
+    return render_template('shelves.html', shelves=shelves_with_books, username=session.get('username'))
 
 #add shelf
 @app.route('/add_shelf', methods=['POST'])
