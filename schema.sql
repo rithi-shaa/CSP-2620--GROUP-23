@@ -62,3 +62,26 @@ CREATE TABLE IF NOT EXISTS Review (
     FOREIGN KEY (book_id) REFERENCES Book(book_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
 );
+
+-- ReadingLog Table (MEMBER 3: Reading Logs)
+CREATE TABLE IF NOT EXISTS ReadingLog (
+    log_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pages_read INTEGER NOT NULL CHECK (pages_read >= 0),
+    log_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    book_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    FOREIGN KEY (book_id) REFERENCES Book(book_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
+);
+
+-- ReadingGoal Table (MEMBER 3: Reading Goals)
+CREATE TABLE IF NOT EXISTS ReadingGoal (
+    goal_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    year INTEGER NOT NULL,
+    target_numpages INTEGER NOT NULL CHECK (target_numpages > 0),
+    target_numbooks INTEGER NOT NULL CHECK (target_numbooks > 0),
+    user_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+    UNIQUE(year, user_id)
+);
