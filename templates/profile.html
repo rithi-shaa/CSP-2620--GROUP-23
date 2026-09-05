@@ -5,22 +5,37 @@
     <title>Your Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
 </head>
-<body>
-    <div class"profile-card">
-        <h2>Your Profile</h2>
+<body class="book-background">
 
-        <div class="user-info">
-            <p><strong>Username:</strong> {{ user['username'] }}</p>
-            <p><strong>Email:</strong> {{ user['email'] }}</p>
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="avatar-circle">{{ user['username'][0]|upper }}</div>
+            <h2>{{ user['username'] }}</h2>
+
+            {% if request.args.get('edit') == 'true' %}
+               <form action="/profile" method="POST" class="fullname-form">
+                <input type="text" name="full_name" placeholder="Enter your full name" value="{{ user['full_name'] if user['full_name'] else '' }}">
+            {% else %}
+               <p class="profile-fullname">{{ user['full_name'] if user['full_name'] else 'No name added yet.' }}</p>
+            {% endif %}
         </div>
+
+        {% with messages = get_flashed_messages() %}
+           {% if messages %}
+              <ul class="flash-messages">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+        {% endwith %}
 
         <div class="bio-section">
             <h3>Bio</h3>
             
             {% if request.args.get('edit') == 'true' %}
-                <form action="/profile" method="POST">
                     <textarea name="bio" rows="4" placeholder="Write something about yourself here...">{{ user.bio if user.bio else ''}}</textarea>
-                    <button type="submit">Save Bio</button>
+                    <button type="submit" class="submit-btn">Save Bio</button>
                 </form>
             {% else %}
                 <p class="bio-text">
@@ -31,8 +46,8 @@
         </div>
 
         <div class="nav-links">
-            <a href="/shelves">Back to Shelves</a>
-            <a href="/logout">Logout</a>
+            <a href="{{ url_for('shelves') }}">Back to Shelves</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
         </div>
     </div>
 </body>
