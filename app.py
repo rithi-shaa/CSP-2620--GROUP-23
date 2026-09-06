@@ -470,10 +470,18 @@ def edit_book(book_id):
         author = request.form['author']
         genre = request.form['genre']
         publication_year = request.form['publication_year']
+        
+        # ---> INSERT THESE THREE LINES HERE <---
+        publisher = request.form.get('publisher', '')
+        isbn = request.form.get('isbn', '')
+        cover_image_url = request.form.get('cover_image_url', '')
 
         conn.execute(
-            'UPDATE Book SET title = ?, author = ?, genre = ?, publication_year = ? WHERE book_id = ?',
-            (title, author, genre, publication_year, book_id)
+            # ---> UPDATE YOUR SQL QUERY HERE TO INCLUDE THE NEW COLUMNS <---
+            '''UPDATE Book 
+               SET title = ?, author = ?, genre = ?, publication_year = ?, publisher = ?, isbn = ?, cover_image_url = ? 
+               WHERE book_id = ?''',
+            (title, author, genre, publication_year, publisher, isbn, cover_image_url, book_id)
         )
         conn.commit()
         conn.close()
