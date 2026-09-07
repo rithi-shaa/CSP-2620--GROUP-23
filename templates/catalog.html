@@ -10,13 +10,16 @@
     <form method="GET" action="/catalog">
         <input type="text" name="q" placeholder="Search by title or author..." value="{{ request.args.get('q', '') }}">
 
-        <select name="genre">
-            <option value="">All Genres</option>
-            <option value="Classic" {% if request.args.get('genre') == 'Classic' %}selected{% endif %}>Classic</option>
-            <option value="Dystopian" {% if request.args.get('genre') == 'Dystopian' %}selected{% endif %}>Dystopian</option>
-            <option value="Fantasy" {% if request.args.get('genre') == 'Fantasy' %}selected{% endif %}>Fantasy</option>
-            <option value="Mystery" {% if request.args.get('genre') == 'Mystery' %}selected{% endif %}>Mystery</option>
-        </select>
+       <input list="genre-options" name="genre" placeholder="Filter by genre..." value="{{ request.args.get('genre', '') }}">
+    <datalist id="genre-options">
+        <option value="Classic">
+        <option value="Dystopian">
+        <option value="Fantasy">
+        <option value="Mystery">
+        <option value="Romance">
+        <option value="Sci-Fi">
+        <option value="Drama">
+    </datalist>
 
         <input type="number" name="year" placeholder="Year (e.g. 1925)" value="{{ request.args.get('year', '') }}">
 
