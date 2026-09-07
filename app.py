@@ -390,6 +390,7 @@ def logout():
     flash("You have been logged out.")
     return redirect(url_for('login'))
 
+#add book
 @app.route('/add-book', methods=['GET', 'POST'])
 def add_book():
     if 'user_id' not in session:
@@ -401,12 +402,16 @@ def add_book():
         author = request.form['author']
         genre = request.form['genre']
         publication_year = request.form['publication_year']
+        publisher = request.form.get('publisher', '')
+        isbn = request.form.get('isbn', '')
+        cover_image_url = request.form.get('cover_image_url', '')
         created_by = session['user_id']
 
         conn = get_db_connection()
         conn.execute(
-            'INSERT INTO Book (title, author, genre, publication_year, created_by) VALUES (?, ?, ?, ?, ?)',
-            (title, author, genre, publication_year, created_by)
+            '''INSERT INTO Book (title, author, genre, publication_year, publisher, isbn, cover_image_url, created_by) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+            (title, author, genre, publication_year, publisher, isbn, cover_image_url, created_by)
         )
         conn.commit()
         conn.close()
@@ -416,6 +421,7 @@ def add_book():
 
     return render_template('add_book.html')
 
+#edit book
 @app.route('/edit-book/<int:book_id>', methods=['GET', 'POST'])
 def edit_book(book_id):
     if 'user_id' not in session:
@@ -462,6 +468,7 @@ def edit_book(book_id):
     conn.close()
     return render_template('edit_book.html', book=book)
 
+#delete book
 @app.route('/delete-book/<int:book_id>', methods=['POST'])
 def delete_book(book_id):
     if 'user_id' not in session:
