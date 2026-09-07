@@ -75,36 +75,6 @@ def catalog():
             if str(selected_year) == str(b.get("year", ""))
         ]
         
-    html = """
-    <h1>Book Catalog</h1>
-    <form method="GET" action="/catalog">
-        <input type="text" name="q" placeholder="Search by title or author..." value="{{ request.args.get('q', '') }}">
-
-        <select name="genre">
-            <option value="">All Genres</option>
-            <option value="Classic" {% if request.args.get('genre') == 'Classic' %}selected{% endif %}>Classic</option>
-            <option value="Dystopian" {% if request.args.get('genre') == 'Dystopian' %}selected{% endif %}>Dystopian</option>
-            <option value="Fantasy" {% if request.args.get('genre') == 'Fantasy' %}selected{% endif %}>Fantasy</option>
-            <option value="Mystery" {% if request.args.get('genre') == 'Mystery' %}selected{% endif %}>Mystery</option>
-        </select>
-
-        <input type="number" name="year" placeholder="Year (e.g. 1925)" value="{{ request.args.get('year', '') }}">
-
-        <button type="submit">Filter & Search</button>
-        <a href="/catalog">Reset</a>
-    </form>
-    <ul>
-        {% for book in filtered_books %}
-            <li>
-                <strong>{{ book.title }}</strong> by {{ book.author }} 
-                ({{ book.genre }}{% if book.year %}, {{ book.year }}{% endif %})<br>
-                {% if book.story %}<em>Story: {{ book.story }}</em>{% endif %}
-            </li>
-        {% else %}
-            <p>No books found matching your search.</p>
-        {% endfor %}
-    </ul>
-    """
     return render_template('catalog.html', filtered_books=filtered_books)
 
 #register page
@@ -471,13 +441,13 @@ def edit_book(book_id):
         genre = request.form['genre']
         publication_year = request.form['publication_year']
         
-        # ---> INSERT THESE THREE LINES HERE <---
+        
         publisher = request.form.get('publisher', '')
         isbn = request.form.get('isbn', '')
         cover_image_url = request.form.get('cover_image_url', '')
 
         conn.execute(
-            # ---> UPDATE YOUR SQL QUERY HERE TO INCLUDE THE NEW COLUMNS <---
+            
             '''UPDATE Book 
                SET title = ?, author = ?, genre = ?, publication_year = ?, publisher = ?, isbn = ?, cover_image_url = ? 
                WHERE book_id = ?''',
