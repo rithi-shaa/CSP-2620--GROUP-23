@@ -41,6 +41,12 @@
                 </div>
             </div>
 
+            <form action="{{ url_for('rename_shelf') }}" method="POST" id="rename-form-{{ shelf.shelf_id }}" class="rename-form" style="display:none;">
+                <input type="hidden" name="shelf_id" value="{{ shelf.shelf_id }}">
+                <input type="text" name="new_name" value="{{ shelf.shelf_name }}" required>
+            <button type="submit" class="submit-btn">Save</button>
+            </form>
+
             {% if shelf.books %}
                 <div class="filter-tabs" data-shelf="{{ shelf.shelf_id }}">
                     <button class="tab-btn active" data-filter="All">All</button>
