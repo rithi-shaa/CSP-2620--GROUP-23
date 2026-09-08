@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Book</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Edit Book</h1>
+    <form method="POST">
+        <label>Title:</label><br>
+        <input type="text" name="title" value="{{ book.title }}" required><br><br>
+
+        <label>Author:</label><br>
+        <input type="text" name="author" value="{{ book.author }}" required><br><br>
+
+        <label>Genre:</label><br>
+        <input type="text" name="genre" value="{{ book.genre }}"><br><br>
+
+        <label>Publication Year:</label><br>
+        <input type="number" name="publication_year" value="{{ book.publication_year }}"><br><br>
+
+        <label>Publisher:</label><br>
+        <input type="text" name="publisher" value="{{ book.publisher }}"><br><br>
+
+        <label>ISBN:</label><br>
+        <input type="text" name="isbn" value="{{ book.isbn }}"><br><br>
+
+        <label>Cover Image URL:</label><br>
+        <input type="url" name="cover_image_url" value="{{ book.cover_image_url }}"><br><br>
+
+        <button type="submit">Update Book</button>
+    </form>
+    <br>
+    <a href="{{ url_for('catalog') }}">Back to Catalog</a>
+</body>
+</html>
