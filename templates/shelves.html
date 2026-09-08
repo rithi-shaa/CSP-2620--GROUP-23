@@ -92,6 +92,11 @@
             });
         });
     });
+
+    function toggleRename(shelfId) {
+        const form = document.getElementById('rename-form-' + shelfId);
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
 </script>
 
     <a href="{{ url_for('index') }}" class="back-link">Back to Home</a>
