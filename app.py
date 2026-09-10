@@ -539,5 +539,17 @@ def add_log():
             flash("Pages read cannot be negative.")
             return redirect(url_for('add_log'))
 
+        conn.execute("""
+            INSERT INTO ReadingLog
+            (pages_read, log_date, book_id, user_id)
+            VALUES (?, ?, ?, ?)
+        """,
+        (
+            pages_read,
+            log_date,
+            book_id,
+            session['user_id']
+        ))
+
 if __name__ == '__main__':
     app.run(debug=True)
