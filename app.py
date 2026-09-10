@@ -583,5 +583,18 @@ def edit_log(log_id):
         session['user_id']
     )).fetchone()
 
+    if not log:
+        flash("Log not found.")
+        return redirect(url_for('reading_logs'))
+
+    if request.method == 'POST':
+
+        pages_read = int(request.form['pages_read'])
+        log_date = request.form['log_date']
+
+        if pages_read < 0:
+            flash("Pages read cannot be negative.")
+            return redirect(url_for('edit_log', log_id=log_id))
+
 if __name__ == '__main__':
     app.run(debug=True)
