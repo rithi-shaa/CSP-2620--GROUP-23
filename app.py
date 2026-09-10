@@ -596,5 +596,17 @@ def edit_log(log_id):
             flash("Pages read cannot be negative.")
             return redirect(url_for('edit_log', log_id=log_id))
 
+    conn.execute("""
+            UPDATE ReadingLog
+            SET pages_read = ?,
+                log_date = ?
+            WHERE log_id = ?
+        """,
+        (
+            pages_read,
+            log_date,
+            log_id
+        ))
+
 if __name__ == '__main__':
     app.run(debug=True)
