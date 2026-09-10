@@ -510,5 +510,12 @@ def reading_logs():
         ORDER BY log_date DESC
     """, (session['user_id'],)).fetchall()
 
+    conn.close()
+
+    return render_template(
+        'reading_logs.html',
+        logs=logs
+    )
+
 if __name__ == '__main__':
     app.run(debug=True)
