@@ -502,5 +502,13 @@ def reading_logs():
 
     conn = get_db_connection()
 
+    logs = conn.execute("""
+        SELECT ReadingLog.*, Book.title
+        FROM ReadingLog
+        JOIN Book ON ReadingLog.book_id = Book.book_id
+        WHERE ReadingLog.user_id = ?
+        ORDER BY log_date DESC
+    """, (session['user_id'],)).fetchall()
+
 if __name__ == '__main__':
     app.run(debug=True)
