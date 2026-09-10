@@ -551,5 +551,18 @@ def add_log():
             session['user_id']
         ))
 
+        conn.commit()
+        conn.close()
+
+        flash("Reading log added.")
+        return redirect(url_for('reading_logs'))
+
+    conn.close()
+
+    return render_template(
+        'add_log.html',
+        books=books
+    )
+
 if __name__ == '__main__':
     app.run(debug=True)
