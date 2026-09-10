@@ -564,5 +564,13 @@ def add_log():
         books=books
     )
 
+@app.route('/edit_log/<int:log_id>', methods=['GET', 'POST'])
+def edit_log(log_id):
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+
 if __name__ == '__main__':
     app.run(debug=True)
