@@ -529,5 +529,15 @@ def add_log():
         SELECT * FROM Book
     """).fetchall()
 
+    if request.method == 'POST':
+
+        book_id = request.form['book_id']
+        pages_read = int(request.form['pages_read'])
+        log_date = request.form['log_date']
+
+        if pages_read < 0:
+            flash("Pages read cannot be negative.")
+            return redirect(url_for('add_log'))
+
 if __name__ == '__main__':
     app.run(debug=True)
