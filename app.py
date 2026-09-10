@@ -495,5 +495,12 @@ def delete_book(book_id):
     flash('Book deleted successfully!')
     return redirect(url_for('catalog'))
 
+@app.route('/reading_logs')
+def reading_logs():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+
 if __name__ == '__main__':
     app.run(debug=True)
