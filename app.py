@@ -572,5 +572,16 @@ def edit_log(log_id):
 
     conn = get_db_connection()
 
+    log = conn.execute("""
+        SELECT *
+        FROM ReadingLog
+        WHERE log_id = ?
+        AND user_id = ?
+    """,
+    (
+        log_id,
+        session['user_id']
+    )).fetchone()
+
 if __name__ == '__main__':
     app.run(debug=True)
