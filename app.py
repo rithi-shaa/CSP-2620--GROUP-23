@@ -517,5 +517,17 @@ def reading_logs():
         logs=logs
     )
 
+@app.route('/add_log', methods=['GET', 'POST'])
+def add_log():
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+
+    books = conn.execute("""
+        SELECT * FROM Book
+    """).fetchall()
+
 if __name__ == '__main__':
     app.run(debug=True)
