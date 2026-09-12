@@ -609,5 +609,18 @@ def edit_log(log_id):
             log_id
         ))
 
+        conn.commit()
+        conn.close()
+
+        flash("Log updated successfully.")
+        return redirect(url_for('reading_logs'))
+
+    conn.close()
+
+    return render_template(
+        'edit_log.html',
+        log=log
+    )
+
 if __name__ == '__main__':
     app.run(debug=True)
