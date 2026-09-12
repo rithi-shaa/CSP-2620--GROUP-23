@@ -583,6 +583,12 @@ def edit_log(log_id):
         session['user_id']
     )).fetchone()
 
+    if not log:
+        conn.close()
+        flash("Log not found.")
+        return redirect(url_for('reading_logs'))
+
+    if request.method == 'POST':
 
 if __name__ == '__main__':
     app.run(debug=True)
