@@ -67,6 +67,47 @@ body.shelves-background {
     color: #3b2b1e;
 }
 
+.shelf-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.shelf-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.rename-toggle, .delete-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border: 1px solid #d9c9a3;
+    background: white;
+    color: #3b2b1e;
+    border-radius: 15px;
+    cursor: pointer;
+    font-family: 'Georgia', serif;
+}
+
+.delete-btn {
+    color: #a94442;
+    border-color: #a94442;
+}
+
+.rename-form {
+    margin-bottom: 16px;
+    display: flex;
+    gap: 8px;
+}
+
+.rename-form input {
+    padding: 8px 12px;
+    border: 1px solid #d9c9a3;
+    border-radius: 15px;
+    font-family: 'Georgia', serif;
+}
+
 .book-grid {
     display: flex;
     flex-wrap: wrap;
