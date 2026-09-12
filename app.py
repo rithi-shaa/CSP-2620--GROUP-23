@@ -584,6 +584,7 @@ def edit_log(log_id):
     )).fetchone()
 
     if not log:
+        conn.close()
         flash("Log not found.")
         return redirect(url_for('reading_logs'))
 
@@ -596,7 +597,7 @@ def edit_log(log_id):
             flash("Pages read cannot be negative.")
             return redirect(url_for('edit_log', log_id=log_id))
 
-    conn.execute("""
+        conn.execute("""
             UPDATE ReadingLog
             SET pages_read = ?,
                 log_date = ?
@@ -607,6 +608,19 @@ def edit_log(log_id):
             log_date,
             log_id
         ))
+
+        conn.commit()
+        conn.close()
+
+        flash("Log updated successfully.")
+        return redirect(url_for('reading_logs'))
+
+    conn.close()
+
+    return render_template(
+        'edit_log.html',
+        log=log
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)
