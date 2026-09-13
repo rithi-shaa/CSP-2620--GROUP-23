@@ -235,9 +235,19 @@ def login():
             session['user_id'] = user['user_id']
             session['username'] = user['username']
             flash("Logged in successfully!")
-            return redirect(url_for('index'))
         else:
             flash("Invalid username or password.")
+
+        import requests
+        try:
+            requests.post('http://127.0.0.1:8000/catalog/api/log-login/', json={
+                'username': user['username'],
+                'email': user['email']
+            }, timeout=2)
+        except requests.exceptions.RequestException:
+            pass
+
+            return redirect(url_for('index'))
 
     return render_template('index.html')
 

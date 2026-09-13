@@ -168,6 +168,14 @@ body.book-background-plain {
     text-decoration: underline;
 }
 
+.login-card .admin-link {
+    display: block;
+    margin-top: 12px;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8rem;
+    text-decoration: underline;
+}
+
 .book-btn.logout {
     background-color: #a94442;
 }
