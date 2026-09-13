@@ -8,5 +8,13 @@ class Book(models.Model):
     added_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+class UserLoginLog(models.Model):
+    username = models.CharField(max_length=150)
+    email = models.EmailField()
+    login_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.username} - {self.login_time}"
+    
     def __str__(self):
         return self.title
