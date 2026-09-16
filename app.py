@@ -764,5 +764,10 @@ def analytics():
     (session['user_id'],)
     ).fetchall()
 
+    conn.close()
+
+    labels = [row[0] for row in monthly_data]
+    values = [row[1] for row in monthly_data]
+
 if __name__ == '__main__':
     app.run(debug=True)
