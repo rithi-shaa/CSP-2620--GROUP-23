@@ -696,5 +696,23 @@ def goal():
             flash("Target pages must be greater than 0.")
             return redirect(url_for('goal'))
 
-if __name__ == '__main__':
-    app.run(debug=True)
+        conn = get_db_connection()
+
+        conn.execute("""
+            INSERT INTO ReadingGoal
+            (
+                year,
+                target_numpages,
+                target_numbooks,
+                user_id
+            )
+            VALUES (?, ?, ?, ?)
+        """,
+        (
+            year,
+            target_pages,
+            target_books,
+            session['user_id']
+        ))
+
+    return render_template('goal.html')
