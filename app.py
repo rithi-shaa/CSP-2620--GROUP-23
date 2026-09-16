@@ -632,5 +632,13 @@ def edit_log(log_id):
         log=log
     )
 
+@app.route('/delete_log/<int:log_id>')
+def delete_log(log_id):
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+
 if __name__ == '__main__':
     app.run(debug=True)
