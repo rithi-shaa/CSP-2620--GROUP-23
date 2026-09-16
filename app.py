@@ -731,5 +731,15 @@ def analytics():
 
     conn = get_db_connection()
 
+    conn = get_db_connection()
+
+    total_pages = conn.execute("""
+        SELECT SUM(pages_read)
+        FROM ReadingLog
+        WHERE user_id = ?
+    """,
+    (session['user_id'],)
+    ).fetchone()[0]
+
 if __name__ == '__main__':
     app.run(debug=True)
