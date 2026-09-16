@@ -723,5 +723,13 @@ def goal():
 
     return render_template('reading_goal.html')
 
+@app.route('/analytics')
+def analytics():
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+
 if __name__ == '__main__':
     app.run(debug=True)
