@@ -742,5 +742,13 @@ def analytics():
     if total_pages is None:
        total_pages = 0
 
+    total_logs = conn.execute("""
+        SELECT COUNT(*)
+        FROM ReadingLog
+        WHERE user_id = ?
+    """,
+    (session['user_id'],)
+    ).fetchone()[0]
+    
 if __name__ == '__main__':
     app.run(debug=True)
