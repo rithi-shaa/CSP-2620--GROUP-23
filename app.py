@@ -749,6 +749,20 @@ def analytics():
     """,
     (session['user_id'],)
     ).fetchone()[0]
-    
+
+    if total_logs is None:
+        total_logs = 0
+
+    monthly_data = conn.execute("""
+        SELECT
+            strftime('%m', log_date) AS month,
+            SUM(pages_read)
+        FROM ReadingLog
+        WHERE user_id = ?
+        GROUP BY month
+    """,
+    (session['user_id'],)
+    ).fetchall()
+
 if __name__ == '__main__':
     app.run(debug=True)
