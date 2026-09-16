@@ -769,5 +769,13 @@ def analytics():
     labels = [row[0] for row in monthly_data]
     values = [row[1] for row in monthly_data]
 
+    return render_template(
+        'analytics.html',
+        total_pages=total_pages,
+        total_logs=total_logs,
+        labels=labels,
+        values=values
+    )
+
 if __name__ == '__main__':
     app.run(debug=True)
