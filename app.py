@@ -407,6 +407,11 @@ def add_book():
         flash('Please log in to add a book.')
         return redirect(url_for('login'))
 
+    # Add this check here:
+    if session.get('username') != 'admin':
+        flash('Only administrators are authorized to add books manually.')
+        return redirect(url_for('catalog'))
+
     if request.method == 'POST':
         title = request.form['title']
         author = request.form['author']
