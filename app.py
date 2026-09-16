@@ -662,5 +662,31 @@ def delete_log(log_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
+    conn = get_db_connection()
+
+    conn.execute("""
+        DELETE FROM ReadingLog
+        WHERE log_id = ?
+        AND user_id = ?
+    """,
+    (
+        log_id,
+        session['user_id']
+    ))
+
+    conn.commit()
+    conn.close()
+
+    flash("Log deleted.")
+    return redirect(url_for('reading_logs'))
+
+@app.route('/goal', methods=['GET', 'POST'])
+def goal():
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+
 if __name__ == '__main__':
     app.run(debug=True)
