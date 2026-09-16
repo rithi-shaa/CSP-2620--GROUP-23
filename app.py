@@ -731,8 +731,6 @@ def analytics():
 
     conn = get_db_connection()
 
-    conn = get_db_connection()
-
     total_pages = conn.execute("""
         SELECT SUM(pages_read)
         FROM ReadingLog
