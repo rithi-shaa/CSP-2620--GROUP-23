@@ -650,5 +650,11 @@ def delete_log(log_id):
         session['user_id']
     ))
 
+    conn.commit()
+    conn.close()
+
+    flash("Log deleted.")
+    return redirect(url_for('reading_logs'))
+
 if __name__ == '__main__':
     app.run(debug=True)
