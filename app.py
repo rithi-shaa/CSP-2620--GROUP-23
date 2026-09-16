@@ -688,5 +688,9 @@ def goal():
 
     if request.method == 'POST':
 
+        year = request.form['year']
+        target_pages = int(request.form['target_pages'])
+        target_books = int(request.form['target_books'])
+
 if __name__ == '__main__':
     app.run(debug=True)
