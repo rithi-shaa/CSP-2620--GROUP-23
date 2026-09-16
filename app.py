@@ -715,4 +715,13 @@ def goal():
             session['user_id']
         ))
 
-    return render_template('goal.html')
+        conn.commit()
+        conn.close()
+
+        flash("Goal added.")
+        return redirect(url_for('goal'))
+
+    return render_template('reading_goal.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
