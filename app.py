@@ -692,5 +692,9 @@ def goal():
         target_pages = int(request.form['target_pages'])
         target_books = int(request.form['target_books'])
 
+        if target_pages <= 0:
+            flash("Target pages must be greater than 0.")
+            return redirect(url_for('goal'))
+
 if __name__ == '__main__':
     app.run(debug=True)
