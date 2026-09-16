@@ -640,5 +640,15 @@ def delete_log(log_id):
 
     conn = get_db_connection()
 
+    conn.execute("""
+        DELETE FROM ReadingLog
+        WHERE log_id = ?
+        AND user_id = ?
+    """,
+    (
+        log_id,
+        session['user_id']
+    ))
+
 if __name__ == '__main__':
     app.run(debug=True)
