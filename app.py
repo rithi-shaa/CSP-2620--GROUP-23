@@ -741,5 +741,8 @@ def analytics():
     (session['user_id'],)
     ).fetchone()[0]
 
+    if total_pages is None:
+       total_pages = 0
+
 if __name__ == '__main__':
     app.run(debug=True)
