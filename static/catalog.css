@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    padding: 40px;
+    background-color: #ede8dc;
+    font-family: 'Georgia', serif;
+    color: #2c2c2c;
+}
+
+h1 {
+    color: #3b2b1e;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* Filter & Search Bar Area */
+form[method="GET"] {
+    background: #fdfbf7;
+    border: 1px solid #d4cebe;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+}
+
+form[method="GET"] input[type="text"]:first-of-type {
+    grid-column: span 3;
+}
+
+/* Catalog Grid & Cards */
+ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+/* Target list items as individual cards */
+ul li {
+    background: #fdfbf7;
+    border: 1px solid #d4cebe;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+ul li img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #e3dec9;
+}
+
+/* Edit / Delete link container */
+ul li p, ul li div.actions {
+    margin-top: auto;
+}
+
+ul li a.edit-btn, ul li a.delete-btn {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-right: 8px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+ul li a.edit-btn {
+    background-color: #8c6d53;
+    color: white;
+}
+
+ul li a.delete-btn {
+    background-color: #a94442;
+    color: white;
+}

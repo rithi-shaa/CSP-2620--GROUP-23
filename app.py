@@ -406,6 +406,11 @@ def add_book():
         flash('Please log in to add a book.')
         return redirect(url_for('login'))
 
+    # Add this check here:
+    if session.get('username') != 'admin':
+        flash('Only administrators are authorized to add books manually.')
+        return redirect(url_for('catalog'))
+
     if request.method == 'POST':
         title = request.form['title']
         author = request.form['author']
@@ -629,6 +634,151 @@ def edit_log(log_id):
     return render_template(
         'edit_log.html',
         log=log
+    )
+
+@app.route('/delete_log/<int:log_id>')
+def delete_log(log_id):
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+
+    conn.execute("""
+        DELETE FROM ReadingLog
+        WHERE log_id = ?
+        AND user_id = ?
+    """,
+    (
+        log_id,
+        session['user_id']
+    ))
+
+    conn.commit()
+    conn.close()
+
+    flash("Log deleted.")
+    return redirect(url_for('reading_logs'))
+
+@app.route('/delete_log/<int:log_id>')
+def delete_log(log_id):
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+
+    conn.execute("""
+        DELETE FROM ReadingLog
+        WHERE log_id = ?
+        AND user_id = ?
+    """,
+    (
+        log_id,
+        session['user_id']
+    ))
+
+    conn.commit()
+    conn.close()
+
+    flash("Log deleted.")
+    return redirect(url_for('reading_logs'))
+
+@app.route('/goal', methods=['GET', 'POST'])
+def goal():
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+
+        year = request.form['year']
+        target_pages = int(request.form['target_pages'])
+        target_books = int(request.form['target_books'])
+
+        if target_pages <= 0:
+            flash("Target pages must be greater than 0.")
+            return redirect(url_for('goal'))
+
+        conn = get_db_connection()
+
+        conn.execute("""
+            INSERT INTO ReadingGoal
+            (
+                year,
+                target_numpages,
+                target_numbooks,
+                user_id
+            )
+            VALUES (?, ?, ?, ?)
+        """,
+        (
+            year,
+            target_pages,
+            target_books,
+            session['user_id']
+        ))
+
+        conn.commit()
+        conn.close()
+
+        flash("Goal added.")
+        return redirect(url_for('goal'))
+
+    return render_template('reading_goal.html')
+
+@app.route('/analytics')
+def analytics():
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+
+    total_pages = conn.execute("""
+        SELECT SUM(pages_read)
+        FROM ReadingLog
+        WHERE user_id = ?
+    """,
+    (session['user_id'],)
+    ).fetchone()[0]
+
+    if total_pages is None:
+       total_pages = 0
+
+    total_logs = conn.execute("""
+        SELECT COUNT(*)
+        FROM ReadingLog
+        WHERE user_id = ?
+    """,
+    (session['user_id'],)
+    ).fetchone()[0]
+
+    if total_logs is None:
+        total_logs = 0
+
+    monthly_data = conn.execute("""
+        SELECT
+            strftime('%m', log_date) AS month,
+            SUM(pages_read)
+        FROM ReadingLog
+        WHERE user_id = ?
+        GROUP BY month
+    """,
+    (session['user_id'],)
+    ).fetchall()
+
+    conn.close()
+
+    labels = [row[0] for row in monthly_data]
+    values = [row[1] for row in monthly_data]
+
+    return render_template(
+        'analytics.html',
+        total_pages=total_pages,
+        total_logs=total_logs,
+        labels=labels,
+        values=values
     )
 
 if __name__ == '__main__':
