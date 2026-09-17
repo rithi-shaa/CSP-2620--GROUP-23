@@ -2,28 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard - Booksession</title>
+    <title>Admin Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h2>Welcome, {{ request.user.username }}</h2>
-    <a href="{% url 'admin_catalog' %}">Book Catalog</a>
+    <h1>Admin Dashboard</h1>
 
-    <h3>User Login History</h3>
-    <table border="1">
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Login Time</th>
-        </tr>
-        {% for log in logs %}
-        <tr>
-            <td>{{ log.username }}</td>
-            <td>{{ log.email }}</td>
-            <td>{{ log.login_time|date:"M d, Y - h:i A" }}</td>
-        </tr>
+    <div class="stats-container">
+        <p><strong>Total Books:</strong> {{ total_books }}</p>
+        <p><strong>Total Users:</strong> {{ total_users }}</p>
+    </div>
+
+    <nav>
+        <a href="{% url 'add_book' %}">Add Book</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+
+    <h2>Recent Login History</h2>
+    <ul>
+        {% for log in login_logs %}
+            <li>{{ log.user.username }} logged in at {{ log.login_time }}</li>
         {% empty %}
-        <tr><td colspan="3">No logins recorded yet.</td></tr>
+            <li>No login history found.</li>
         {% endfor %}
-    </table>
+    </ul>
 </body>
 </html>
