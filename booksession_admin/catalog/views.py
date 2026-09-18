@@ -2,8 +2,39 @@ import requests
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils import timezone
 from django.shortcuts import render, redirect
 from .models import UserProfile, Book, Shelf, ShelfBook, UserLoginLog
+
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        full_name = request.POST.get('full_name')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return redirect('register')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username is already taken.")
+            return redirect('register')
+
+        try:
+            user = User.objects.create_user(username=username, email=email, password=password)
+            profile, created = UserProfile.objects.get_or_create(user=user)
+            profile.full_name = full_name
+            profile.save()
+
+            messages.success(request, "Registration successful! You can now log in.")
+            return redirect('login')
+        except Exception as e:
+            messages.error(request, f"An error occurred: {e}")
+            return redirect('register')
+
+    return render(request, 'catalog/user_register.html')
 
 def profile(request):
     if not request.user.is_authenticated:
@@ -72,7 +103,7 @@ def login_view(request):
         else:
             messages.error(request, "Invalid username or password.")
             
-    return render(request, 'catalog/login.html')
+    return render(request, 'catalog/user_login.html')
 
 def index(request):
     books = Book.objects.all().order_by('-created_at')[:10]
