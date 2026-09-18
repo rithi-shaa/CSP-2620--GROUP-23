@@ -147,3 +147,18 @@ def save_book_from_api(request):
         return redirect('admin_home')
         
     return redirect('search_google_books')
+
+def manual_book_entry(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        authors = request.POST.get('authors')
+        published_date = request.POST.get('published_date')
+        
+        Book.objects.create(
+            title=title,
+            author=authors,
+            published_date=published_date if published_date else None
+        )
+        return redirect('admin_home')
+        
+    return render(request, 'catalog/manual_entry.html')
