@@ -24,6 +24,8 @@ urlpatterns = [
 
     
     path('search/', views.search_google_books, name='search_google_books'),
+    path('manual-entry/', views.manual_book_entry, name='manual_book_entry'),
+    path('save-book/', views.save_book_from_api, name='save_book_from_api'),
     # path('api/log-login/', views.log_login, name='log_login'),
 ]
 

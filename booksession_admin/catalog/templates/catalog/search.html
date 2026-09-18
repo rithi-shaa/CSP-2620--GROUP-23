@@ -36,11 +36,12 @@
                     </li>
                 {% endwith %}
             {% endfor %}
-        </ul>
-    {% elif query %}
+       </ul>
+{% else %}
+    {% if query %}
         <p>No books found for "{{ query }}".</p>
     {% endif %}
-
+{% endif %}
     <br>
     <a href="{% url 'admin_home' %}">Back to Home</a>
 </body>
