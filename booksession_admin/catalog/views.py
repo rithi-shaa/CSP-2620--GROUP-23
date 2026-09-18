@@ -2,6 +2,10 @@ import requests
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from .models import UserProfile, Book, Shelf, ShelfBook, UserLoginLog
@@ -35,6 +39,68 @@ def register_view(request):
             return redirect('register')
 
     return render(request, 'catalog/user_register.html')
+
+def forgot_password_view(request):
+    """Step 1: User enters email to request a password reset link."""
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        users = User.objects.filter(email=email)
+        
+        if users.exists():
+            for user in users:
+                token = default_token_generator.make_token(user)
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                
+                reset_link = request.build_absolute_uri(
+                    f"/catalog/password-reset/{uid}/{token}/"
+                )
+                
+                send_mail(
+                    subject="Password Reset Request",
+                    message=f"Click the link to reset your password: {reset_link}",
+                    from_email=None,  # Uses DEFAULT_FROM_EMAIL from settings.py
+                    recipient_list=[user.email],
+                )
+                
+            messages.success(request, "Password reset instructions have been sent to your email.")
+        else:
+            messages.error(request, "No account found with that email address.")
+            
+        return redirect('reset_password')
+
+    return render(request, 'catalog/reset_password.html', {'token': None})
+
+
+def reset_password_view(request, uidb64, token):
+    """Step 2: User clicks the email link, verifies the token, and enters a new password."""
+    try:
+        # Decode the user ID from the URL
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    # check if user exists and token is valid
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
+
+            if password != confirm_password:
+                messages.error(request, "Passwords do not match.")
+                return redirect('reset_password_token', uidb64=uidb64, token=token)
+
+            #save the new password securely
+            user.set_password(password)
+            user.save()
+            
+            messages.success(request, "Your password has been successfully reset. You can now login.")
+            return redirect('login')
+
+        return render(request, 'catalog/reset_password.html', {'token': token})
+    else:
+        messages.error(request, "The password reset link is invalid or has expired.")
+        return redirect('reset_password')
 
 def profile(request):
     if not request.user.is_authenticated:
