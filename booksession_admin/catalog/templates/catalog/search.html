@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Books</title>
+</head>
+<body>
+    <h1>Search Books (Google Books API)</h1>
+
+    <!-- Search Form -->
+    <form method="GET" action="{% url 'search_google_books' %}">
+        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search title or author..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    <hr>
+
+    <!-- Results List -->
+    {% if books %}
+        <h2>Results:</h2>
+        <ul>
+            {% for item in books %}
+                {% with volume=item.volumeInfo %}
+                    <li style="margin-bottom: 15px;">
+                        <strong>{{ volume.title }}</strong> 
+                        {% if volume.authors %} by {{ volume.authors|join:", " }}{% endif %}
+                        
+                        <!-- Form to save book directly to database -->
+                        <form method="POST" action="{% url 'save_book_from_api' %}" style="display:inline; margin-left: 10px;">
+                            {% csrf_token %}
+                            <input type="hidden" name="title" value="{{ volume.title }}">
+                            <input type="hidden" name="authors" value="{% if volume.authors %}{{ volume.authors|join:', ' }}{% endif %}">
+                            <input type="hidden" name="published_date" value="{{ volume.publishedDate }}">
+                            <button type="submit">Add to Catalog</button>
+                        </form>
+                    </li>
+                {% endwith %}
+            {% endfor %}
+        </ul>
+    {% elif query %}
+        <p>No books found for "{{ query }}".</p>
+    {% endif %}
+
+    <br>
+    <a href="{% url 'admin_home' %}">Back to Home</a>
+</body>
+</html>
