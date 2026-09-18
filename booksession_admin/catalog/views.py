@@ -1,14 +1,15 @@
 import requests
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.utils import timezone
-from django.shortcuts import render, redirect
-from .models import UserProfile, Book, Shelf, ShelfBook, UserLoginLog
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import UserProfile, Book, Shelf, ShelfBook, UserLoginLog, User
 
 def register_view(request):
     if request.method == 'POST':
@@ -154,6 +155,27 @@ def admin_home(request):
 
     return render(request, 'catalog/admin_home.html', context)
 
+@staff_member_required(login_url='admin_login')
+def admin_genre_shelves(request):
+    """Admin view to see books organized into shelves by genre."""
+    #get all genre available in db
+    genres = Book.objects.values_list('genre', flat=True).distinct()
+    
+    genre_shelves = []
+    for genre in genres:
+        if genre: #make sure genre is not empty
+            books_in_genre = Book.objects.filter(genre=genre)
+            genre_shelves.append({
+                'genre_name': genre,
+                'books': books_in_genre
+            })
+
+    context = {
+        'genre_shelves': genre_shelves,
+        'username': request.user.username,
+    }
+    return render(request, 'catalog/admin_genre_shelves.html', context)
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -176,29 +198,72 @@ def index(request):
     
     return render(request, 'index.html', {'books': books})
 
+@login_required(login_url='login')
+def shelves(request):
+    """Displays the main collections overview page (just the blocks)."""
+    my_collections = Shelf.objects.filter(user=request.user)
+    
+    context = {
+        'collections': my_collections,
+        'username': request.user.username
+    }
+    return render(request, 'catalog/collections.html', context)
+
+
+@login_required(login_url='login')
+def collection_detail(request, shelf_id):
+    """Displays the books inside a specific collection when its block is clicked."""
+    # Get the specific collection and make sure it belongs to the logged-in user
+    collection = get_object_or_404(Shelf, shelf_id=shelf_id, user=request.user)
+    
+    #get all books tied to this specific collection
+    shelf_books = ShelfBook.objects.filter(shelf=collection).select_related('book')
+    books = [{'book': sb.book, 'reading_status': sb.reading_status} for sb in shelf_books]
+    
+    context = {
+        'collection': collection,
+        'books': books,
+        'username': request.user.username
+    }
+    return render(request, 'catalog/collection_detail.html', context)
+
+@login_required(login_url='login')
+def rename_shelf(request):
+    """Handles renaming an existing collection for the user."""
+    if request.method == 'POST':
+        shelf_id = request.POST.get('shelf_id')
+        new_name = request.POST.get('new_name')
+        
+        # Ensure the collection belongs to the logged-in user
+        collection = get_object_or_404(Shelf, shelf_id=shelf_id, user=request.user)
+        if new_name:
+            collection.shelf_name = new_name
+            collection.save()
+            messages.success(request, "Collection renamed successfully.")
+        else:
+            messages.error(request, "Collection name cannot be empty.")
+            
+    return redirect('shelves')
+
+@login_required(login_url='login')
+def delete_shelf(request):
+    """Handles deleting a user's collection."""
+    if request.method == 'POST':
+        shelf_id = request.POST.get('shelf_id')
+        
+        # Ensure the collection belongs to the logged-in user
+        collection = get_object_or_404(Shelf, shelf_id=shelf_id, user=request.user)
+        collection.delete()
+        messages.success(request, "Collection deleted successfully.")
+        
+    return redirect('shelves')
+
 def logout_view(request):
     from django.contrib.auth import logout
     logout(request)
     messages.info(request, "You have been logged out.")
     return redirect('login')
 
-def shelves(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-
-    my_shelves = Shelf.objects.filter(user=request.user)
-    shelves_with_books = []
-
-    for shelf in my_shelves:
-        shelf_books = ShelfBook.objects.filter(shelf=shelf).select_related('book')
-        books = [{'book': sb.book, 'reading_status': sb.reading_status} for sb in shelf_books]
-        shelves_with_books.append({
-            'shelf_id': shelf.shelf_id,
-            'shelf_name': shelf.shelf_name,
-            'books': books
-        })
-
-    return render(request, 'shelves.html', {'shelves': shelves_with_books, 'username': request.user.username})
 
 #search function
 @login_required

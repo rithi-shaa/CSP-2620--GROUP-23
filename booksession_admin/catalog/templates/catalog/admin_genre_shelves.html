@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Genre Shelves</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'catalog/shelves.css' %}">
+</head>
+<body class="shelves-background">
+
+    <div class="shelves-header">
+        <div class="avatar-circle">{{ username.0|upper }}</div>
+        <h2>Admin Genre Shelves</h2>
+    </div>
+
+    <div class="shelves-list">
+        {% for shelf in genre_shelves %}
+            <div class="shelf-card">
+                <div class="shelf-header">
+                    <h3>Genre: {{ shelf.genre_name }}</h3>
+                </div>
+
+                {% if shelf.books %}
+                    <div class="book-grid">
+                        {% for book in shelf.books %}
+                            <div class="book-item">
+                                <div class="book-cover-placeholder">{{ book.title.0|upper }}</div>
+                                <p class="book-title">{{ book.title }}</p>
+                                <p class="book-status">Author: {{ book.author }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="empty-shelf">No books found under this genre.</p>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p class="empty-shelf" style="text-align: center;">No genres available yet.</p>
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'admin_home' %}" class="back-link">Back to Admin Home</a>
+
+</body>
+</html>
