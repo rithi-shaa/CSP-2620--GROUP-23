@@ -228,6 +228,18 @@ def collection_detail(request, shelf_id):
     return render(request, 'catalog/collection_detail.html', context)
 
 @login_required(login_url='login')
+def add_shelf(request):
+    """Handles adding a new collection/shelf for the user."""
+    if request.method == 'POST':
+        shelf_name = request.POST.get('shelf_name')
+        if shelf_name:
+            Shelf.objects.create(shelf_name=shelf_name, user=request.user)
+            messages.success(request, "Collection added successfully.")
+        else:
+            messages.error(request, "Collection name cannot be empty.")
+    return redirect('shelves')
+
+@login_required(login_url='login')
 def rename_shelf(request):
     """Handles renaming an existing collection for the user."""
     if request.method == 'POST':
