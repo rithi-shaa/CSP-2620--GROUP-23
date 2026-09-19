@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Collections</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'catalog/shelves.css' %}">
+</head>
+<body class="shelves-background">
+
+    <div class="shelves-header">
+        <div class="avatar-circle">{{ username.0|upper }}</div>
+        <h2>MY COLLECTIONS</h2>
+    </div>
+
+    {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Add Collection Form -->
+    <form action="{% url 'add_shelf' %}" method="POST" class="add-shelf-form">
+        {% csrf_token %}
+        <input type="text" name="shelf_name" placeholder="New collection name" required>
+        <button type="submit" class="submit-btn">Add Collection</button>
+    </form>
+
+    <div class="shelves-list">
+        {% for collection in collections %}
+            <!-- this block navigates to its detail page -->
+            <div class="shelf-card" style="cursor: pointer;" onclick="location.href=`{% url 'collection_detail' collection.shelf_id %}`"></div>
+                <div class="shelf-header">
+                    <h3>{{ collection.shelf_name }}</h3>
+                    <div class="shelf-actions" onclick="event.stopPropagation();">
+                        <button class="rename-toggle" type="button" onclick="toggleRename('{{ collection.shelf_id }}')">Rename</button>
+                        <form action="{% url 'delete_shelf' %}" method="POST" style="display:inline;" onsubmit="return confirm('Delete this collection?');">
+                            {% csrf_token %}
+                            <input type="hidden" name="shelf_id" value="{{ collection.shelf_id }}">
+                            <button type="submit" class="delete-btn">Delete</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- rename -->
+                <form action="{% url 'rename_shelf' %}" method="POST" id="rename-form-{{ collection.shelf_id }}" class="rename-form" style="display:none;" onclick="event.stopPropagation();">
+                    {% csrf_token %}
+                    <input type="hidden" name="shelf_id" value="{{ collection.shelf_id }}">
+                    <input type="text" name="new_name" value="{{ collection.shelf_name }}" required>
+                    <button type="submit" class="submit-btn">Save</button>
+                </form>
+            </div>
+        {% empty %}
+            <p class="empty-shelf" style="text-align: center;">No collections created yet.</p>
+        {% endfor %}
+    </div>
+
+    <script>
+        function toggleRename(shelfId) {
+            const form = document.getElementById('rename-form-' + shelfId);
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+
+    <a href="{% url 'index' %}" class="back-link">Back to Home</a>
+
+</body>
+</html>

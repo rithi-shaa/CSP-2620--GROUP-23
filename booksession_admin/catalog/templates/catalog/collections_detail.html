@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ collection.shelf_name }} - Books</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'catalog/shelves.css' %}">
+</head>
+<body class="shelves-background">
+
+    <div class="shelves-header">
+        <h2>{{ collection.shelf_name }}</h2>
+    </div>
+
+    {% if books %}
+        <div class="filter-tabs" data-shelf="{{ collection.shelf_id }}">
+            <button class="tab-btn active" data-filter="All" type="button">All</button>
+            <button class="tab-btn" data-filter="Want to Read" type="button">Want to Read</button>
+            <button class="tab-btn" data-filter="Currently Reading" type="button">Currently Reading</button>
+            <button class="tab-btn" data-filter="Completed" type="button">Completed</button>
+        </div>
+
+        <div class="book-grid" id="grid-{{ collection.shelf_id }}">
+            {% for item in books %}
+                <div class="book-item" data-status="{{ item.reading_status }}">
+                    <div class="book-cover-placeholder">{{ item.book.title.0|upper }}</div>
+                    <p class="book-title">{{ item.book.title }}</p>
+                    <p class="book-status">{{ item.reading_status }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-shelf" style="text-align: center;">No books added to this collection yet.</p>
+    {% endif %}
+
+    <a href="{% url 'shelves' %}" class="back-link">Back to Collections</a>
+
+    <script>
+        document.querySelectorAll('.filter-tabs').forEach(tabGroup => {
+            const shelfId = tabGroup.dataset.shelf;
+            const grid = document.getElementById('grid-' + shelfId);
+
+            tabGroup.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabGroup.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const filter = btn.dataset.filter;
+                    grid.querySelectorAll('.book-item').forEach(item => {
+                        if (filter === 'All' || item.dataset.status === filter) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
