@@ -130,3 +130,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'booksession9@gmail.com'
 EMAIL_HOST_PASSWORD = os.getenv("MAIL_PASSWORD")
 DEFAULT_FROM_EMAIL = 'Booksession <booksession9@gmail.com>'
+
+LOGIN_URL = 'login'
