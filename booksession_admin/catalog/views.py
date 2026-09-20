@@ -283,26 +283,25 @@ def admin_home(request):
     logs = UserLoginLog.objects.all().order_by('-login_time')
     return render(request, 'catalog/home.html', {'logs': logs})
 
-
 def search_google_books(request):
     query = request.GET.get('q', '')
     books = None
     
     if query:
-        api_url = f"https://www.googleapis.com/books/v1/volumes?q={query}"
+        api_url = "https://www.googleapis.com/books/v1/volumes"
         try:
-            response = requests.get(api_url)
+            response = requests.get(api_url, params={'q': query}, timeout=5)
+            print("--- API STATUS:", response.status_code)
             response.raise_for_status()
-            data = response.json()
+            data = response.json() 
+            print("--- API DATA KEYS:", data.keys() if isinstance(data, dict) else data)
             
-            # Fallback if no books found
-            if 'items' not in data or not data['items']:
-                return redirect('manual_book_entry')
-                
-            books = data['items']
-        except requests.exceptions.RequestException:
-            # Fallback if API fails
-            return redirect('manual_book_entry')
+            if 'items' in data and data['items']:
+                books = data['items']
+            else:
+                print("--- WARNING: 'items' not found or empty in data!")
+        except Exception as e:
+            print("--- API ERROR:", e)
 
     return render(request, 'catalog/search.html', {'books': books, 'query': query})
 

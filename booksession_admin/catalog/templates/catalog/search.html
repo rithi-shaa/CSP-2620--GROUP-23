@@ -14,6 +14,13 @@
     </form>
 
     <hr>
+{% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li style="color: red;">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 
     <!-- Results List -->
     {% if books %}
