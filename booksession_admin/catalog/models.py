@@ -43,3 +43,13 @@ class ShelfBook(models.Model):
 
     def __str__(self):
         return f"{self.book.title} on {self.shelf.shelf_name}"
+
+class Review(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=[(i, f"{i} Stars") for i in range(1, 6)])
+    review_text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.book.title} - {self.rating} Stars by {self.user.username}"
