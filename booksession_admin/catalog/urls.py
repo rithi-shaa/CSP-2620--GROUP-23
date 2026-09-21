@@ -21,12 +21,15 @@ urlpatterns = [
 
     #admin
     path('admin/genre-shelves/', views.admin_genre_shelves, name='admin_genre_shelves'),
-
+    path('admin/add-book/', views.manual_book_entry, name='add_book'),
     
     path('search/', views.search_google_books, name='search_google_books'),
     path('manual-entry/', views.manual_book_entry, name='manual_book_entry'),
     path('save-book/', views.save_book_from_api, name='save_book_from_api'),
     path('books/', views.book_catalog, name='book_catalog'),
+    path('books/<int:pk>/edit/', views.edit_book, name='edit_book'),
+    path('books/<int:pk>/delete/', views.delete_book, name='delete_book'),
+
     # path('api/log-login/', views.log_login, name='log_login'),
 ]
 

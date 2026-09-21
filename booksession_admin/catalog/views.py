@@ -135,9 +135,9 @@ def admin_login(request):
             
             return redirect('admin_home')
         else:
-            return render(request, 'catalog/login.html', {'error': 'Invalid credentials or not an admin.'})
+            return render(request, 'catalog/admin_login.html', {'error': 'Invalid credentials or not an admin.'})
             
-    return render(request, 'catalog/login.html')
+    return render(request, 'catalog/admin_login.html')
 
 def admin_home(request):
     if not request.user.is_authenticated or not request.user.is_staff:
@@ -282,7 +282,7 @@ def logout_view(request):
 @login_required
 def admin_home(request):
     logs = UserLoginLog.objects.all().order_by('-login_time')
-    return render(request, 'catalog/home.html', {'logs': logs})
+    return render(request, 'catalog/admin_home.html', {'logs': logs})
 
 def search_google_books(request):
     print("=== SEARCH VIEW HIT ===")
