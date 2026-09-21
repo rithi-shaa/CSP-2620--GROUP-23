@@ -290,30 +290,25 @@ def search_google_books(request):
     books = None
     
     if query:
-        books = [
-            {
-                'volumeInfo': {
-                    'title': 'Test Clean Code Book',
-                    'authors': ['Robert C. Martin'],
-                    'publishedDate': '2008'
-                }
-            }
-        ]
-        # api_url = "https://www.googleapis.com/books/v1/volumes"
-        # try:
-        #     response = requests.get(api_url, params={'q': query}, timeout=5)
-        #     print("--- API STATUS:", response.status_code)
-        #     response.raise_for_status()
-        #     data = response.json() 
-        #     print("--- API DATA KEYS:", data.keys() if isinstance(data, dict) else data)
+        api_url = "https://www.googleapis.com/books/v1/volumes"
+        try:
+            response = requests.get(api_url, params={'q': query, 'key': 'AIzaSyAFRsqeZf64pEnbhAjSxUOonmpD6QWw1p0'}, timeout=5)
+            print("--- API STATUS:", response.status_code)
+            response.raise_for_status()
+            data = response.json()
             
-        #     if 'items' in data and data['items']:
-        #         books = data['items']
-        #     else:
-        #         print("--- WARNING: 'items' not found or empty in data!")
-        # except Exception as e:
-        #     print("--- API ERROR:", e)
-
+            if 'items' in data and data['items']:
+                books = data['items']
+            else:
+                print("--- WARNING: 'items' not found or empty in data!")
+        except Exception as e:
+            print("--- API ERROR:", e)
+            books = []
+            
+        # Fallback mechanism: if API fails or returns no books, redirect to manual entry
+        if not books:
+            return redirect('manual_book_entry')
+            
     return render(request, 'catalog/search.html', {'books': books, 'query': query})
 
 def save_book_from_api(request):
@@ -337,7 +332,7 @@ def save_book_from_api(request):
             year=year_val
         )
         
-    return redirect('search_google_books')
+    return redirect('book_catalog')
 
 def book_catalog(request):
     books = Book.objects.all()
@@ -354,7 +349,7 @@ def book_catalog(request):
     if year:
         books = books.filter(year=year)
 
-    return render(request, 'catalog.html', {'books': books})
+    return render(request, 'catalog/catalog.html', {'books': books})
 
 def manual_book_entry(request):
     if request.method == 'POST':
