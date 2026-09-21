@@ -379,3 +379,24 @@ def manual_book_entry(request):
         return redirect('book_catalog')
         
     return render(request, 'catalog/manual_entry.html')
+
+#edit and delete functions
+def edit_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        book.title = request.POST.get('title')
+        book.author = request.POST.get('author')
+        book.genre = request.POST.get('genre')
+        book.published_date = request.POST.get('published_date')
+        book.save()
+        return redirect('book_catalog')
+    
+    return render(request, 'catalog/edit_book.html', {'book': book})
+
+def delete_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    print(f"--- DELETE VIEW HIT --- Method: {request.method}") # For testing purposes
+    if request.method == 'POST':
+        print(f"Deleting book: {book.title}") # For testing purposes
+        book.delete()
+    return redirect('book_catalog')

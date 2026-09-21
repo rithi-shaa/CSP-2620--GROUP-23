@@ -39,15 +39,18 @@
                     {% if book.published_date %} | <strong>Published:</strong> {{ book.published_date }}{% endif %}
                 </div>
                 
-                {% if request.session.user_id == book.added_by_id %}
-                    <div style="margin-top: 8px; font-size: 0.9em;">
-                        <a href="#">Edit</a> &bull; 
-                        <form action="#" method="POST" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" style="background:none; border:none; color:#e74c3c; cursor:pointer; padding:0;" onclick="return confirm('Delete this book?')">Delete</button>
-                        </form>
-                    </div>
-                {% endif %}
+            {% if request.session.user_id == book.added_by_id %}
+    <div style="margin-top: 8px; font-size: 0.9em;">
+        <a href="{% url 'edit_book' book.id %}">Edit</a> &bull; 
+        <form action="{% url 'delete_book' book.id %}" method="POST" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" style="background:none; border:none; color:#e74c3c; cursor:pointer; padding:0;" 
+                    onclick="return confirm('Delete this book?')">
+                Delete
+            </button>
+        </form>
+    </div>
+{% endif %}
             </div>
         </li>
     {% empty %}
