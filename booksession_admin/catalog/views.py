@@ -1,4 +1,8 @@
-import requests
+import os
+import requests 
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -135,7 +139,8 @@ def admin_login(request):
             
             return redirect('admin_home')
         else:
-            return render(request, 'catalog/admin_login.html', {'error': 'Invalid credentials or not an admin.'})
+          messages.error(request, 'Invalid credentials or not an admin.')
+          return render(request, 'catalog/admin_login.html')
             
     return render(request, 'catalog/admin_login.html')
 
@@ -296,18 +301,15 @@ def search_google_books(request):
             print("--- API STATUS:", response.status_code)
             response.raise_for_status()
             data = response.json()
-            
+
             if 'items' in data and data['items']:
                 books = data['items']
             else:
                 print("--- WARNING: 'items' not found or empty in data!")
         except Exception as e:
-            print("--- API ERROR:", e)
+            print("--- API ERROR TRACEBACK:", e)
             books = []
-            
-        # Fallback mechanism: if API fails or returns no books, redirect to manual entry
-        if not books:
-            return redirect('manual_book_entry')
+
             
     return render(request, 'catalog/search.html', {'books': books, 'query': query})
 
