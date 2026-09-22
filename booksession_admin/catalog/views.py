@@ -10,6 +10,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import UserProfile, Book, Shelf, ShelfBook, UserLoginLog, User
+from django.db.models import Q
 
 def user_register(request):
     if request.method == 'POST':
@@ -136,7 +137,11 @@ def admin_login(request):
         else:
             return render(request, 'catalog/admin_login.html', {'error': 'Invalid credentials or not an admin.'})
             
+<<<<<<< HEAD
     return render(request, 'catalog/user_login.html')
+=======
+    return render(request, 'catalog/admin_login.html')
+>>>>>>> 759553cdc759adef22a084fd1d75dfcef5a7cc42
 
 def admin_home(request):
     if not request.user.is_authenticated or not request.user.is_staff:
@@ -281,29 +286,33 @@ def logout_view(request):
 @login_required
 def admin_home(request):
     logs = UserLoginLog.objects.all().order_by('-login_time')
-    return render(request, 'catalog/home.html', {'logs': logs})
-
+    return render(request, 'catalog/admin_home.html', {'logs': logs})
 
 def search_google_books(request):
+    print("=== SEARCH VIEW HIT ===")
     query = request.GET.get('q', '')
     books = None
     
     if query:
-        api_url = f"https://www.googleapis.com/books/v1/volumes?q={query}"
+        api_url = "https://www.googleapis.com/books/v1/volumes"
         try:
-            response = requests.get(api_url)
+            response = requests.get(api_url, params={'q': query, 'key': 'AIzaSyAFRsqeZf64pEnbhAjSxUOonmpD6QWw1p0'}, timeout=5)
+            print("--- API STATUS:", response.status_code)
             response.raise_for_status()
             data = response.json()
             
-            # Fallback if no books found
-            if 'items' not in data or not data['items']:
-                return redirect('manual_book_entry')
-                
-            books = data['items']
-        except requests.exceptions.RequestException:
-            # Fallback if API fails
+            if 'items' in data and data['items']:
+                books = data['items']
+            else:
+                print("--- WARNING: 'items' not found or empty in data!")
+        except Exception as e:
+            print("--- API ERROR:", e)
+            books = []
+            
+        # Fallback mechanism: if API fails or returns no books, redirect to manual entry
+        if not books:
             return redirect('manual_book_entry')
-
+            
     return render(request, 'catalog/search.html', {'books': books, 'query': query})
 
 def save_book_from_api(request):
@@ -311,16 +320,40 @@ def save_book_from_api(request):
         title = request.POST.get('title')
         authors = request.POST.get('authors')
         published_date = request.POST.get('published_date')
-        
-        # Save directly to Django database model
+
+        # Parse the year from the date string (e.g., '2008-05-12' -> 2008)
+        year_val = None
+        if published_date:
+            try:
+                year_val = int(published_date.split('-')[0])
+            except (ValueError, IndexError):
+                year_val = None
+
+        # Save directly to Django database model using 'year'
         Book.objects.create(
             title=title,
             author=authors,
-            published_date=published_date if published_date else None
+            year=year_val
         )
-        return redirect('admin_home')
         
-    return redirect('search_google_books')
+    return redirect('book_catalog')
+
+def book_catalog(request):
+    books = Book.objects.all()
+    
+    # Get search/filter parameters
+    query = request.GET.get('q')
+    genre = request.GET.get('genre')
+    year = request.GET.get('year')
+
+    if query:
+        books = books.filter(Q(title__icontains=query) | Q(author__icontains=query))
+    if genre:
+        books = books.filter(genre__icontains=genre)
+    if year:
+        books = books.filter(year=year)
+
+    return render(request, 'catalog/catalog.html', {'books': books})
 
 def manual_book_entry(request):
     if request.method == 'POST':
@@ -328,11 +361,41 @@ def manual_book_entry(request):
         authors = request.POST.get('authors')
         published_date = request.POST.get('published_date')
         
+        # Parse the year safely
+        year_val = None
+        if published_date:
+            try:
+                year_val = int(published_date.split('-')[0])
+            except (ValueError, IndexError):
+                year_val = None
+        
+        # Fixed: using 'year' instead of 'published_date'
         Book.objects.create(
             title=title,
             author=authors,
-            published_date=published_date if published_date else None
+            year=year_val
         )
-        return redirect('admin_home')
+        return redirect('book_catalog')
         
     return render(request, 'catalog/manual_entry.html')
+
+#edit and delete functions
+def edit_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        book.title = request.POST.get('title')
+        book.author = request.POST.get('author')
+        book.genre = request.POST.get('genre')
+        book.published_date = request.POST.get('published_date')
+        book.save()
+        return redirect('book_catalog')
+    
+    return render(request, 'catalog/edit_book.html', {'book': book})
+
+def delete_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    print(f"--- DELETE VIEW HIT --- Method: {request.method}") # For testing purposes
+    if request.method == 'POST':
+        print(f"Deleting book: {book.title}") # For testing purposes
+        book.delete()
+    return redirect('book_catalog')

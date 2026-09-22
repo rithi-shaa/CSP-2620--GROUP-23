@@ -1,0 +1,59 @@
+<style>
+    li {
+        background: #f9f9f9;
+        margin-bottom: 15px;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #3498db;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+    }
+    .book-cover {
+        max-width: 60px;
+        height: auto;
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+    .book-info {
+        flex-grow: 1;
+    }
+    .book-title {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+</style>
+
+<ul>
+    {% for book in books %}
+        <li>
+            {% if book.cover_image_url %}
+                <img src="{{ book.cover_image_url }}" alt="{{ book.title }} cover" class="book-cover">
+            {% endif %}
+            <div class="book-info">
+                <div class="book-title">{{ book.title }}</div>
+                <div style="color: #555; font-size: 0.95em; margin-top: 4px;">
+                    <strong>Author(s):</strong> {{ book.author }}
+                    {% if book.genre %} | <strong>Genre:</strong> {{ book.genre }}{% endif %}
+                    {% if book.published_date %} | <strong>Published:</strong> {{ book.published_date }}{% endif %}
+                </div>
+                
+            {% if request.session.user_id == book.added_by_id %}
+    <div style="margin-top: 8px; font-size: 0.9em;">
+        <a href="{% url 'edit_book' book.id %}">Edit</a> &bull; 
+        <form action="{% url 'delete_book' book.id %}" method="POST" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" style="background:none; border:none; color:#e74c3c; cursor:pointer; padding:0;" 
+                    onclick="return confirm('Delete this book?')">
+                Delete
+            </button>
+        </form>
+    </div>
+{% endif %}
+            </div>
+        </li>
+    {% empty %}
+        <p>No books found matching your criteria.</p>
+    {% endfor %}
+</ul>

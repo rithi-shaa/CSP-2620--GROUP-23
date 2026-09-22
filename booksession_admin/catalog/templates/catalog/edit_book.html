@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Book</title>
+</head>
+<body>
+    <h2>Edit Book Details</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <label for="title">Title:</label><br>
+            <input type="text" id="title" name="title" value="{{ book.title }}" required>
+        </div>
+        <br>
+        <div>
+            <label for="author">Author:</label><br>
+            <input type="text" id="author" name="author" value="{{ book.author }}" required>
+        </div>
+        <br>
+        <div>
+            <label for="genre">Genre:</label><br>
+            <input type="text" id="genre" name="genre" value="{{ book.genre|default:'' }}">
+        </div>
+        <br>
+        <div>
+            <label for="published_date">Published Date / Year:</label><br>
+            <input type="text" id="published_date" name="published_date" value="{{ book.published_date|default:'' }}">
+        </div>
+        <br>
+        <button type="submit">Save Changes</button>
+    </form>
+    
+    <p><a href="{% url 'book_catalog' %}">Cancel</a></p>
+</body>
+</html>
