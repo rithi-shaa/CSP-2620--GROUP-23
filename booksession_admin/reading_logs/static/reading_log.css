@@ -1,0 +1,427 @@
+html {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    width: 100%;
+    font-family: 'Georgia', serif;
+    color: #2c2c2c;
+    background-color: #ede8dc;
+    background-image: url('background.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+/* Main Reading Logs Container */
+.reading-logs-container {
+    width: 900px;
+    max-width: 90%;
+    margin: 50px auto;
+    padding: 40px;
+    box-sizing: border-box;
+
+    background: rgba(255, 250, 240, 0.94);
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.25);
+
+    border: 1px solid rgba(91, 67, 45, 0.25);
+}
+
+/* Page Title */
+.reading-logs-container h1 {
+    font-family: 'Georgia', serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+
+    color: #3b2b1e;
+
+    text-align: center;
+
+    margin-top: 0;
+    margin-bottom: 10px;
+
+    font-size: 2.2rem;
+
+    -webkit-text-stroke: 0.5px #666;
+}
+
+/* Subtitle */
+.reading-logs-container .subtitle {
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+
+/* Add Reading Log Button */
+.add-log-btn {
+    display: inline-block;
+
+    padding: 12px 24px;
+
+    background: linear-gradient(
+        135deg,
+        #a78bfa,
+        #4c1d95 40%,
+        #1e1b4b
+    );
+
+    color: white;
+
+    border: none;
+    border-radius: 25px;
+
+    text-decoration: none;
+
+    font-family: 'Georgia', serif;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    margin-bottom: 25px;
+}
+
+.add-log-btn:hover {
+    opacity: 0.9;
+}
+
+
+/* Reading Logs Table */
+.reading-logs-table {
+    width: 100%;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    overflow: hidden;
+
+    background: rgba(255, 255, 255, 0.75);
+
+    border-radius: 15px;
+
+    border: 1px solid #d4c5ae;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+
+/* Table Header */
+.reading-logs-table th {
+    padding: 16px 14px;
+
+    background: linear-gradient(
+        135deg,
+        #4c1d95,
+        #1e1b4b
+    );
+
+    color: white;
+
+    font-family: 'Georgia', serif;
+
+    font-size: 0.9rem;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+    text-align: left;
+}
+
+
+/* Table Cells */
+.reading-logs-table td {
+    padding: 15px 14px;
+
+    color: #3b2b1e;
+
+    font-size: 0.95rem;
+
+    border-bottom: 1px solid #ddd2bf;
+}
+
+
+/* Alternating Rows */
+.reading-logs-table tbody tr:nth-child(even) {
+    background-color: rgba(237, 232, 220, 0.55);
+}
+
+
+/* Hover */
+.reading-logs-table tbody tr:hover {
+    background-color: rgba(167, 139, 250, 0.12);
+}
+
+
+/* Remove border from last row */
+.reading-logs-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* Book Title */
+.book-title {
+    font-weight: bold;
+    color: #3b2b1e;
+}
+
+
+/* Action Links */
+.action-link {
+    color: #4c1d95;
+
+    font-weight: bold;
+
+    text-decoration: none;
+
+    margin-right: 8px;
+}
+
+.action-link:hover {
+    text-decoration: underline;
+}
+
+
+/* Delete Link */
+.delete-link {
+    color: #8b2c2c;
+
+    font-weight: bold;
+
+    text-decoration: none;
+}
+
+.delete-link:hover {
+    text-decoration: underline;
+}
+
+
+/* Empty Reading Logs Message */
+.no-logs {
+    text-align: center;
+
+    padding: 35px;
+
+    color: #666;
+
+    font-style: italic;
+
+    font-size: 1rem;
+
+    background: rgba(255, 255, 255, 0.6);
+
+    border-radius: 15px;
+
+    border: 1px solid #d4c5ae;
+}
+
+
+/* Flash Messages */
+.flash-messages {
+    list-style: none;
+
+    padding: 12px 15px;
+
+    background: #fcf8e3;
+
+    border: 1px solid #faebcc;
+
+    color: #8a6d3b;
+
+    border-radius: 8px;
+
+    margin-bottom: 20px;
+
+    font-size: 0.85rem;
+}
+
+
+/* Forms */
+.reading-log-form {
+    max-width: 500px;
+
+    margin: 0 auto;
+}
+
+.reading-log-form label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #3b2b1e;
+
+    font-weight: bold;
+}
+
+.reading-log-form input,
+.reading-log-form select {
+    width: 100%;
+
+    padding: 13px 16px;
+
+    margin-bottom: 15px;
+
+    border: 1px solid #c9baa3;
+
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.7);
+
+    color: #3b2b1e;
+
+    font-family: 'Georgia', serif;
+
+    font-size: 0.95rem;
+
+    box-sizing: border-box;
+}
+
+.reading-log-form input:focus,
+.reading-log-form select:focus {
+    outline: none;
+
+    border-color: #4c1d95;
+
+    box-shadow: 0 0 0 2px rgba(76, 29, 149, 0.15);
+}
+
+
+/* Submit Button */
+.submit-btn {
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 25px;
+
+    background: linear-gradient(
+        135deg,
+        #a78bfa,
+        #4c1d95 40%,
+        #1e1b4b
+    );
+
+    color: white;
+
+    font-family: 'Georgia', serif;
+
+    font-weight: bold;
+
+    font-size: 1rem;
+
+    cursor: pointer;
+
+    margin-top: 10px;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.submit-btn:hover {
+    opacity: 0.9;
+}
+
+
+/* Back Link */
+.back-link {
+    display: inline-block;
+
+    margin-top: 20px;
+
+    color: #4c1d95;
+
+    text-decoration: none;
+
+    font-weight: bold;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+
+/* Delete Confirmation */
+.delete-card {
+    max-width: 500px;
+
+    margin: 0 auto;
+
+    padding: 30px;
+
+    background: rgba(255, 255, 255, 0.75);
+
+    border-radius: 20px;
+
+    text-align: center;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.delete-card h2 {
+    color: #3b2b1e;
+}
+
+.delete-card p {
+    color: #666;
+
+    margin-bottom: 25px;
+}
+
+.delete-btn {
+    padding: 12px 25px;
+
+    border: none;
+
+    border-radius: 25px;
+
+    background: #8b2c2c;
+
+    color: white;
+
+    font-family: 'Georgia', serif;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #6f2020;
+}
+
+
+/* Responsive Design */
+@media (max-width: 750px) {
+
+    .reading-logs-container {
+        width: 95%;
+        padding: 25px 15px;
+        margin: 25px auto;
+    }
+
+    .reading-logs-container h1 {
+        font-size: 1.7rem;
+    }
+
+    .reading-logs-table {
+        font-size: 0.8rem;
+    }
+
+    .reading-logs-table th,
+    .reading-logs-table td {
+        padding: 10px 7px;
+    }
+
+}
