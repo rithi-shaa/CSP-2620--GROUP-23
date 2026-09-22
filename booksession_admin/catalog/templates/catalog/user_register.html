@@ -39,7 +39,7 @@
                     {% endif %}
 
                     <!-- Django Form Action and CSRF Token -->
-                    <form method="POST" action="{% url 'register' %}" onsubmit="return checkPasswords()">
+                    <form method="POST" action="{% url 'user_register' %}" onsubmit="return checkPasswords()">
                         {% csrf_token %}
                         <input type="text" name="username" placeholder="Username" required>
                         <input type="email" name="email" placeholder="Email" required>
@@ -52,7 +52,7 @@
                         <button type="submit" class="submit-btn">Register</button>
                     </form>
 
-                    <a href="{% url 'login' %}" class="register-link">Already have an account? Login</a>
+                    <a href="{% url 'user_login' %}" class="register-link">Already have an account? Login</a>
                 </div>
             </div>
         </div>

@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import UserProfile, Book, Shelf, ShelfBook, UserLoginLog, User
 
-def register_view(request):
+def user_register(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -21,11 +21,11 @@ def register_view(request):
 
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")
-            return redirect('register')
+            return redirect('user_register')
 
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username is already taken.")
-            return redirect('register')
+            return redirect('user_register')
 
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
@@ -34,10 +34,10 @@ def register_view(request):
             profile.save()
 
             messages.success(request, "Registration successful! You can now log in.")
-            return redirect('login')
+            return redirect('user_login')
         except Exception as e:
             messages.error(request, f"An error occurred: {e}")
-            return redirect('register')
+            return redirect('user_register')
 
     return render(request, 'catalog/user_register.html')
 
@@ -96,16 +96,16 @@ def reset_password_view(request, uidb64, token):
             user.save()
             
             messages.success(request, "Your password has been successfully reset. You can now login.")
-            return redirect('login')
+            return redirect('user_login')
 
         return render(request, 'catalog/reset_password.html', {'token': token})
     else:
         messages.error(request, "The password reset link is invalid or has expired.")
         return redirect('reset_password')
 
-def profile(request):
+def user_profile(request):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('user_login')
     
     profile_obj, _ = UserProfile.objects.get_or_create(user=request.user)
 
@@ -118,9 +118,9 @@ def profile(request):
             
         profile_obj.save()
         messages.success(request, "Profile updated successfully!")
-        return redirect('profile')
+        return redirect('user_profile')
 
-    return render(request, 'profile.html', {'user': request.user, 'profile': profile_obj})
+    return render(request, 'catalog/user_profile.html', {'user': request.user, 'user_profile': profile_obj})
 
 def admin_login(request):
     if request.method == 'POST':
@@ -134,9 +134,9 @@ def admin_login(request):
             
             return redirect('admin_home')
         else:
-            return render(request, 'catalog/login.html', {'error': 'Invalid credentials or not an admin.'})
+            return render(request, 'catalog/admin_login.html', {'error': 'Invalid credentials or not an admin.'})
             
-    return render(request, 'catalog/login.html')
+    return render(request, 'catalog/user_login.html')
 
 def admin_home(request):
     if not request.user.is_authenticated or not request.user.is_staff:
@@ -176,7 +176,7 @@ def admin_genre_shelves(request):
     }
     return render(request, 'catalog/admin_genre_shelves.html', context)
 
-def login_view(request):
+def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -187,7 +187,7 @@ def login_view(request):
             UserLoginLog.objects.create(user=user)
             
             messages.success(request, "Logged in successfully!")
-            return redirect('shelves')
+            return redirect('index')
         else:
             messages.error(request, "Invalid username or password.")
             
@@ -196,10 +196,10 @@ def login_view(request):
 def index(request):
     books = Book.objects.all().order_by('-created_at')[:10]
     
-    return render(request, 'index.html', {'books': books})
+    return render(request, 'catalog/index.html', {'books': books})
 
-@login_required(login_url='login')
-def shelves(request):
+@login_required(login_url='user_login')
+def collections(request):
     """Displays the main collections overview page (just the blocks)."""
     my_collections = Shelf.objects.filter(user=request.user)
     
@@ -210,7 +210,7 @@ def shelves(request):
     return render(request, 'catalog/collections.html', context)
 
 
-@login_required(login_url='login')
+@login_required(login_url='user_login')
 def collection_detail(request, shelf_id):
     """Displays the books inside a specific collection when its block is clicked."""
     # Get the specific collection and make sure it belongs to the logged-in user
@@ -227,7 +227,7 @@ def collection_detail(request, shelf_id):
     }
     return render(request, 'catalog/collection_detail.html', context)
 
-@login_required(login_url='login')
+@login_required(login_url='user_login')
 def add_shelf(request):
     """Handles adding a new collection/shelf for the user."""
     if request.method == 'POST':
@@ -237,9 +237,9 @@ def add_shelf(request):
             messages.success(request, "Collection added successfully.")
         else:
             messages.error(request, "Collection name cannot be empty.")
-    return redirect('shelves')
+    return redirect('collections')
 
-@login_required(login_url='login')
+@login_required(login_url='user_login')
 def rename_shelf(request):
     """Handles renaming an existing collection for the user."""
     if request.method == 'POST':
@@ -255,9 +255,9 @@ def rename_shelf(request):
         else:
             messages.error(request, "Collection name cannot be empty.")
             
-    return redirect('shelves')
+    return redirect('collections')
 
-@login_required(login_url='login')
+@login_required(login_url='user_login')
 def delete_shelf(request):
     """Handles deleting a user's collection."""
     if request.method == 'POST':
@@ -268,13 +268,13 @@ def delete_shelf(request):
         collection.delete()
         messages.success(request, "Collection deleted successfully.")
         
-    return redirect('shelves')
+    return redirect('collections')
 
 def logout_view(request):
     from django.contrib.auth import logout
     logout(request)
     messages.info(request, "You have been logged out.")
-    return redirect('login')
+    return redirect('user_login')
 
 
 #search function

@@ -2,28 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Login</title>
+    <title>Login - Booksession</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'catalog/style.css' %}">
 </head>
-<body>
-    <h2>User Login</h2>
+<body class="book-background">
 
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
+    <div class="login-card">
+        <h2>Login</h2>
+
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for message in messages %}
                 <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-    <form method="POST" action="{% url 'login' %}">
-        {% csrf_token %}
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>
+        <form method="POST" action="{% url 'user_login' %}">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
 
-    <p>Are you an admin? <a href="{% url 'admin_login' %}">Log in here</a></p>
+            <div class="form-options">
+                <label><input type="checkbox" name="remember"> Remember me</label>
+                <a href="{% url 'reset_password' %}" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="submit-btn">Login</button>
+        </form>
+
+        <p class="register-link"><a href="{% url 'user_register' %}">Don't have an account? Register</a></p>
+        <p class="admin-link-text"><a href="{% url 'admin_login' %}">Are you an admin? Log in here</a></p>
+    </div>
+
 </body>
 </html>

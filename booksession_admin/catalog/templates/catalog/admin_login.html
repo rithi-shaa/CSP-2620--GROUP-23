@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Login - Booksession</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'catalog/style.css' %}">
 </head>
-<body>
-    <h2>Admin Login</h2>
+<body class="book-background">
 
-    {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% endif %}
+    <div class="login-card">
+        <h2>Admin Login</h2>
 
-    <form method="POST" action="{% url 'admin_login' %}">
-        {% csrf_token %}
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="POST" action="{% url 'admin_login' %}">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+
+            <button type="submit" class="submit-btn">Login</button>
+        </form>
+
+        <p class="admin-link-text">Not an admin? <a href="{% url 'user_login' %}">Go to user login</a></p>
+    </div>
+
 </body>
 </html>

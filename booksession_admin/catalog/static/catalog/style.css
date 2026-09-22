@@ -36,13 +36,11 @@ body.book-background-plain {
     justify-content: center;
 }
 
-
 .right-page {
     text-align: left;
     width: 50%;
-    padding-right:20px;
+    padding-right: 20px;
 }
-
 
 .page-content h2 {
     font-size: 1.8rem;
@@ -91,15 +89,37 @@ body.book-background-plain {
     box-shadow: 0 8px 30px rgba(0,0,0,0.3);
     text-align: center;
     font-family: 'Georgia', serif;
-    position:absolute;
-    top: 15%;
-    right: 8%;
+    position: absolute;
+    top: 50%;
+    right: 12%;
+    transform: translateY(-50%);
 }
 
 .login-card h2 {
     color: white;
     font-size: 2rem;
     margin-bottom: 25px;
+}
+
+.login-card .input-wrapper {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.login-card .input-wrapper input[type="text"],
+.login-card .input-wrapper input[type="password"] {
+    margin-bottom: 0;
+    padding-right: 45px;
+}
+
+.login-card .input-wrapper .input-icon {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255,255,255,0.7);
+    font-size: 1.1rem;
+    pointer-events: none;
 }
 
 .login-card input[type="text"],
@@ -176,6 +196,93 @@ body.book-background-plain {
     text-decoration: underline;
 }
 
+/* Admin/User cross-link text under the form */
+.login-card .admin-link-text {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.85rem;
+    margin-top: 15px;
+}
+
+.login-card .admin-link-text a {
+    color: white;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+/* ===== user home ===== */
+
+body {
+    margin: 0;
+    font-family: 'Georgia', serif;
+    background-color: #ede8dc;
+    color: #2c2c2c;
+    padding: 40px 60px;
+    box-sizing: border-box;
+}
+
+body h1 {
+    font-size: 2.2rem;
+    color: #3b2b1e;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+nav a {
+    display: inline-block;
+    padding: 10px 22px;
+    background-color: #4a3525;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+nav a:hover {
+    background-color: #8c6d53;
+}
+
+body h2 {
+    font-size: 1.6rem;
+    color: #3b2b1e;
+    border-bottom: 2px solid #4a3525;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+body ul {
+    list-style: none;
+    padding: 0;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+body ul li {
+    background: white;
+    border: 1px solid #d8cfc0;
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+body ul li strong {
+    color: #3b2b1e;
+}
+
+body p {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
 .book-btn.logout {
     background-color: #a94442;
 }
@@ -196,5 +303,4 @@ body.book-background-plain {
     max-width: 90%;
     text-align: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-
 }

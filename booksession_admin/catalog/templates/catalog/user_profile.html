@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Your Profile</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'profile.css' %}">
+    <link rel="stylesheet" href="{% static 'catalog/profile.css' %}">
 </head>
 <body class="book-background">
 
@@ -19,7 +19,7 @@
             <h2>{{ user.username }}</h2>
 
             {% if request.GET.edit == 'true' %}
-                <form action="{% url 'profile' %}" method="POST" enctype="multipart/form-data" class="fullname-form">
+                <form action="{% url 'user_profile' %}" method="POST" enctype="multipart/form-data" class="fullname-form">
                     {% csrf_token %}
                     
                     <label>Full Name:</label>
@@ -53,7 +53,7 @@
                 <p class="bio-text">
                     {{ profile.bio|default:"No bio written yet." }}
                 </p>
-                <a href="{% url 'profile' %}?edit=true" class="edit-btn">Edit Profile</a>
+                <a href="{% url 'user_profile' %}?edit=true" class="edit-btn">Edit Profile</a>
             {% endif %}
         </div>
 
