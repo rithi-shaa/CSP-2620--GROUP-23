@@ -209,6 +209,11 @@ body.book-background-plain {
     font-weight: bold;
 }
 
+.login-card .toggle-password {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
 /* ===== user home ===== */
 
 .body {
