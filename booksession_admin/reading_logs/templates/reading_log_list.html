@@ -20,3 +20,27 @@
             </tr>
 
         </thead>
+
+                <tbody>
+
+            {% for log in logs %}
+
+            <tr>
+
+                <td>
+                    {{ log.book.title }}
+                </td>
+
+                <td>
+                    {{ log.pages_read }}
+                </td>
+
+                <td>
+                    {{ log.log_date }}
+                </td>
+
+                <td>
+                    {{ log.created_at }}
+                </td>
+
+            </tr>
