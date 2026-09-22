@@ -9,3 +9,11 @@ def reading_logs(request):
     logs = ReadingLog.objects.select_related('book').filter(
         user=request.user
     ).order_by('-log_date')
+
+    return render(
+        request,
+        'reading_logs/reading_log_list.html',
+        {
+            'logs': logs
+        }
+    )
