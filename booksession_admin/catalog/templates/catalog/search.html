@@ -13,7 +13,19 @@
         <button type="submit">Search</button>
     </form>
 
-    <hr>
+{% if debug_info %}
+    <p style="color: blue; font-weight: bold;">Debug Info: {{ debug_info }}</p>
+{% endif %}
+
+<hr>
+    
+{% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li style="color: red;">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 
     <!-- Results List -->
     {% if books %}
