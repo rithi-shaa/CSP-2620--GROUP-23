@@ -1,0 +1,29 @@
+{% extends 'reading_logs/base.html' %}
+
+{% block content %}
+
+<div class="reading-logs-container">
+
+    <h1>Add Reading Log</h1>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Save Reading Log
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="{% url 'reading_logs' %}">
+        Back to Reading Logs
+    </a>
+
+</div>
+
+{% endblock %}
