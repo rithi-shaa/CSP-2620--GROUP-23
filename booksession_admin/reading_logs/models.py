@@ -23,3 +23,12 @@ class ReadingLog(models.Model):
         on_delete=models.CASCADE,
         db_column='book_id'
     )
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        db_column='user_id'
+    )
+
+    def __str__(self):
+        return f"{self.book.title} - {self.log_date}"
