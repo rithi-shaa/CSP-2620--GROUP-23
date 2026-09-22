@@ -9,10 +9,10 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import UserProfile, Book, Shelf, ShelfBook, UserLoginLog, User
+from .models import UserProfile, Book, Shelf, ShelfBook, UserLoginLog, User, Review
 from django.db.models import Q
 
-def user_register(request):
+def register_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -22,11 +22,11 @@ def user_register(request):
 
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")
-            return redirect('user_register')
+            return redirect('register')
 
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username is already taken.")
-            return redirect('user_register')
+            return redirect('register')
 
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
@@ -35,10 +35,10 @@ def user_register(request):
             profile.save()
 
             messages.success(request, "Registration successful! You can now log in.")
-            return redirect('user_login')
+            return redirect('login')
         except Exception as e:
             messages.error(request, f"An error occurred: {e}")
-            return redirect('user_register')
+            return redirect('register')
 
     return render(request, 'catalog/user_register.html')
 
@@ -97,16 +97,16 @@ def reset_password_view(request, uidb64, token):
             user.save()
             
             messages.success(request, "Your password has been successfully reset. You can now login.")
-            return redirect('user_login')
+            return redirect('login')
 
         return render(request, 'catalog/reset_password.html', {'token': token})
     else:
         messages.error(request, "The password reset link is invalid or has expired.")
         return redirect('reset_password')
 
-def user_profile(request):
+def profile(request):
     if not request.user.is_authenticated:
-        return redirect('user_login')
+        return redirect('login')
     
     profile_obj, _ = UserProfile.objects.get_or_create(user=request.user)
 
@@ -119,9 +119,9 @@ def user_profile(request):
             
         profile_obj.save()
         messages.success(request, "Profile updated successfully!")
-        return redirect('user_profile')
+        return redirect('profile')
 
-    return render(request, 'catalog/user_profile.html', {'user': request.user, 'user_profile': profile_obj})
+    return render(request, 'profile.html', {'user': request.user, 'profile': profile_obj})
 
 def admin_login(request):
     if request.method == 'POST':
@@ -137,11 +137,7 @@ def admin_login(request):
         else:
             return render(request, 'catalog/admin_login.html', {'error': 'Invalid credentials or not an admin.'})
             
-<<<<<<< HEAD
-    return render(request, 'catalog/user_login.html')
-=======
     return render(request, 'catalog/admin_login.html')
->>>>>>> 759553cdc759adef22a084fd1d75dfcef5a7cc42
 
 def admin_home(request):
     if not request.user.is_authenticated or not request.user.is_staff:
@@ -181,7 +177,7 @@ def admin_genre_shelves(request):
     }
     return render(request, 'catalog/admin_genre_shelves.html', context)
 
-def user_login(request):
+def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -192,7 +188,7 @@ def user_login(request):
             UserLoginLog.objects.create(user=user)
             
             messages.success(request, "Logged in successfully!")
-            return redirect('index')
+            return redirect('shelves')
         else:
             messages.error(request, "Invalid username or password.")
             
@@ -201,10 +197,10 @@ def user_login(request):
 def index(request):
     books = Book.objects.all().order_by('-created_at')[:10]
     
-    return render(request, 'catalog/index.html', {'books': books})
+    return render(request, 'index.html', {'books': books})
 
-@login_required(login_url='user_login')
-def collections(request):
+@login_required(login_url='login')
+def shelves(request):
     """Displays the main collections overview page (just the blocks)."""
     my_collections = Shelf.objects.filter(user=request.user)
     
@@ -215,7 +211,7 @@ def collections(request):
     return render(request, 'catalog/collections.html', context)
 
 
-@login_required(login_url='user_login')
+@login_required(login_url='login')
 def collection_detail(request, shelf_id):
     """Displays the books inside a specific collection when its block is clicked."""
     # Get the specific collection and make sure it belongs to the logged-in user
@@ -232,7 +228,7 @@ def collection_detail(request, shelf_id):
     }
     return render(request, 'catalog/collection_detail.html', context)
 
-@login_required(login_url='user_login')
+@login_required(login_url='login')
 def add_shelf(request):
     """Handles adding a new collection/shelf for the user."""
     if request.method == 'POST':
@@ -242,9 +238,9 @@ def add_shelf(request):
             messages.success(request, "Collection added successfully.")
         else:
             messages.error(request, "Collection name cannot be empty.")
-    return redirect('collections')
+    return redirect('shelves')
 
-@login_required(login_url='user_login')
+@login_required(login_url='login')
 def rename_shelf(request):
     """Handles renaming an existing collection for the user."""
     if request.method == 'POST':
@@ -260,9 +256,9 @@ def rename_shelf(request):
         else:
             messages.error(request, "Collection name cannot be empty.")
             
-    return redirect('collections')
+    return redirect('shelves')
 
-@login_required(login_url='user_login')
+@login_required(login_url='login')
 def delete_shelf(request):
     """Handles deleting a user's collection."""
     if request.method == 'POST':
@@ -273,13 +269,13 @@ def delete_shelf(request):
         collection.delete()
         messages.success(request, "Collection deleted successfully.")
         
-    return redirect('collections')
+    return redirect('shelves')
 
 def logout_view(request):
     from django.contrib.auth import logout
     logout(request)
     messages.info(request, "You have been logged out.")
-    return redirect('user_login')
+    return redirect('login')
 
 
 #search function
@@ -296,7 +292,7 @@ def search_google_books(request):
     if query:
         api_url = "https://www.googleapis.com/books/v1/volumes"
         try:
-            response = requests.get(api_url, params={'q': query, 'key': 'AIzaSyAFRsqeZf64pEnbhAjSxUOonmpD6QWw1p0'}, timeout=5)
+            response = requests.get(api_url, params={'q': query, 'key': os.getenv('GOOGLE_API_KEY')}, timeout=5)
             print("--- API STATUS:", response.status_code)
             response.raise_for_status()
             data = response.json()
@@ -398,4 +394,48 @@ def delete_book(request, pk):
     if request.method == 'POST':
         print(f"Deleting book: {book.title}") # For testing purposes
         book.delete()
+    return redirect('book_catalog')
+
+# Review Management
+
+def add_review(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        review_text = request.POST.get('review_text')
+        
+        Review.objects.create(
+            book=book,
+            user=request.user,
+            rating=rating,
+            review_text=review_text
+        )
+    # Redirect back to book detail or catalog view
+    return redirect('book_catalog') 
+
+def edit_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    
+    # Enforce security: users can only modify their own reviews
+    if review.user != request.user:
+        return redirect('book_catalog')
+        
+    if request.method == 'POST':
+        review.rating = request.POST.get('rating')
+        review.review_text = request.POST.get('review_text')
+        review.save()
+        return redirect('book_catalog')
+        
+    return render(request, 'catalog/edit_review.html', {'review': review})
+
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    
+    # Enforce security: users can only delete their own reviews
+    if review.user != request.user:
+        return redirect('book_catalog')
+        
+    if request.method == 'POST':
+        review.delete()
+        
     return redirect('book_catalog')

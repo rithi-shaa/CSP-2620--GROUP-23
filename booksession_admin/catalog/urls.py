@@ -2,22 +2,25 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.user_login, name='user_login'),
+    path('', views.login_view, name='login'),
     path('index/', views.index, name='index'),
-    path('user_register/', views.user_register, name='user_register'),
-    path('password_reset/', views.forgot_password_view, name='reset_password'),
-    path('password_reset/<str:uidb64>/<str:token>/', views.reset_password_view, name='reset_password_token'),
-    path('admin_login/', views.admin_login, name='admin_login'),
+    path('register/', views.register_view, name='register'),
+    path('password-reset/', views.forgot_password_view, name='reset_password'),
+    path('password-reset/<str:uidb64>/<str:token>/', views.reset_password_view, name='reset_password_token'),
+    path('admin-login/', views.admin_login, name='admin_login'),
     path('logout/', views.logout_view, name='logout'),
     path('home/', views.admin_home, name='admin_home'),
 
     #user
-    path('user_profile/', views.user_profile, name='user_profile'),
-    path('collections/', views.collections, name='collections'),
+    path('profile/', views.profile, name='profile'),
+    path('collections/', views.shelves, name='shelves'),
     path('collection/<int:shelf_id>/', views.collection_detail, name='collection_detail'),
     path('collection/add/', views.add_shelf, name='add_shelf'),
     path('collection/rename/', views.rename_shelf, name='rename_shelf'),
     path('collection/delete/', views.delete_shelf, name='delete_shelf'),
+    path('book/<int:book_id>/review/add/', views.add_review, name='add_review'),
+    path('review/<int:review_id>/edit/', views.edit_review, name='edit_review'),
+    path('review/<int:review_id>/delete/', views.delete_review, name='delete_review'),
 
     #admin
     path('admin/genre-shelves/', views.admin_genre_shelves, name='admin_genre_shelves'),
