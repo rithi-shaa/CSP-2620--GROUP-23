@@ -9,3 +9,18 @@ class BookAdmin(admin.ModelAdmin):
         'book_id',
         'title',
     )
+
+@admin.register(ReadingLog)
+class ReadingLogAdmin(admin.ModelAdmin):
+    list_display = (
+        'log_id',
+        'book',
+        'user',
+        'pages_read',
+        'log_date',
+        'created_at',
+    )
+
+    list_filter = (
+        'log_date',
+    )
