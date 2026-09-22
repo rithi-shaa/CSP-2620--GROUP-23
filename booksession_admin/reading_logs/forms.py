@@ -12,3 +12,11 @@ class ReadingLogForm(forms.ModelForm):
             'pages_read',
             'log_date',
         ]
+
+        widgets = {
+            'log_date': forms.DateInput(
+                attrs={
+                    'type': 'date'
+                }
+            ),
+        }
