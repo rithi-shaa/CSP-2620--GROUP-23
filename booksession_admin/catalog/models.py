@@ -31,25 +31,46 @@ class Book(models.Model):
     def __str__(self):
             return self.title
 
-class Shelf(models.Model):
-    shelf_id = models.AutoField(primary_key=True)
-    shelf_name = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-class ShelfBook(models.Model):
-    shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    reading_status = models.CharField(max_length=50, default='Want to Read')
+class UserLoginLog(models.Model):
+    username = models.CharField(max_length=150)
+    email = models.EmailField()
+    login_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.book.title} on {self.shelf.shelf_name}"
+        return f"{self.username} - {self.login_time}"
 
-class Review(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    rating = models.IntegerField(choices=[(i, f"{i} Stars") for i in range(1, 6)])
-    review_text = models.TextField()
+    from django.db import models
+from django.contrib.auth.models import User
+
+
+class Book(models.Model):
+    book_id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.title
+
+
+class ReadingLog(models.Model):
+    log_id = models.AutoField(primary_key=True)
+
+    pages_read = models.IntegerField()
+
+    log_date = models.DateField()
+
     created_at = models.DateTimeField(auto_now_add=True)
 
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE,
+        db_column='book_id'
+    )
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        db_column='user_id'
+    )
+
     def __str__(self):
-        return f"{self.book.title} - {self.rating} Stars by {self.user.username}"
+        return f"{self.book.title} - {self.log_date}"
