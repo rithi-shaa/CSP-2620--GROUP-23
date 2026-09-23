@@ -136,6 +136,8 @@ def admin_login(request):
             return redirect('admin_home')
         else:
             return render(request, 'catalog/admin_login.html', {'error': 'Invalid credentials or not an admin.'})
+        
+    return render(request, 'catalog/admin_login.html')
 
 def admin_home(request):
     if not request.user.is_authenticated or not request.user.is_staff:
