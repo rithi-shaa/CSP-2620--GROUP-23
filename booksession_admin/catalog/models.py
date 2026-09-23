@@ -19,7 +19,7 @@ class UserLoginLog(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
-    genre = models.CharField(max_length=100)
+    genre = models.CharField(max_length=100, blank=True, null=True)
     publisher = models.CharField(max_length=255, blank=True, null=True)
     year = models.IntegerField(blank=True, null=True)
     isbn = models.CharField(max_length=20, blank=True, null=True)

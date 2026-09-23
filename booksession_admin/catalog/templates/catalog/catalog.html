@@ -25,6 +25,16 @@
     }
 </style>
 
+<div style="margin-bottom: 20px;">
+    <a href="javascript:history.back()" class="btn btn-secondary" style="padding: 6px 12px; background-color: #6c75d6; color: white; text-decoration: none; border-radius: 4px;">
+        &larr; Go Back
+    </a>
+</div>
+
+<p class="text-muted" style="margin-bottom: 15px;">
+    Total Books in Catalog: <strong>{{ total_books }}</strong>
+</p>
+
 <ul>
     {% for book in books %}
         <li>

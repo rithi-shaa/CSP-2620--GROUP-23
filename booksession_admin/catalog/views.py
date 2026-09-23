@@ -297,7 +297,7 @@ def search_google_books(request):
     if query:
         api_url = "https://www.googleapis.com/books/v1/volumes"
         try:
-            response = requests.get(api_url, params={'q': query, 'key': os.getenv('GOOGLE_API_KEY')}, timeout=5)
+            response = requests.get(api_url, params={'q': f"inauthor:{query}", 'key': os.getenv('GOOGLE_API_KEY')}, timeout=5)
             print("--- API STATUS:", response.status_code)
             response.raise_for_status()
             data = response.json()
@@ -318,6 +318,8 @@ def save_book_from_api(request):
         title = request.POST.get('title')
         authors = request.POST.get('authors')
         published_date = request.POST.get('published_date')
+        publisher = request.POST.get('publisher') 
+        genre = request.POST.get('genre')         
 
         # Parse the year from the date string (e.g., '2008-05-12' -> 2008)
         year_val = None
@@ -331,6 +333,8 @@ def save_book_from_api(request):
         Book.objects.create(
             title=title,
             author=authors,
+            publisher=publisher,
+            genre=genre,
             year=year_val
         )
         
@@ -350,6 +354,16 @@ def book_catalog(request):
         books = books.filter(genre__icontains=genre)
     if year:
         books = books.filter(year=year)
+
+        total_books = books.count()
+    
+    # Define total_books right here so it's always accessible
+    total_books = books.count()
+
+    return render(request, 'catalog/catalog.html', {
+        'books': books, 
+        'total_books': total_books
+    })
 
     return render(request, 'catalog/catalog.html', {'books': books})
 
