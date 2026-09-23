@@ -16,7 +16,16 @@ class UserLoginLog(models.Model):
     def __str__(self):
         return f"{self.user.username if self.user else 'Unknown'} - {self.login_time}"
 
+class Shelf(models.Model):
+    shelf_id = models.AutoField(primary_key=True)
+    shelf_name = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shelves')
+
+    def __str__(self):
+        return self.shelf_name
+
 class Book(models.Model):
+    book_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     genre = models.CharField(max_length=100)
@@ -31,24 +40,22 @@ class Book(models.Model):
     def __str__(self):
             return self.title
 
-class UserLoginLog(models.Model):
-    username = models.CharField(max_length=150)
-    email = models.EmailField()
-    login_time = models.DateTimeField(auto_now_add=True)
+class ShelfBook(models.Model):
+    shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    reading_status = models.CharField(
+        max_length=20,
+        choices=[
+            ('to_read', 'To Read'),
+            ('reading', 'Reading'),
+            ('finished', 'Finished'),
+        ],
+        default='to_read',
+    )
+    added_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.username} - {self.login_time}"
-
-    from django.db import models
-from django.contrib.auth.models import User
-
-
-class Book(models.Model):
-    book_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.title
+        return f"{self.book.title} on {self.shelf.shelf_name}"
 
 
 class ReadingLog(models.Model):

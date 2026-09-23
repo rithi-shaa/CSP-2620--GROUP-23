@@ -142,12 +142,10 @@ def admin_home(request):
         messages.error(request, "Unauthorized access.")
         return redirect('admin_login')
 
-    login_logs = UserLoginLog.objects.select_related('user').order_by('-login_time')[:15]
     total_books = Book.objects.count()
     total_users = UserProfile.objects.count()
 
     context = {
-        'login_logs': login_logs,
         'total_books': total_books,
         'total_users': total_users,
     }
