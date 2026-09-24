@@ -1,0 +1,357 @@
+/* ============================= */
+/* READING LOG PAGE               */
+/* ============================= */
+
+body.book-background {
+    margin: 0;
+    min-height: 100vh;
+    width: 100%;
+    font-family: 'Georgia', serif;
+    background-color: #ede8dc;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+
+/* ============================= */
+/* MAIN READING LOG CARD          */
+/* ============================= */
+
+.reading-logs-container {
+    background: linear-gradient(
+        135deg,
+        #a78bfa,
+        #4c1d95 40%,
+        #1e1b4b
+    );
+
+    border-radius: 24px;
+
+    padding: 40px 35px;
+
+    width: 90%;
+    max-width: 1000px;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+
+    color: white;
+
+    box-sizing: border-box;
+}
+
+
+/* ============================= */
+/* PAGE TITLE                     */
+/* ============================= */
+
+.reading-logs-container h1 {
+    text-align: center;
+
+    color: white;
+
+    font-size: 1.8rem;
+
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+
+/* ============================= */
+/* ADD READING LOG BUTTON         */
+/* ============================= */
+
+.add-log-btn {
+    display: inline-block;
+
+    padding: 10px 20px;
+
+    background: white;
+
+    color: #1e1b4b;
+
+    text-decoration: none;
+
+    border: none;
+
+    border-radius: 25px;
+
+    font-size: 0.9rem;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    font-family: 'Georgia', serif;
+
+    margin-bottom: 25px;
+
+    transition: 0.2s ease;
+}
+
+.add-log-btn:hover {
+    background: #ede8dc;
+
+    transform: translateY(-2px);
+}
+
+
+/* ============================= */
+/* TABLE                          */
+/* ============================= */
+
+.reading-logs-container table {
+    width: 100%;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    overflow: hidden;
+
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.10);
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+
+/* ============================= */
+/* TABLE HEADER                   */
+/* ============================= */
+
+.reading-logs-container th {
+    padding: 14px 12px;
+
+    background: rgba(255, 255, 255, 0.18);
+
+    color: white;
+
+    font-size: 0.9rem;
+
+    text-align: left;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+
+/* ============================= */
+/* TABLE CELLS                    */
+/* ============================= */
+
+.reading-logs-container td {
+    padding: 14px 12px;
+
+    color: rgba(255, 255, 255, 0.9);
+
+    font-size: 0.9rem;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+
+/* Remove border from last row */
+
+.reading-logs-container tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* ============================= */
+/* TABLE HOVER                    */
+/* ============================= */
+
+.reading-logs-container tbody tr:hover {
+    background: rgba(255, 255, 255, 0.10);
+}
+
+
+/* ============================= */
+/* ACTION LINKS                   */
+/* ============================= */
+
+.reading-logs-container td a {
+    color: white;
+
+    text-decoration: underline;
+
+    font-size: 0.85rem;
+}
+
+.reading-logs-container td a:hover {
+    color: #ddd6fe;
+}
+
+
+/* ============================= */
+/* NO LOG MESSAGE                 */
+/* ============================= */
+
+.reading-logs-container > p {
+    color: rgba(255, 255, 255, 0.85);
+
+    text-align: center;
+
+    font-style: italic;
+
+    margin-top: 30px;
+}
+
+
+/* ============================= */
+/* BACK / NAVIGATION LINKS        */
+/* ============================= */
+
+.nav-links {
+    display: flex;
+
+    justify-content: space-between;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+    padding-top: 20px;
+
+    margin-top: 25px;
+}
+
+.nav-links a {
+    color: white;
+
+    text-decoration: underline;
+
+    font-size: 0.9rem;
+}
+
+.nav-links a:hover {
+    color: #ddd6fe;
+}
+
+
+/* ============================= */
+/* FORM STYLING                   */
+/* ============================= */
+
+.reading-logs-container form {
+    margin-top: 20px;
+}
+
+
+.reading-logs-container label {
+    display: block;
+
+    color: white;
+
+    margin-bottom: 6px;
+
+    font-size: 0.9rem;
+}
+
+
+.reading-logs-container input,
+.reading-logs-container select,
+.reading-logs-container textarea {
+    width: 100%;
+
+    padding: 10px 14px;
+
+    margin-bottom: 15px;
+
+    border: none;
+
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    color: white;
+
+    font-size: 0.95rem;
+
+    box-sizing: border-box;
+
+    font-family: 'Georgia', serif;
+
+    outline: none;
+}
+
+
+/* Placeholder */
+
+.reading-logs-container input::placeholder,
+.reading-logs-container textarea::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+
+/* ============================= */
+/* BUTTONS                       */
+/* ============================= */
+
+.reading-logs-container button {
+    display: inline-block;
+
+    padding: 10px 20px;
+
+    background: white;
+
+    color: #1e1b4b;
+
+    text-decoration: none;
+
+    border: none;
+
+    border-radius: 25px;
+
+    font-size: 0.9rem;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    font-family: 'Georgia', serif;
+
+    transition: 0.2s ease;
+}
+
+
+.reading-logs-container button:hover {
+    background: #ede8dc;
+
+    transform: translateY(-2px);
+}
+
+
+/* ============================= */
+/* RESPONSIVE DESIGN              */
+/* ============================= */
+
+@media (max-width: 700px) {
+
+    body.book-background {
+        padding: 20px 10px;
+    }
+
+    .reading-logs-container {
+        width: 100%;
+
+        padding: 25px 20px;
+
+        border-radius: 20px;
+    }
+
+    .reading-logs-container h1 {
+        font-size: 1.5rem;
+    }
+
+    .reading-logs-container table {
+        font-size: 0.8rem;
+    }
+
+    .reading-logs-container th,
+    .reading-logs-container td {
+        padding: 9px 7px;
+    }
+
+}
