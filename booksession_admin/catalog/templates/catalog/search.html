@@ -27,34 +27,39 @@
     </ul>
 {% endif %}
 
-    <!-- Results List -->
-    {% if books %}
-        <h2>Results:</h2>
-        <ul>
-            {% for item in books %}
-                {% with volume=item.volumeInfo %}
-                    <li style="margin-bottom: 15px;">
-                        <strong>{{ volume.title }}</strong> 
-                        {% if volume.authors %} by {{ volume.authors|join:", " }}{% endif %}
-                        
-                        <!-- Form to save book directly to database -->
-                        <form method="POST" action="{% url 'save_book_from_api' %}" style="display:inline; margin-left: 10px;">
-                            {% csrf_token %}
-                            <input type="hidden" name="title" value="{{ volume.title }}">
-                            <input type="hidden" name="authors" value="{% if volume.authors %}{{ volume.authors|join:', ' }}{% endif %}">
-                            <input type="hidden" name="published_date" value="{{ volume.publishedDate }}">
-                            <button type="submit">Add to Catalog</button>
-                        </form>
-                    </li>
-                {% endwith %}
-            {% endfor %}
-       </ul>
+<!-- Results List -->
+{% if books %}
+    <h2>Results:</h2>
+    <ul>
+        {% for book in books %}
+            <li style="margin-bottom: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+        {% if book.cover_image_url %}
+        <img src="{{ book.cover_image_url }}" alt="Book Cover" style="width: 45px; height: auto; margin-right: 12px; vertical-align: middle; border-radius: 4px;">
+        {% endif %}
+
+        <strong>{{ book.title }}</strong> by {{ book.authors }}<br>        
+        <small style="color: #555;">Publisher: {{ book.publisher }} | Published: {{ book.published_date }} | Genre: {{ book.genre }}</small><br><br>
+                
+                <!-- Form to save book directly to database -->
+                <form method="POST" action="{% url 'save_book_from_api' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="title" value="{{ book.title }}">
+                    <input type="hidden" name="authors" value="{{ book.authors }}">
+                    <input type="hidden" name="publisher" value="{{ book.publisher }}">
+                    <input type="hidden" name="published_date" value="{{ book.published_date }}">
+                    <input type="hidden" name="genre" value="{{ book.genre }}">
+                    <input type="hidden" name="cover_image_url" value="{{ book.cover_image_url }}">
+                    <button type="submit" class="btn btn-sm btn-secondary" style="padding: 6px 12px;">Add to Catalog</button>
+                </form>
+            </li>
+        {% endfor %}
 {% else %}
     {% if query %}
         <p>No books found for "{{ query }}".</p>
     {% endif %}
 {% endif %}
-    <br>
-    <a href="{% url 'admin_home' %}">Back to Home</a>
+
+<br>
+<a href="{% url 'admin_home' %}">Back to Home</a>   
 </body>
 </html>

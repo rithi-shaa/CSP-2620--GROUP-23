@@ -28,7 +28,7 @@ class Book(models.Model):
     book_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
-    genre = models.CharField(max_length=100)
+    genre = models.CharField(max_length=100, blank=True, null=True)
     publisher = models.CharField(max_length=255, blank=True, null=True)
     year = models.IntegerField(blank=True, null=True)
     isbn = models.CharField(max_length=20, blank=True, null=True)
@@ -81,3 +81,26 @@ class ReadingLog(models.Model):
 
     def __str__(self):
         return f"{self.book.title} - {self.log_date}"
+
+class Review(models.Model):
+    review_id = models.AutoField(primary_key=True)
+    rating = models.IntegerField()  # 1-5 stars
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column='book_id')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id')
+
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE,
+        db_column='book_id'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        db_column='user_id'
+    )
+
+    def __str__(self):
+        return f"Review by {self.user.username} for {self.book.title} ({self.rating} Stars)"

@@ -1,4 +1,8 @@
-import requests
+import os
+import requests 
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -135,7 +139,10 @@ def admin_login(request):
             
             return redirect('admin_home')
         else:
-            return render(request, 'catalog/admin_login.html', {'error': 'Invalid credentials or not an admin.'})
+          messages.error(request, 'Invalid credentials or not an admin.')
+          return render(request, 'catalog/admin_login.html')
+
+    return render(request, 'catalog/admin_login.html')
             
 
 def admin_home(request):
@@ -284,27 +291,53 @@ def admin_home(request):
 def search_google_books(request):
     print("=== SEARCH VIEW HIT ===")
     query = request.GET.get('q', '')
+
+    if query:
+        request.session['last_query'] = query
+    
     books = None
     
     if query:
         api_url = "https://www.googleapis.com/books/v1/volumes"
         try:
-            response = requests.get(api_url, params={'q': query, 'key': os.getenv('GOOGLE_API_KEY')}, timeout=5)
+            response = requests.get(api_url, params={'q': f"inauthor:{query}", 'key': os.getenv('GOOGLE_API_KEY')})
             print("--- API STATUS:", response.status_code)
             response.raise_for_status()
             data = response.json()
             
             if 'items' in data and data['items']:
-                books = data['items']
+                seen_titles = set()
+                books = []
+                for item in data['items']:
+                    volume_info = item.get('volumeInfo', {})
+                    title = volume_info.get('title')
+                    
+                    # Skip if this title has already been added
+                    if title in seen_titles:
+                        continue
+                    seen_titles.add(title)
+                    
+                    # Extract details for display and saving
+                    authors = ", ".join(volume_info.get('authors', ['Unknown Author']))
+                    publisher = volume_info.get('publisher', 'N/A')
+                    published_date = volume_info.get('publishedDate', 'N/A')
+                    genre = ", ".join(volume_info.get('categories', ['General']))
+                    thumbnail = volume_info.get('imageLinks', {}).get('thumbnail', '')
+                    
+                    books.append({
+                        'title': title,
+                        'authors': authors,
+                        'publisher': publisher,
+                        'published_date': published_date,
+                        'genre': genre,
+                        'cover_image_url': thumbnail,
+                    })
             else:
                 print("--- WARNING: 'items' not found or empty in data!")
+                books = []
         except Exception as e:
-            print("--- API ERROR:", e)
+            print("--- API ERROR TRACEBACK:", e)
             books = []
-            
-        # Fallback mechanism: if API fails or returns no books, redirect to manual entry
-        if not books:
-            return redirect('manual_book_entry')
             
     return render(request, 'catalog/search.html', {'books': books, 'query': query})
 
@@ -313,6 +346,10 @@ def save_book_from_api(request):
         title = request.POST.get('title')
         authors = request.POST.get('authors')
         published_date = request.POST.get('published_date')
+        publisher = request.POST.get('publisher') 
+        genre = request.POST.get('genre')   
+        cover_image_url = request.POST.get('cover_image_url')  
+        print("--- SAVING COVER URL:", cover_image_url)    
 
         # Parse the year from the date string (e.g., '2008-05-12' -> 2008)
         year_val = None
@@ -326,7 +363,10 @@ def save_book_from_api(request):
         Book.objects.create(
             title=title,
             author=authors,
-            year=year_val
+            publisher=publisher,
+            genre=genre,
+            year=year_val,
+            cover_image_url=cover_image_url
         )
         
     return redirect('book_catalog')
@@ -345,6 +385,16 @@ def book_catalog(request):
         books = books.filter(genre__icontains=genre)
     if year:
         books = books.filter(year=year)
+
+        total_books = books.count()
+    
+    # Define total_books right here so it's always accessible
+    total_books = books.count()
+
+    return render(request, 'catalog/catalog.html', {
+        'books': books, 
+        'total_books': total_books
+    })
 
     return render(request, 'catalog/catalog.html', {'books': books})
 
@@ -392,3 +442,51 @@ def delete_book(request, pk):
         print(f"Deleting book: {book.title}") # For testing purposes
         book.delete()
     return redirect('book_catalog')
+
+#Review Management
+@login_required
+def add_review(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        review_text = request.POST.get('review_text')
+        if rating and review_text:
+            Review.objects.create(
+                book=book,
+                user=request.user,
+                rating=rating,
+                review_text=review_text
+            )
+            messages.success(request, "Your review has been added successfully.")
+    return redirect('book_detail', book_id=book.book_id)
+
+@login_required
+def edit_review(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+    if review.user != request.user:
+        messages.error(request, "You do not have permission to edit this review.")
+        return redirect('book_detail', book_id=review.book.book_id)
+    
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        review_text = request.POST.get('review_text')
+        if rating and review_text:
+            review.rating = rating
+            review.review_text = review_text
+            review.save()
+            messages.success(request, "Your review has been updated.")
+            return redirect('book_detail', book_id=review.book.book_id)
+            
+    return render(request, 'catalog/edit_review.html', {'review': review})
+
+@login_required
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+    if review.user == request.user:
+        book_id = review.book.book_id
+        review.delete()
+        messages.success(request, "Your review has been deleted.")
+    else:
+        messages.error(request, "You do not have permission to delete this review.")
+        return redirect('book_detail', book_id=review.book.book_id)
+    return redirect('book_detail', book_id=book_id)

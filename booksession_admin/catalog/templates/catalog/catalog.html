@@ -25,6 +25,16 @@
     }
 </style>
 
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'search_google_books' %}{% if request.session.last_query %}?q={{ request.session.last_query }}{% endif %}" class="btn btn-secondary" style="padding: 6px 12px;">
+    &larr; Go Back
+    </a>
+</div>
+
+<p class="text-muted" style="margin-bottom: 15px;">
+    Total Books in Catalog: <strong>{{ total_books }}</strong>
+</p>
+
 <ul>
     {% for book in books %}
         <li>
@@ -41,8 +51,8 @@
                 
             {% if request.session.user_id == book.added_by_id %}
     <div style="margin-top: 8px; font-size: 0.9em;">
-        <a href="{% url 'edit_book' book.id %}">Edit</a> &bull; 
-        <form action="{% url 'delete_book' book.id %}" method="POST" style="display:inline;">
+        <a href="{% url 'edit_book' book.pk %}">Edit</a> &bull;
+        <form action="{% url 'delete_book' book.pk %}" method="POST" style="display:inline;">
             {% csrf_token %}
             <button type="submit" style="background:none; border:none; color:#e74c3c; cursor:pointer; padding:0;" 
                     onclick="return confirm('Delete this book?')">
