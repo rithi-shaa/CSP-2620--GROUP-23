@@ -9,7 +9,8 @@ body.book-background {
 
 body.book-background-plain {
     margin: 0;
-    height: 100vh;
+    min-height: 100vh;
+    height:auto;
     width: 100vw;
     display: flex;
     justify-content: center;
@@ -225,21 +226,21 @@ body.book-background-plain {
     box-sizing: border-box;
 }
 
-.h1 {
+h1 {
     font-size: 2.2rem;
     color: #3b2b1e;
     margin-bottom: 10px;
     text-align: center;
 }
 
-.nav {
+nav {
     display: flex;
     justify-content: center;
     gap: 12px;
     margin-bottom: 40px;
 }
 
-.nav a {
+nav a {
     display: inline-block;
     padding: 10px 22px;
     background-color: #4a3525;
@@ -250,11 +251,11 @@ body.book-background-plain {
     transition: background-color 0.2s ease;
 }
 
-.nav a:hover {
+nav a:hover {
     background-color: #8c6d53;
 }
 
-.h2 {
+h2 {
     font-size: 1.6rem;
     color: #3b2b1e;
     border-bottom: 2px solid #4a3525;
@@ -262,14 +263,22 @@ body.book-background-plain {
     margin-bottom: 20px;
 }
 
-.ul {
+.admin-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    align-self: flex-start;
+    padding: 20px;
+}
+
+.admin-container ul {
     list-style: none;
     padding: 0;
     max-width: 700px;
     margin: 0 auto;
 }
 
-.ul li {
+.admin-container ul li {
     background: white;
     border: 1px solid #d8cfc0;
     border-radius: 10px;
@@ -278,11 +287,11 @@ body.book-background-plain {
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-.ul li strong {
+.admin-container ul li strong {
     color: #3b2b1e;
 }
 
-.body p {
+body p {
     text-align: center;
     color: #666;
     font-style: italic;

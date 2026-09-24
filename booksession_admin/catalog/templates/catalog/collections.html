@@ -31,7 +31,7 @@
     <div class="shelves-list">
         {% for collection in collections %}
             <!-- this block navigates to its detail page -->
-            <div class="shelf-card" style="cursor: pointer;" onclick="location.href=`{% url 'collection_detail' collection.shelf_id %}`"></div>
+            <div class="shelf-card" style="cursor: pointer;" onclick="location.href=`{% url 'collection_detail' collection.shelf_id %}`">
                 <div class="shelf-header">
                     <h3>{{ collection.shelf_name }}</h3>
                     <div class="shelf-actions" onclick="event.stopPropagation();">
