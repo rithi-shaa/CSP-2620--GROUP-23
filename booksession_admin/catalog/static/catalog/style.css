@@ -175,7 +175,7 @@ body.book-background-plain {
     border: none;
     border-radius: 25px;
     background: white;
-    color: #edecf5;
+    color: #3f2d81;
     font-weight: bold;
     font-size: 1rem;
     cursor: pointer;
@@ -209,7 +209,7 @@ body.book-background-plain {
     font-weight: bold;
 }
 
-.login-card .toggle-password {
+.login-card .input-wrapper .toggle-password {
     cursor: pointer;
     pointer-events: auto;
 }
