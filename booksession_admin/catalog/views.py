@@ -13,7 +13,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import UserProfile, Book, Shelf, ShelfBook, UserLoginLog, User, Review
+from .models import ReadingLog, UserProfile, Book, Shelf, ShelfBook, UserLoginLog, User, Review
 from django.db.models import Q
 
 def register_view(request):
@@ -478,7 +478,11 @@ def delete_book(request, pk):
     if request.method == 'POST':
         print(f"Deleting book: {book.title}") # For testing purposes
         book.delete()
+
     return redirect('book_catalog')
+
+
+# Review Management
 
 # USER FEATURE: Add Book to Collection/Shelf
 @login_required
@@ -515,8 +519,11 @@ def book_detail(request, book_id):
 @login_required
 def add_review(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
+
     if request.method == 'POST':
         rating = request.POST.get('rating')
+        review_text = request.POST.get('review_text')
+
         review_text = request.POST.get('comment')
         if rating and review_text:
             Review.objects.create(
@@ -526,30 +533,38 @@ def add_review(request, book_id):
                 comment=review_text
             )
             messages.success(request, "Your review has been added successfully.")
+
     return redirect('book_detail', book_id=book.book_id)
+
 
 @login_required
 def edit_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
+
     if review.user != request.user:
         messages.error(request, "You do not have permission to edit this review.")
         return redirect('book_detail', book_id=review.book.book_id)
-    
+
     if request.method == 'POST':
         rating = request.POST.get('rating')
+        review_text = request.POST.get('review_text')
+
         review_text = request.POST.get('comment')
         if rating and review_text:
             review.rating = rating
             review.comment = review_text
             review.save()
+
             messages.success(request, "Your review has been updated.")
             return redirect('book_detail', book_id=review.book.book_id)
-            
+
     return render(request, 'catalog/edit_review.html', {'review': review})
+
 
 @login_required
 def delete_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
+
     book_id = review.book.book_id
     if review.user == request.user:
         book_id = review.book.book_id
@@ -558,5 +573,55 @@ def delete_review(request, review_id):
     else:
         messages.error(request, "You do not have permission to delete this review.")
         return redirect('book_detail', book_id=review.book.book_id)
+
     return redirect('book_detail', book_id=book_id)
+
+
+# Reading Logs
+
+@login_required
+def reading_logs(request):
+    logs = ReadingLog.objects.select_related('book').filter(
+        user=request.user
+    ).order_by('-log_date')
+
+    return render(
+        request,
+        'reading_logs/reading_log_list.html',
+        {
+            'logs': logs
+        }
+    )
+
+
+@login_required
+def add_log(request):
+    books = Book.objects.all()
+
+    if request.method == 'POST':
+        book_id = request.POST['book_id']
+        pages_read = int(request.POST['pages_read'])
+        log_date = request.POST['log_date']
+
+        if pages_read < 0:
+            messages.error(request, "Pages read cannot be negative.")
+            return redirect('add_log')
+
+        ReadingLog.objects.create(
+            pages_read=pages_read,
+            log_date=log_date,
+            book_id=book_id,
+            user_id=request.user.id
+        )
+
+        messages.success(request, "Reading log added.")
+        return redirect('reading_logs')
+
+    return render(
+        request,
+        'add_log.html',
+        {
+            'books': books
+        }
+    )
 
