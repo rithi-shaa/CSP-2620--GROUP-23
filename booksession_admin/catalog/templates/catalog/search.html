@@ -33,8 +33,12 @@
     <ul>
         {% for book in books %}
             <li style="margin-bottom: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px;">
-                <strong>{{ book.title }}</strong> by {{ book.authors }}<br>
-                <small style="color: #555;">Publisher: {{ book.publisher }} | Published: {{ book.published_date }} | Genre: {{ book.genre }}</small><br><br>
+        {% if book.cover_image_url %}
+        <img src="{{ book.cover_image_url }}" alt="Book Cover" style="width: 45px; height: auto; margin-right: 12px; vertical-align: middle; border-radius: 4px;">
+        {% endif %}
+
+        <strong>{{ book.title }}</strong> by {{ book.authors }}<br>        
+        <small style="color: #555;">Publisher: {{ book.publisher }} | Published: {{ book.published_date }} | Genre: {{ book.genre }}</small><br><br>
                 
                 <!-- Form to save book directly to database -->
                 <form method="POST" action="{% url 'save_book_from_api' %}" style="display:inline;">
@@ -44,6 +48,7 @@
                     <input type="hidden" name="publisher" value="{{ book.publisher }}">
                     <input type="hidden" name="published_date" value="{{ book.published_date }}">
                     <input type="hidden" name="genre" value="{{ book.genre }}">
+                    <input type="hidden" name="cover_image_url" value="{{ book.cover_image_url }}">
                     <button type="submit" class="btn btn-sm btn-secondary" style="padding: 6px 12px;">Add to Catalog</button>
                 </form>
             </li>

@@ -291,6 +291,10 @@ def admin_home(request):
 def search_google_books(request):
     print("=== SEARCH VIEW HIT ===")
     query = request.GET.get('q', '')
+
+    if query:
+        request.session['last_query'] = query
+    
     books = None
     
     if query:
@@ -343,7 +347,9 @@ def save_book_from_api(request):
         authors = request.POST.get('authors')
         published_date = request.POST.get('published_date')
         publisher = request.POST.get('publisher') 
-        genre = request.POST.get('genre')         
+        genre = request.POST.get('genre')   
+        cover_image_url = request.POST.get('cover_image_url')  
+        print("--- SAVING COVER URL:", cover_image_url)    
 
         # Parse the year from the date string (e.g., '2008-05-12' -> 2008)
         year_val = None
@@ -359,7 +365,8 @@ def save_book_from_api(request):
             author=authors,
             publisher=publisher,
             genre=genre,
-            year=year_val
+            year=year_val,
+            cover_image_url=cover_image_url
         )
         
     return redirect('book_catalog')

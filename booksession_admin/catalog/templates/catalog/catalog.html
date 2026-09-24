@@ -26,8 +26,8 @@
 </style>
 
 <div style="margin-bottom: 20px;">
-    <a href="javascript:history.back()" class="btn btn-secondary" style="padding: 6px 12px; background-color: #6c75d6; color: white; text-decoration: none; border-radius: 4px;">
-        &larr; Go Back
+    <a href="{% url 'search_google_books' %}{% if request.session.last_query %}?q={{ request.session.last_query }}{% endif %}" class="btn btn-secondary" style="padding: 6px 12px;">
+    &larr; Go Back
     </a>
 </div>
 
