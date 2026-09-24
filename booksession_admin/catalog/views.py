@@ -137,19 +137,16 @@ def admin_login(request):
         else:
             return render(request, 'catalog/admin_login.html', {'error': 'Invalid credentials or not an admin.'})
             
-    return render(request, 'catalog/admin_login.html')
 
 def admin_home(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         messages.error(request, "Unauthorized access.")
         return redirect('admin_login')
 
-    login_logs = UserLoginLog.objects.select_related('user').order_by('-login_time')[:15]
     total_books = Book.objects.count()
     total_users = UserProfile.objects.count()
 
     context = {
-        'login_logs': login_logs,
         'total_books': total_books,
         'total_users': total_users,
     }
@@ -394,48 +391,4 @@ def delete_book(request, pk):
     if request.method == 'POST':
         print(f"Deleting book: {book.title}") # For testing purposes
         book.delete()
-    return redirect('book_catalog')
-
-# Review Management
-
-def add_review(request, book_id):
-    book = get_object_or_404(Book, id=book_id)
-    if request.method == 'POST':
-        rating = request.POST.get('rating')
-        review_text = request.POST.get('review_text')
-        
-        Review.objects.create(
-            book=book,
-            user=request.user,
-            rating=rating,
-            review_text=review_text
-        )
-    # Redirect back to book detail or catalog view
-    return redirect('book_catalog') 
-
-def edit_review(request, review_id):
-    review = get_object_or_404(Review, id=review_id)
-    
-    # Enforce security: users can only modify their own reviews
-    if review.user != request.user:
-        return redirect('book_catalog')
-        
-    if request.method == 'POST':
-        review.rating = request.POST.get('rating')
-        review.review_text = request.POST.get('review_text')
-        review.save()
-        return redirect('book_catalog')
-        
-    return render(request, 'catalog/edit_review.html', {'review': review})
-
-def delete_review(request, review_id):
-    review = get_object_or_404(Review, id=review_id)
-    
-    # Enforce security: users can only delete their own reviews
-    if review.user != request.user:
-        return redirect('book_catalog')
-        
-    if request.method == 'POST':
-        review.delete()
-        
     return redirect('book_catalog')

@@ -1,0 +1,65 @@
+{% extends 'reading_logs/base.html' %}
+
+{% block content %}
+
+<div class="reading-logs-container">
+
+    <h1>My Reading Logs</h1>
+
+
+    {% if logs %}
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Book</th>
+                <th>Pages Read</th>
+                <th>Reading Date</th>
+                <th>Created At</th>
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for log in logs %}
+
+            <tr>
+
+                <td>
+                    {{ log.book.title }}
+                </td>
+
+                <td>
+                    {{ log.pages_read }}
+                </td>
+
+                <td>
+                    {{ log.log_date }}
+                </td>
+
+                <td>
+                    {{ log.created_at }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+    {% else %}
+
+        <p>You have no reading logs yet.</p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
