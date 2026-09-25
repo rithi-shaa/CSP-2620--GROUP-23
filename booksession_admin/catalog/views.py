@@ -192,15 +192,19 @@ def login_view(request):
             UserLoginLog.objects.create(user=user)
             
             messages.success(request, "Logged in successfully!")
-            return redirect('collections')
+            return redirect('index')
         else:
             messages.error(request, "Invalid username or password.")
             
     return render(request, 'catalog/user_login.html')
 
 def index(request):
+<<<<<<< HEAD
     books = Book.objects.all().order_by('-created_at')[:10]
     
+=======
+    books = Book.objects.all()
+>>>>>>> 7421e0a0f574ae637e40dd5ff3ead3cfc4632a84
     return render(request, 'catalog/index.html', {'books': books})
 
 @login_required(login_url='login')
@@ -380,10 +384,11 @@ def book_catalog(request):
     if request.user.is_staff or request.user.is_superuser:
         # Admin logic or tools can go here
         user_shelves = None
-    else:
-        # Fetch only the regular user's shelves/collections
-        user_shelves = Shelf.objects.filter(user=request.user)
 
+    else:
+        # Fetch only the regular user's shelves using request.user
+        user_shelves = Shelf.objects.filter(user=request.user)
+    
     # Get search/filter parameters
     query = request.GET.get('q')
     genre = request.GET.get('genre')
@@ -465,7 +470,11 @@ def add_to_shelf(request, book_pk):
         
     return redirect('book_catalog')
 
-
+@login_required
+def collection_detail(request, shelf_id):
+    collection = get_object_or_404(Shelf, pk=shelf_id, user=request.user)
+    books = collection.shelfbook_set.all()
+    return render(request, 'catalog/collections_detail.html', {'collection': collection, 'books': books})
 
 
 
@@ -532,8 +541,3 @@ def delete_review(request, review_id):
         return redirect('book_detail', book_id=review.book.book_id)
     return redirect('book_detail', book_id=book_id)
 
-@login_required
-def collection_detail(request, shelf_id):
-    collection = get_object_or_404(Shelf, pk=shelf_id, user=request.user)
-    books = collection.shelfbook_set.all()
-    return render(request, 'catalog/collections_detail.html', {'collection': collection, 'books': books})
