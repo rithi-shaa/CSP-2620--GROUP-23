@@ -199,12 +199,7 @@ def login_view(request):
     return render(request, 'catalog/user_login.html')
 
 def index(request):
-<<<<<<< HEAD
-    books = Book.objects.all().order_by('-created_at')[:10]
-    
-=======
     books = Book.objects.all()
->>>>>>> 7421e0a0f574ae637e40dd5ff3ead3cfc4632a84
     return render(request, 'catalog/index.html', {'books': books})
 
 @login_required(login_url='login')
