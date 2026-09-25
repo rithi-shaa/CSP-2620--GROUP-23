@@ -15,11 +15,12 @@ urlpatterns = [
 
     #user
     path('profile/', views.profile, name='profile'),
-    path('collections/', views.shelves, name='shelves'),
-    path('collection/<int:shelf_id>/', views.collection_detail, name='collection_detail'),
+    path('collections/', views.shelves, name='collections'),
+    path('collections/<int:shelf_id>/', views.collection_detail, name='collection_detail'),
     path('collection/add/', views.add_shelf, name='add_shelf'),
     path('collection/rename/', views.rename_shelf, name='rename_shelf'),
     path('collection/delete/', views.delete_shelf, name='delete_shelf'),
+    path('shelf/add/<int:book_pk>/', views.add_to_shelf, name='add_to_shelf'),
     path('book/<int:book_id>/review/add/', views.add_review, name='add_review'),
     path('review/<int:review_id>/edit/', views.edit_review, name='edit_review'),
     path('review/<int:review_id>/delete/', views.delete_review, name='delete_review'),

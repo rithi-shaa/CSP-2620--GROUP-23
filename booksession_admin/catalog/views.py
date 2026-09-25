@@ -192,7 +192,7 @@ def login_view(request):
             UserLoginLog.objects.create(user=user)
             
             messages.success(request, "Logged in successfully!")
-            return redirect('shelves')
+            return redirect('collections')
         else:
             messages.error(request, "Invalid username or password.")
             
@@ -371,9 +371,18 @@ def save_book_from_api(request):
         
     return redirect('book_catalog')
 
+@login_required
 def book_catalog(request):
     books = Book.objects.all()
     
+    # Check if the user is an admin / staff
+    if request.user.is_staff or request.user.is_superuser:
+        # Admin logic or tools can go here
+        user_shelves = None
+    else:
+        # Fetch only the regular user's shelves/collections
+        user_shelves = Shelf.objects.filter(user=request.user)
+
     # Get search/filter parameters
     query = request.GET.get('q')
     genre = request.GET.get('genre')
@@ -386,17 +395,14 @@ def book_catalog(request):
     if year:
         books = books.filter(year=year)
 
-        total_books = books.count()
-    
-    # Define total_books right here so it's always accessible
     total_books = books.count()
 
     return render(request, 'catalog/catalog.html', {
-        'books': books, 
-        'total_books': total_books
+        'books': books,
+        'total_books': total_books,
+        'user_shelves': user_shelves,
+        'is_admin': request.user.is_staff, # Pass this flag if you need it in your HTML template
     })
-
-    return render(request, 'catalog/catalog.html', {'books': books})
 
 def manual_book_entry(request):
     if request.method == 'POST':
@@ -442,6 +448,40 @@ def delete_book(request, pk):
         print(f"Deleting book: {book.title}") # For testing purposes
         book.delete()
     return redirect('book_catalog')
+
+# USER FEATURE: Add Book to Collection/Shelf
+@login_required
+def add_to_shelf(request, book_pk):
+    if request.method == 'POST':
+        shelf_id = request.POST.get('shelf_id')
+        book = get_object_or_404(Book, pk=book_pk)
+        
+        # Verify the shelf exists and belongs to the current user
+        shelf = get_object_or_404(Shelf, pk=shelf_id, user=request.user)
+        
+        # Create the relationship using the explicit ShelfBook model
+        ShelfBook.objects.get_or_create(shelf=shelf, book=book)
+        
+    return redirect('book_catalog')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #Review Management
 @login_required
@@ -490,3 +530,9 @@ def delete_review(request, review_id):
         messages.error(request, "You do not have permission to delete this review.")
         return redirect('book_detail', book_id=review.book.book_id)
     return redirect('book_detail', book_id=book_id)
+
+@login_required
+def collection_detail(request, shelf_id):
+    collection = get_object_or_404(Shelf, pk=shelf_id, user=request.user)
+    books = collection.shelfbook_set.all()
+    return render(request, 'catalog/collections_detail.html', {'collection': collection, 'books': books})
