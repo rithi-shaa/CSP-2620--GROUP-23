@@ -151,7 +151,10 @@ def admin_home(request):
         return redirect('admin_login')
 
     total_books = Book.objects.count()
-    total_users = UserProfile.objects.count()
+    total_users = User.objects.count()
+    login_logs = UserLoginLog.objects.all().order_by('-login_time')[:5] # Adjust based on how you fetch logs
+
+    print(f"DEBUG COUNTS -> Books: {total_books}, Users: {total_users}") # Add this line
 
     context = {
         'total_books': total_books,
@@ -198,10 +201,12 @@ def login_view(request):
             
     return render(request, 'catalog/user_login.html')
 
+#user
 def index(request):
     books = Book.objects.all()
     return render(request, 'catalog/index.html', {'books': books})
 
+#admin
 @login_required(login_url='login')
 def collections(request):
     """Displays the main collections overview page (just the blocks)."""
@@ -229,7 +234,7 @@ def collection_detail(request, shelf_id):
         'books': books,
         'username': request.user.username
     }
-    return render(request, 'catalog/collection_detail.html', context)
+    return render(request, 'catalog/collections_detail.html', context)
 
 @login_required(login_url='login')
 def add_shelf(request):
@@ -272,6 +277,25 @@ def delete_shelf(request):
         collection = get_object_or_404(Shelf, shelf_id=shelf_id, user=request.user)
         collection.delete()
         messages.success(request, "Collection deleted successfully.")
+        
+    return redirect('collections')
+
+@login_required(login_url='login')
+def update_reading_status(request, shelf_id, book_id):
+    if request.method == 'POST':
+        shelf = get_object_or_404(Shelf, shelf_id=shelf_id, user=request.user)
+        book = get_object_or_404(Book, id=book_id)
+        shelf_book = get_object_or_404(ShelfBook, shelf=shelf, book=book)
+        
+        new_status = request.POST.get('reading_status')
+        valid_statuses = ['Want to Read', 'Currently Reading', 'Completed']
+        
+        if new_status in valid_statuses:
+            shelf_book.reading_status = new_status
+            shelf_book.save()
+            messages.success(request, "Reading status updated successfully!")
+            
+        return redirect('collection_detail', shelf_id=shelf.shelf_id)
         
     return redirect('collections')
 
@@ -464,25 +488,6 @@ def add_to_shelf(request, book_pk):
         ShelfBook.objects.get_or_create(shelf=shelf, book=book)
         
     return redirect('book_catalog')
-
-@login_required
-def collection_detail(request, shelf_id):
-    collection = get_object_or_404(Shelf, pk=shelf_id, user=request.user)
-    books = collection.shelfbook_set.all()
-    return render(request, 'catalog/collections_detail.html', {'collection': collection, 'books': books})
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -62,6 +62,8 @@
 {% endif %}
 
 <br>
-<a href="{% url 'admin_home' %}">Back to Home</a>   
-</body>
-</html>
+{% if request.user.is_staff %}
+    <a href="{% url 'admin_home' %}">Back to Dashboard</a>
+{% else %}
+    <a href="{% url 'index' %}">Back to Home</a>
+{% endif %}

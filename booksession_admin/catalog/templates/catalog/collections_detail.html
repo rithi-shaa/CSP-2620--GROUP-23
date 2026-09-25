@@ -22,12 +22,24 @@
 
         <div class="book-grid" id="grid-{{ collection.shelf_id }}">
             {% for item in books %}
-                <div class="book-item" data-status="{{ item.reading_status }}">
-                    <div class="book-cover-placeholder">{{ item.book.title.0|upper }}</div>
-                    <p class="book-title">{{ item.book.title }}</p>
-                    <p class="book-status">{{ item.reading_status }}</p>
-                </div>
-            {% endfor %}
+        <div class="book-item" data-status="{{ item.reading_status }}">
+        {% if item.book.cover_image_url %}
+    <img src="{{ item.book.cover_image_url }}" alt="{{ item.book.title }} cover" class="book-cover">
+{% else %}
+    <div class="book-cover-placeholder">{{ item.book.title.0|upper }}</div>
+{% endif %}
+<p class="book-title">{{ item.book.title }}</p>
+
+<form method="POST" action="{% url 'update_reading_status' collection.shelf_id item.book.pk %}"></form>
+    {% csrf_token %}
+    <select name="reading_status" onchange="this.form.submit()" class="status-dropdown">
+        <option value="Want to Read" {% if item.reading_status == "Want to Read" or item.reading_status == "to_read" %}selected{% endif %}>Want to Read</option>
+        <option value="Currently Reading" {% if item.reading_status == "Currently Reading" %}selected{% endif %}>Currently Reading</option>
+        <option value="Completed" {% if item.reading_status == "Completed" %}selected{% endif %}>Completed</option>
+    </select>
+</form>
+    </div>
+{% endfor %}
         </div>
     {% else %}
         <p class="empty-shelf" style="text-align: center;">No books added to this collection yet.</p>
@@ -48,7 +60,7 @@
                     const filter = btn.dataset.filter;
                     grid.querySelectorAll('.book-item').forEach(item => {
                         if (filter === 'All' || item.dataset.status === filter) {
-                            item.style.display = 'block';
+                            item.style.display = 'flex';
                         } else {
                             item.style.display = 'none';
                         }
