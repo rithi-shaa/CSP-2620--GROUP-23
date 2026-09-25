@@ -78,18 +78,18 @@ body.book-background {
     margin-bottom: 14px;
 }
 
-/* Register card (right page) */
+/* register card (right page) */
 .login-card.register-card {
-    background: linear-gradient(135deg, #a78bfa, #4c1d95 40%, #1e1b4b);
+    background: linear-gradient(135deg, #1C0F0A, #321B12, #4A2A1C, #5C3827);
     border-radius: 24px;
     padding: 35px 35px 30px;
     max-width: 340px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
     text-align: center;
 }
 
 .register-card h2 {
-    color: white;
+    color: #f5eee6;
     font-size: 2rem;
     margin-bottom: 20px;
 }
@@ -100,7 +100,7 @@ body.book-background {
     margin-bottom: 12px;
     border: none;
     border-radius: 25px;
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.12);
     color: white;
     font-size: 1rem;
     box-sizing: border-box;
@@ -123,8 +123,8 @@ body.book-background {
     padding: 14px;
     border: none;
     border-radius: 25px;
-    background: white;
-    color: #1e1b4b;
+    background: #f5eee6;
+    color: #3A2116;
     font-weight: bold;
     font-size: 1rem;
     cursor: pointer;
@@ -132,7 +132,7 @@ body.book-background {
 }
 
 .register-card .register-link {
-    color: white;
+    color: #f5eee6;
     font-size: 0.85rem;
     text-decoration: underline;
 }

@@ -83,11 +83,11 @@ body.book-background-plain {
 }
 
 .login-card {
-    background: linear-gradient(135deg, #a78bfa, #4c1d95 40%, #1e1b4b);
+    background: linear-gradient(135deg, #1C0F0A, #321B12, #4A2A1C, #5C3827);
     border-radius: 24px;
     padding: 40px 35px;
     max-width: 360px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
     text-align: center;
     font-family: 'Georgia', serif;
     position: absolute;
@@ -97,7 +97,7 @@ body.book-background-plain {
 }
 
 .login-card h2 {
-    color: white;
+    color: #f5eee6;
     font-size: 2rem;
     margin-bottom: 25px;
 }
@@ -130,7 +130,7 @@ body.book-background-plain {
     margin-bottom: 15px;
     border: none;
     border-radius: 25px;
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.12);
     color: white;
     font-size: 1rem;
     box-sizing: border-box;
@@ -146,7 +146,7 @@ body.book-background-plain {
     margin-bottom: 15px;
     border: none;
     border-radius: 25px;
-    background: white;
+    background: rgba(255,255,255,0.92);
     color: #333;
     font-size: 1.05rem;
     box-sizing: border-box;
@@ -160,13 +160,13 @@ body.book-background-plain {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: white;
+    color: #f5eee6;
     font-size: 0.85rem;
     margin-bottom: 20px;
 }
 
 .login-card .forgot-link {
-    color: white;
+    color: #f5eee6;
     text-decoration: underline;
 }
 
@@ -175,8 +175,8 @@ body.book-background-plain {
     padding: 14px;
     border: none;
     border-radius: 25px;
-    background: white;
-    color: #3f2d81;
+    background: #f5eee6;
+    color: #3A2116;
     font-weight: bold;
     font-size: 1rem;
     cursor: pointer;
@@ -184,7 +184,7 @@ body.book-background-plain {
 }
 
 .login-card .register-link a {
-    color: white;
+    color: #f5eee6;
     font-size: 0.85rem;
     text-decoration: underline;
 }
@@ -197,15 +197,11 @@ body.book-background-plain {
     text-decoration: underline;
 }
 
-/* Admin/User cross-link text under the form */
+/* admin and user cross-link text under the form */
 .login-card .admin-link-text a {
-    color: rgba(235, 243, 239, 0.923);
+    color: #f5eee6;
     font-size: 0.85rem;
     margin-top: 15px;
-}
-
-.login-card .admin-link-text a {
-    color: white;
     text-decoration: underline;
     font-weight: bold;
 }
