@@ -123,9 +123,9 @@ def profile(request):
             
         profile_obj.save()
         messages.success(request, "Profile updated successfully!")
-        return redirect('profile')
+        return redirect('user_profile')
 
-    return render(request, 'profile.html', {'user': request.user, 'profile': profile_obj})
+    return render(request, 'catalog/user_profile.html', {'user': request.user, 'profile': profile_obj})
 
 def admin_login(request):
     if request.method == 'POST':
@@ -201,10 +201,10 @@ def login_view(request):
 def index(request):
     books = Book.objects.all().order_by('-created_at')[:10]
     
-    return render(request, 'index.html', {'books': books})
+    return render(request, 'catalog/index.html', {'books': books})
 
 @login_required(login_url='login')
-def shelves(request):
+def collections(request):
     """Displays the main collections overview page (just the blocks)."""
     my_collections = Shelf.objects.filter(user=request.user)
     
@@ -242,7 +242,7 @@ def add_shelf(request):
             messages.success(request, "Collection added successfully.")
         else:
             messages.error(request, "Collection name cannot be empty.")
-    return redirect('shelves')
+    return redirect('collections')
 
 @login_required(login_url='login')
 def rename_shelf(request):
@@ -260,20 +260,21 @@ def rename_shelf(request):
         else:
             messages.error(request, "Collection name cannot be empty.")
             
-    return redirect('shelves')
+    return redirect('collections')
 
 @login_required(login_url='login')
 def delete_shelf(request):
     """Handles deleting a user's collection."""
     if request.method == 'POST':
         shelf_id = request.POST.get('shelf_id')
+        print("DELETE SHELF ID:", shelf_id)
         
-        # Ensure the collection belongs to the logged-in user
+        # ensure the collection belongs to the logged-in user
         collection = get_object_or_404(Shelf, shelf_id=shelf_id, user=request.user)
         collection.delete()
         messages.success(request, "Collection deleted successfully.")
         
-    return redirect('shelves')
+    return redirect('collections')
 
 def logout_view(request):
     from django.contrib.auth import logout

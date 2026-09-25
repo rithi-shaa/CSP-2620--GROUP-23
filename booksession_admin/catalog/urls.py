@@ -14,8 +14,8 @@ urlpatterns = [
     path('user-register/', views.register_view, name='user_register'),
 
     #user
-    path('profile/', views.profile, name='profile'),
-    path('collections/', views.shelves, name='collections'),
+    path('profile/', views.profile, name='user_profile'),
+    path('collections/', views.collections, name='collections'),
     path('collections/<int:shelf_id>/', views.collection_detail, name='collection_detail'),
     path('collection/add/', views.add_shelf, name='add_shelf'),
     path('collection/rename/', views.rename_shelf, name='rename_shelf'),
