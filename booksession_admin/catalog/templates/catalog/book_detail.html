@@ -49,6 +49,7 @@
 
     <!-- Review Form -->
     {% if user.is_authenticated %}
+        {% if not user_has_reviewed %}
         <form method="POST" action="{% url 'add_review' book.pk %}" class="mb-4">
             {% csrf_token %}
             <div class="mb-3">
@@ -68,6 +69,9 @@
             </div>
             <button type="submit" class="btn btn-primary">Submit Review</button>
         </form>
+    {% else %}
+        <p class="text-muted fst-italic mb-4">You have already reviewed this book. You can edit your existing review below.</p>
+        {% endif %}
     {% else %}
         <p><a href="{% url 'login' %}">Log in</a> to leave a review.</p>
     {% endif %}

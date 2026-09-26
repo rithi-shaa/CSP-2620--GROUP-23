@@ -288,10 +288,14 @@ def update_reading_status(request, shelf_id, book_id):
         shelf_book = get_object_or_404(ShelfBook, shelf=shelf, book=book)
         
         new_status = request.POST.get('reading_status')
-        valid_statuses = ['Want to Read', 'Currently Reading', 'Completed']
+        status_mapping = {
+            'Want to Read': 'to_read',
+            'Currently Reading': 'reading',
+            'Completed': 'finished'
+        }
         
-        if new_status in valid_statuses:
-            shelf_book.reading_status = new_status
+        if new_status in status_mapping:
+            shelf_book.reading_status = status_mapping[new_status]
             shelf_book.save()
             messages.success(request, "Reading status updated successfully!")
             
@@ -494,16 +498,18 @@ def add_to_shelf(request, book_pk):
 def book_detail(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     reviews = Review.objects.filter(book=book)
+
+    # Check if the current user has already reviewed this book
+    user_has_reviewed = False
+    if request.user.is_authenticated:
+        user_has_reviewed = reviews.filter(user=request.user).exists()
     
     context = {
         'book': book,
         'reviews': reviews,
+        'user_has_reviewed': user_has_reviewed,
     }
     return render(request, 'catalog/book_detail.html', context)
-
-
-
-
 
 #Review Management
 @login_required
