@@ -1,357 +1,238 @@
-/* ============================= */
-/* READING LOG PAGE               */
-/* ============================= */
+.reading-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+}
 
-body.book-background {
-    margin: 0;
-    min-height: 100vh;
-    width: 100%;
-    font-family: 'Georgia', serif;
-    background-color: #ede8dc;
+.page-header {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 40px 20px;
-    box-sizing: border-box;
-}
-
-
-/* ============================= */
-/* MAIN READING LOG CARD          */
-/* ============================= */
-
-.reading-logs-container {
-    background: linear-gradient(
-        135deg,
-        #a78bfa,
-        #4c1d95 40%,
-        #1e1b4b
-    );
-
-    border-radius: 24px;
-
-    padding: 40px 35px;
-
-    width: 90%;
-    max-width: 1000px;
-
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-
-    color: white;
-
-    box-sizing: border-box;
-}
-
-
-/* ============================= */
-/* PAGE TITLE                     */
-/* ============================= */
-
-.reading-logs-container h1 {
-    text-align: center;
-
-    color: white;
-
-    font-size: 1.8rem;
-
-    margin-top: 0;
-    margin-bottom: 25px;
-}
-
-
-/* ============================= */
-/* ADD READING LOG BUTTON         */
-/* ============================= */
-
-.add-log-btn {
-    display: inline-block;
-
-    padding: 10px 20px;
-
-    background: white;
-
-    color: #1e1b4b;
-
-    text-decoration: none;
-
-    border: none;
-
-    border-radius: 25px;
-
-    font-size: 0.9rem;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-    font-family: 'Georgia', serif;
-
-    margin-bottom: 25px;
-
-    transition: 0.2s ease;
-}
-
-.add-log-btn:hover {
-    background: #ede8dc;
-
-    transform: translateY(-2px);
-}
-
-
-/* ============================= */
-/* TABLE                          */
-/* ============================= */
-
-.reading-logs-container table {
-    width: 100%;
-
-    border-collapse: separate;
-
-    border-spacing: 0;
-
-    overflow: hidden;
-
-    border-radius: 12px;
-
-    background: rgba(255, 255, 255, 0.10);
-
-    border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-
-/* ============================= */
-/* TABLE HEADER                   */
-/* ============================= */
-
-.reading-logs-container th {
-    padding: 14px 12px;
-
-    background: rgba(255, 255, 255, 0.18);
-
-    color: white;
-
-    font-size: 0.9rem;
-
-    text-align: left;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-
-/* ============================= */
-/* TABLE CELLS                    */
-/* ============================= */
-
-.reading-logs-container td {
-    padding: 14px 12px;
-
-    color: rgba(255, 255, 255, 0.9);
-
-    font-size: 0.9rem;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-
-/* Remove border from last row */
-
-.reading-logs-container tr:last-child td {
-    border-bottom: none;
-}
-
-
-/* ============================= */
-/* TABLE HOVER                    */
-/* ============================= */
-
-.reading-logs-container tbody tr:hover {
-    background: rgba(255, 255, 255, 0.10);
-}
-
-
-/* ============================= */
-/* ACTION LINKS                   */
-/* ============================= */
-
-.reading-logs-container td a {
-    color: white;
-
-    text-decoration: underline;
-
-    font-size: 0.85rem;
-}
-
-.reading-logs-container td a:hover {
-    color: #ddd6fe;
-}
-
-
-/* ============================= */
-/* NO LOG MESSAGE                 */
-/* ============================= */
-
-.reading-logs-container > p {
-    color: rgba(255, 255, 255, 0.85);
-
-    text-align: center;
-
-    font-style: italic;
-
-    margin-top: 30px;
-}
-
-
-/* ============================= */
-/* BACK / NAVIGATION LINKS        */
-/* ============================= */
-
-.nav-links {
-    display: flex;
-
     justify-content: space-between;
-
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-
-    padding-top: 20px;
-
-    margin-top: 25px;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
-.nav-links a {
-    color: white;
-
-    text-decoration: underline;
-
-    font-size: 0.9rem;
+.page-header h1 {
+    margin-bottom: 5px;
+    color: #3b2b1e;
 }
 
-.nav-links a:hover {
-    color: #ddd6fe;
+.page-header p {
+    margin: 0;
+    color: #666;
 }
 
 
-/* ============================= */
-/* FORM STYLING                   */
-/* ============================= */
+/* BUTTONS */
 
-.reading-logs-container form {
-    margin-top: 20px;
-}
-
-
-.reading-logs-container label {
-    display: block;
-
-    color: white;
-
-    margin-bottom: 6px;
-
-    font-size: 0.9rem;
-}
-
-
-.reading-logs-container input,
-.reading-logs-container select,
-.reading-logs-container textarea {
-    width: 100%;
-
-    padding: 10px 14px;
-
-    margin-bottom: 15px;
-
-    border: none;
-
-    border-radius: 20px;
-
-    background: rgba(255, 255, 255, 0.15);
-
-    color: white;
-
-    font-size: 0.95rem;
-
-    box-sizing: border-box;
-
-    font-family: 'Georgia', serif;
-
-    outline: none;
-}
-
-
-/* Placeholder */
-
-.reading-logs-container input::placeholder,
-.reading-logs-container textarea::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-
-/* ============================= */
-/* BUTTONS                       */
-/* ============================= */
-
-.reading-logs-container button {
+.primary-btn,
+.secondary-btn,
+.danger-btn {
     display: inline-block;
-
-    padding: 10px 20px;
-
-    background: white;
-
-    color: #1e1b4b;
-
+    padding: 10px 18px;
+    border-radius: 8px;
     text-decoration: none;
-
     border: none;
-
-    border-radius: 25px;
-
-    font-size: 0.9rem;
-
-    font-weight: bold;
-
     cursor: pointer;
-
-    font-family: 'Georgia', serif;
-
-    transition: 0.2s ease;
+    font-size: 14px;
 }
 
+.primary-btn {
+    background: #4A2A1C;
+    color: #f5eee6;
+}
 
-.reading-logs-container button:hover {
+.secondary-btn {
     background: #ede8dc;
+    color: #3b2b1e;
+}
 
-    transform: translateY(-2px);
+.danger-btn {
+    background: #8b3a32;
+    color: #f5eee6;
+}
+
+.danger-link {
+    color: #8b3a32;
 }
 
 
-/* ============================= */
-/* RESPONSIVE DESIGN              */
-/* ============================= */
+/* STATISTICS */
 
-@media (max-width: 700px) {
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
 
-    body.book-background {
-        padding: 20px 10px;
+.stat-card {
+    background: #f5eee6;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(44, 32, 24, 0.15);
+}
+
+.stat-card h3 {
+    margin: 0 0 10px;
+    font-size: 15px;
+    color: #666;
+}
+
+.stat-card p {
+    margin: 0;
+    font-size: 30px;
+    font-weight: bold;
+    color: #3b2b1e;
+}
+
+
+/* FORMS */
+
+.form-card,
+.detail-card,
+.confirmation-card,
+.goal-card,
+.analytics-card,
+.table-card {
+    background: #f5eee6;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 10px rgba(44, 32, 24, 0.15);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #3b2b1e;
+}
+
+.form-control,
+.form-group select,
+.form-group input {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #c9b9a8;
+    border-radius: 7px;
+    box-sizing: border-box;
+    background: #fffaf4;
+    color: #3b2b1e;
+}
+
+
+/* TABLE */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #d8cabb;
+}
+
+th {
+    background: #ede8dc;
+    color: #3b2b1e;
+}
+
+
+/* ERRORS */
+
+.error-box,
+.field-error {
+    color: #8b3a32;
+    margin-top: 5px;
+}
+
+.error-box {
+    background: #f5dede;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+
+/* GOALS */
+
+.goal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.goal-progress-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.progress-section {
+    margin-bottom: 25px;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 18px;
+    background: #ded5c8;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #4A2A1C;
+    border-radius: 10px;
+}
+
+
+/* CHARTS */
+
+.chart-container {
+    max-width: 500px;
+    margin: auto;
+}
+
+
+/* EMPTY */
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: #3b2b1e;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    .reading-logs-container {
-        width: 100%;
-
-        padding: 25px 20px;
-
-        border-radius: 20px;
+    .goal-grid,
+    .goal-progress-grid {
+        grid-template-columns: 1fr;
     }
 
-    .reading-logs-container h1 {
-        font-size: 1.5rem;
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
-
-    .reading-logs-container table {
-        font-size: 0.8rem;
-    }
-
-    .reading-logs-container th,
-    .reading-logs-container td {
-        padding: 9px 7px;
-    }
-
 }
