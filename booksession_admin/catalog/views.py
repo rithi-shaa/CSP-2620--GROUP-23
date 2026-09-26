@@ -685,3 +685,20 @@ def reading_log_update(request, log_id):
             "log": log,
         }
     )
+
+@login_required
+def reading_log_detail(request, log_id):
+
+    log = get_object_or_404(
+        ReadingLog,
+        log_id=log_id,
+        user=request.user
+    )
+
+    return render(
+        request,
+        "catalog/reading_log_detail.html",
+        {
+            "log": log
+        }
+    )
