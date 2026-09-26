@@ -729,3 +729,80 @@ def reading_log_delete(request, log_id):
             "log": log
         }
     )
+
+@login_required
+def reading_goal(request):
+
+    current_year = timezone.now().year
+
+    goal, created = ReadingGoal.objects.get_or_create(
+        user=request.user,
+        year=current_year,
+        defaults={
+            "target_numpages": 10000,
+            "target_numbooks": 20,
+        }
+    )
+
+    if request.method == "POST":
+
+        form = ReadingGoalForm(
+            request.POST,
+            instance=goal
+        )
+
+        if form.is_valid():
+
+            updated_goal = form.save(commit=False)
+            updated_goal.user = request.user
+            updated_goal.save()
+
+            messages.success(
+                request,
+                "Reading goal updated successfully."
+            )
+
+            return redirect("reading_goal")
+
+    else:
+        form = ReadingGoalForm(instance=goal)
+
+    logs = ReadingLog.objects.filter(
+        user=request.user,
+        log_date__year=current_year
+    )
+
+    pages_read = logs.aggregate(
+        total=Sum("pages_read")
+    )["total"] or 0
+
+    completed_books = ShelfBook.objects.filter(
+        shelf__user=request.user,
+        reading_status="Completed"
+    ).values("book").distinct().count()
+
+    page_percentage = (
+        pages_read / goal.target_numpages * 100
+        if goal.target_numpages > 0
+        else 0
+    )
+
+    book_percentage = (
+        completed_books / goal.target_numbooks * 100
+        if goal.target_numbooks > 0
+        else 0
+    )
+
+    return render(
+        request,
+        "catalog/reading_goal.html",
+        {
+            "form": form,
+            "goal": goal,
+            "pages_read": pages_read,
+            "completed_books": completed_books,
+            "page_percentage": min(page_percentage, 100),
+            "book_percentage": min(book_percentage, 100),
+            "current_year": current_year,
+        }
+    )
