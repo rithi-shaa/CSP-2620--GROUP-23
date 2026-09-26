@@ -1,64 +1,115 @@
-{% extends 'reading_logs/base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
 
-<div class="reading-logs-container">
+<div class="reading-container">
 
-    <h1>My Reading Logs</h1>
+    <div class="page-header">
 
+        <div>
+            <h1>My Reading Logs</h1>
+            <p>Track your daily reading progress.</p>
+        </div>
 
-    {% if logs %}
+        <a href="{% url 'reading_log_create' %}" class="primary-btn">
+            + Add Reading Log
+        </a>
 
-    <table>
-
-        <thead>
-
-            <tr>
-                <th>Book</th>
-                <th>Pages Read</th>
-                <th>Reading Date</th>
-                <th>Created At</th>
-            </tr>
-
-        </thead>
+    </div>
 
 
-        <tbody>
+    <div class="stats-row">
 
-            {% for log in logs %}
+        <div class="stat-card">
+            <h3>Total Pages</h3>
+            <p>{{ total_pages }}</p>
+        </div>
 
-            <tr>
+        <div class="stat-card">
+            <h3>Total Logs</h3>
+            <p>{{ total_logs }}</p>
+        </div>
 
-                <td>
-                    {{ log.book.title }}
-                </td>
-
-                <td>
-                    {{ log.pages_read }}
-                </td>
-
-                <td>
-                    {{ log.log_date }}
-                </td>
-
-                <td>
-                    {{ log.created_at }}
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </tbody>
-
-    </table>
+    </div>
 
 
-    {% else %}
+    <div class="table-card">
 
-        <p>You have no reading logs yet.</p>
+        {% if logs %}
 
-    {% endif %}
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Book</th>
+                    <th>Pages Read</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for log in logs %}
+
+                <tr>
+
+                    <td>
+                        {{ log.log_date|date:"d M Y" }}
+                    </td>
+
+                    <td>
+                        {{ log.book.title }}
+                    </td>
+
+                    <td>
+                        {{ log.pages_read }}
+                    </td>
+
+                    <td>
+
+                        <a href="{% url 'reading_log_detail' log.log_id %}">
+                            View
+                        </a>
+
+                        <a href="{% url 'reading_log_update' log.log_id %}">
+                            Edit
+                        </a>
+
+                        <a
+                            href="{% url 'reading_log_delete' log.log_id %}"
+                            class="danger-link"
+                        >
+                            Delete
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+            <div class="empty-state">
+                <h3>No reading logs yet</h3>
+                <p>Start tracking your reading progress.</p>
+
+                <a
+                    href="{% url 'reading_log_create' %}"
+                    class="primary-btn"
+                >
+                    Add Your First Log
+                </a>
+            </div>
+
+        {% endif %}
+
+    </div>
 
 </div>
 
