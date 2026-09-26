@@ -8,7 +8,7 @@
 
     <!-- Review Form -->
     {% if user.is_authenticated %}
-        <form method="POST" action="{% url 'catalog:add_review' book.pk %}" class="mb-4">
+        <form method="POST" action="{% url 'add_review' book.pk %}" class="mb-4">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="rating" class="form-label">Rating (1-5)</label>
@@ -43,9 +43,10 @@
                 <small class="text-muted">Posted on {{ review.created_at|date:"M d, Y" }}</small>
                 
                 {% if review.user == request.user %}
-                    <div class="mt-2">
-                    <button class="btn btn-sm btn-danger" data-url="{% url 'catalog:delete_review' review.pk %}" onclick="confirmDelete(this.getAttribute('data-url'))">Delete</button>
-                    </div>
+                <div class="mt-2">
+                 <a href="{% url 'catalog:edit_review' review.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+                 <button type="button" class="btn btn-sm btn-danger" data-url="{% url 'catalog:delete_review' review.pk %}" onclick="confirmDelete(this)">Delete</button>
+                </div>
                 {% endif %}
             </div>
         {% empty %}

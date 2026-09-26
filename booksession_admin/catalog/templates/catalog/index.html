@@ -24,13 +24,17 @@
 
     <h2>Available Books</h2>
     <ul>
-        {% for book in books %}
-            <li>
-                <strong>{{ book.title }}</strong> by {{ book.author }} ({{ book.genre }})
-            </li>
-        {% empty %}
-            <li>No books available yet.</li>
-        {% endfor %}
+       {% for book in books %}
+        <li>
+            <!-- Wrap the title in a link pointing to book_detail -->
+            <a href="{% url 'book_detail' book.pk %}">
+                <strong>{{ book.title }}</strong>
+            </a> 
+            by {{ book.author }} ({{ book.genre }})
+        </li>
+    {% empty %}
+        <li>No books available yet.</li>
+    {% endfor %}
     </ul>
 </body>
 </html>

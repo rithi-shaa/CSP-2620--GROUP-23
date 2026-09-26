@@ -284,7 +284,7 @@ def delete_shelf(request):
 def update_reading_status(request, shelf_id, book_id):
     if request.method == 'POST':
         shelf = get_object_or_404(Shelf, shelf_id=shelf_id, user=request.user)
-        book = get_object_or_404(Book, id=book_id)
+        book = get_object_or_404(Book, book_id=book_id)
         shelf_book = get_object_or_404(ShelfBook, shelf=shelf, book=book)
         
         new_status = request.POST.get('reading_status')
@@ -454,6 +454,7 @@ def manual_book_entry(request):
     return render(request, 'catalog/manual_entry.html')
 
 #edit and delete functions
+@staff_member_required(login_url='login')
 def edit_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
@@ -466,6 +467,7 @@ def edit_book(request, pk):
     
     return render(request, 'catalog/edit_book.html', {'book': book})
 
+@staff_member_required(login_url='login')
 def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     print(f"--- DELETE VIEW HIT --- Method: {request.method}") # For testing purposes
@@ -489,6 +491,16 @@ def add_to_shelf(request, book_pk):
         
     return redirect('book_catalog')
 
+def book_detail(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    reviews = Review.objects.filter(book=book)
+    
+    context = {
+        'book': book,
+        'reviews': reviews,
+    }
+    return render(request, 'catalog/book_detail.html', context)
+
 
 
 
@@ -499,7 +511,7 @@ def add_review(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     if request.method == 'POST':
         rating = request.POST.get('rating')
-        review_text = request.POST.get('review_text')
+        review_text = request.POST.get('comment')
         if rating and review_text:
             Review.objects.create(
                 book=book,
@@ -519,7 +531,7 @@ def edit_review(request, review_id):
     
     if request.method == 'POST':
         rating = request.POST.get('rating')
-        review_text = request.POST.get('review_text')
+        review_text = request.POST.get('comment')
         if rating and review_text:
             review.rating = rating
             review.review_text = review_text
@@ -532,6 +544,7 @@ def edit_review(request, review_id):
 @login_required
 def delete_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
+    book_id = review.book.book_id
     if review.user == request.user:
         book_id = review.book.book_id
         review.delete()

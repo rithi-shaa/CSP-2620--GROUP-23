@@ -13,12 +13,12 @@
     </div>
 
     {% if books %}
-        <div class="filter-tabs" data-shelf="{{ collection.shelf_id }}">
-            <button class="tab-btn active" data-filter="All" type="button">All</button>
-            <button class="tab-btn" data-filter="Want to Read" type="button">Want to Read</button>
-            <button class="tab-btn" data-filter="Currently Reading" type="button">Currently Reading</button>
-            <button class="tab-btn" data-filter="Completed" type="button">Completed</button>
-        </div>
+       <div class="filter-tabs" data-shelf="{{ collection.shelf_id }}">
+    <button class="tab-btn active" data-filter="All" type="button">All</button>
+    <button class="tab-btn" data-filter="to_read" type="button">Want to Read</button>
+    <button class="tab-btn" data-filter="currently_reading" type="button">Currently Reading</button>
+    <button class="tab-btn" data-filter="completed" type="button">Completed</button>
+    </div>
 
         <div class="book-grid" id="grid-{{ collection.shelf_id }}">
             {% for item in books %}
@@ -30,12 +30,12 @@
 {% endif %}
 <p class="book-title">{{ item.book.title }}</p>
 
-<form method="POST" action="{% url 'update_reading_status' collection.shelf_id item.book.pk %}"></form>
+<form method="POST" action="{% url 'update_reading_status' collection.shelf_id item.book.pk %}">
     {% csrf_token %}
     <select name="reading_status" onchange="this.form.submit()" class="status-dropdown">
         <option value="Want to Read" {% if item.reading_status == "Want to Read" or item.reading_status == "to_read" %}selected{% endif %}>Want to Read</option>
-        <option value="Currently Reading" {% if item.reading_status == "Currently Reading" %}selected{% endif %}>Currently Reading</option>
-        <option value="Completed" {% if item.reading_status == "Completed" %}selected{% endif %}>Completed</option>
+        <option value="Currently Reading" {% if item.reading_status == "Currently Reading" or item.reading_status == "currently_reading" %}selected{% endif %}>Currently Reading</option>
+        <option value="Completed" {% if item.reading_status == "Completed" or item.reading_status == "completed" %}selected{% endif %}>Completed</option>
     </select>
 </form>
     </div>
@@ -48,27 +48,40 @@
     <a href="{% url 'collections' %}" class="back-link">Back to Collections</a>
 
     <script>
-        document.querySelectorAll('.filter-tabs').forEach(tabGroup => {
-            const shelfId = tabGroup.dataset.shelf;
-            const grid = document.getElementById('grid-' + shelfId);
+document.querySelectorAll('.filter-tabs').forEach(tabGroup => {
+    const shelfId = tabGroup.dataset.shelf;
+    const grid = document.getElementById('grid-' + shelfId);
 
-            tabGroup.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    tabGroup.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
+    tabGroup.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabGroup.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-                    const filter = btn.dataset.filter;
-                    grid.querySelectorAll('.book-item').forEach(item => {
-                        if (filter === 'All' || item.dataset.status === filter) {
-                            item.style.display = 'flex';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-                });
+            // Get the clicked button text
+            const buttonText = btn.textContent.trim().toLowerCase();
+            let filter = 'all';
+            
+            if (buttonText.includes('want to read')) {
+                filter = 'want to read';
+            } else if (buttonText.includes('currently reading')) {
+                filter = 'currently reading';
+            } else if (buttonText.includes('completed')) {
+                filter = 'completed';
+            }
+
+            grid.querySelectorAll('.book-item').forEach(item => {
+                const itemStatus = (item.dataset.status || '').trim().toLowerCase();
+
+                if (filter === 'all' || itemStatus === filter) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
             });
         });
-    </script>
+    });
+});
+</script>
 
 </body>
 </html>

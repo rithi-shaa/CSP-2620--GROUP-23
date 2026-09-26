@@ -91,16 +91,6 @@ class Review(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column='book_id')
     user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id')
 
-    book = models.ForeignKey(
-        Book,
-        on_delete=models.CASCADE,
-        db_column='book_id'
-    )
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        db_column='user_id'
-    )
 
     def __str__(self):
         return f"Review by {self.user.username} for {self.book.title} ({self.rating} Stars)"

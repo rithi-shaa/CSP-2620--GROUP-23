@@ -29,6 +29,10 @@
     <a href="{% url 'search_google_books' %}{% if request.session.last_query %}?q={{ request.session.last_query }}{% endif %}" class="btn btn-secondary" style="padding: 6px 12px;">
     &larr; Go Back
     </a>
+    {% if not request.user.is_staff %}
+        <span style="margin: 0 10px;">|</span>
+        <a href="{% url 'collections' %}">My Collections</a>
+    {% endif %}
 </div>
 
 <p class="text-muted" style="margin-bottom: 15px;">
@@ -63,18 +67,19 @@
 </form>
 {% endif %}    
     
-            {% if request.session.user_id == book.added_by_id %}
-    <div style="margin-top: 8px; font-size: 0.9em;">
-        <a href="{% url 'edit_book' book.pk %}">Edit</a> &bull;
-        <form action="{% url 'delete_book' book.pk %}" method="POST" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" style="background:none; border:none; color:#e74c3c; cursor:pointer; padding:0;" 
-                    onclick="return confirm('Delete this book?')">
-                Delete
-            </button>
-        </form>
-    </div>
-{% endif %}
+           <!-- ONLY Admins/Staff can see Edit and Delete -->
+                {% if request.user.is_staff %}
+                <div style="margin-top: 8px; font-size: 0.9em;">
+                    <a href="{% url 'edit_book' book.pk %}">Edit</a> &bull;
+                    <form action="{% url 'delete_book' book.pk %}" method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" style="background:none; border:none; color:#e74c3c; cursor:pointer; padding:0;" 
+                                onclick="return confirm('Delete this book?')">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
             </div>
         </li>
     {% empty %}

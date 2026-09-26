@@ -22,6 +22,7 @@ urlpatterns = [
     path('collection/rename/', views.rename_shelf, name='rename_shelf'),
     path('collection/delete/', views.delete_shelf, name='delete_shelf'),
     path('shelf/add/<int:book_pk>/', views.add_to_shelf, name='add_to_shelf'),
+    path('book/<int:book_id>/', views.book_detail, name='book_detail'),
     path('book/<int:book_id>/review/add/', views.add_review, name='add_review'),
     path('review/<int:review_id>/edit/', views.edit_review, name='edit_review'),
     path('review/<int:review_id>/delete/', views.delete_review, name='delete_review'),
