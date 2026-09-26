@@ -88,3 +88,35 @@ class ReadingLog(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.book} - {self.pages_read} pages"
+
+    
+    class ReadingGoal(models.Model):
+        goal_id = models.AutoField(primary_key=True)
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="reading_goals"
+    )
+
+    year = models.PositiveIntegerField()
+
+    target_numpages = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)]
+    )
+
+    target_numbooks = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)]
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "year"],
+                name="unique_reading_goal_per_user_year"
+            )
+        ]
+        ordering = ["-year"]
+
+    def __str__(self):
+        return f"{self.user} - {self.year} Reading Goal"
