@@ -52,3 +52,7 @@ urlpatterns = [
 
     #path('', include('reading_logs.urls')),
 #]
+
+from django.urls import path
+
+from . import views
