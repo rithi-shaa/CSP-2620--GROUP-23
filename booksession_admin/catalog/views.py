@@ -577,51 +577,16 @@ def delete_review(request, review_id):
     return redirect('book_detail', book_id=book_id)
 
 
-# Reading Logs
 
-@login_required
-def reading_logs(request):
-    logs = ReadingLog.objects.select_related('book').filter(
-        user=request.user
-    ).order_by('-log_date')
+from datetime import date, timedelta
 
-    return render(
-        request,
-        'reading_logs/reading_log_list.html',
-        {
-            'logs': logs
-        }
-    )
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum, Count
+from django.db.models.functions import TruncDate, TruncWeek, TruncMonth
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
-
-@login_required
-def add_log(request):
-    books = Book.objects.all()
-
-    if request.method == 'POST':
-        book_id = request.POST['book_id']
-        pages_read = int(request.POST['pages_read'])
-        log_date = request.POST['log_date']
-
-        if pages_read < 0:
-            messages.error(request, "Pages read cannot be negative.")
-            return redirect('add_log')
-
-        ReadingLog.objects.create(
-            pages_read=pages_read,
-            log_date=log_date,
-            book_id=book_id,
-            user_id=request.user.id
-        )
-
-        messages.success(request, "Reading log added.")
-        return redirect('reading_logs')
-
-    return render(
-        request,
-        'add_log.html',
-        {
-            'books': books
-        }
-    )
-
+from .forms import ReadingLogForm, ReadingGoalForm
+from .models import ReadingLog, ReadingGoal, Book, ShelfBook
