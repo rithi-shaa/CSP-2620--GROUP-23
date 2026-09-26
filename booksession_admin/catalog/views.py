@@ -806,3 +806,233 @@ def reading_goal(request):
             "current_year": current_year,
         }
     )
+
+@login_required
+def analytics_dashboard(request):
+
+    user = request.user
+
+    logs = ReadingLog.objects.filter(
+        user=user
+    ).select_related("book")
+
+    today = timezone.localdate()
+
+    # --------------------------------
+    # BASIC STATISTICS
+    # --------------------------------
+
+    total_pages = logs.aggregate(
+        total=Sum("pages_read")
+    )["total"] or 0
+
+    total_logs = logs.count()
+
+    total_books_logged = logs.values(
+        "book"
+    ).distinct().count()
+
+    # --------------------------------
+    # COMPLETED BOOKS
+    # --------------------------------
+
+    completed_books = ShelfBook.objects.filter(
+        shelf__user=user,
+        reading_status="Completed"
+    ).values(
+        "book"
+    ).distinct().count()
+
+    # --------------------------------
+    # DAILY DATA - LAST 7 DAYS
+    # --------------------------------
+
+    daily_labels = []
+    daily_pages = []
+
+    for i in range(6, -1, -1):
+
+        current_date = today - timedelta(days=i)
+
+        pages = logs.filter(
+            log_date=current_date
+        ).aggregate(
+            total=Sum("pages_read")
+        )["total"] or 0
+
+        daily_labels.append(
+            current_date.strftime("%d %b")
+        )
+
+        daily_pages.append(pages)
+
+    # --------------------------------
+    # WEEKLY DATA - LAST 8 WEEKS
+    # --------------------------------
+
+    weekly_labels = []
+    weekly_pages = []
+
+    for i in range(7, -1, -1):
+
+        week_end = today - timedelta(
+            days=today.weekday()
+        ) - timedelta(
+            weeks=i
+        ) + timedelta(days=6)
+
+        week_start = week_end - timedelta(days=6)
+
+        pages = logs.filter(
+            log_date__range=[
+                week_start,
+                week_end
+            ]
+        ).aggregate(
+            total=Sum("pages_read")
+        )["total"] or 0
+
+        weekly_labels.append(
+            f"{week_start.strftime('%d %b')} - "
+            f"{week_end.strftime('%d %b')}"
+        )
+
+        weekly_pages.append(pages)
+
+    # --------------------------------
+    # MONTHLY DATA - LAST 12 MONTHS
+    # --------------------------------
+
+    monthly_labels = []
+    monthly_pages = []
+
+    for i in range(11, -1, -1):
+
+        year = today.year
+        month = today.month - i
+
+        while month <= 0:
+            month += 12
+            year -= 1
+
+        month_start = date(
+            year,
+            month,
+            1
+        )
+
+        if month == 12:
+            next_month = date(
+                year + 1,
+                1,
+                1
+            )
+        else:
+            next_month = date(
+                year,
+                month + 1,
+                1
+            )
+
+        month_end = next_month - timedelta(days=1)
+
+        pages = logs.filter(
+            log_date__range=[
+                month_start,
+                month_end
+            ]
+        ).aggregate(
+            total=Sum("pages_read")
+        )["total"] or 0
+
+        monthly_labels.append(
+            month_start.strftime("%b %Y")
+        )
+
+        monthly_pages.append(pages)
+
+    # --------------------------------
+    # GENRE DISTRIBUTION
+    # --------------------------------
+
+    genre_data = (
+        logs.values("book__genre")
+        .annotate(
+            total=Count("book", distinct=True)
+        )
+        .order_by("-total")
+    )
+
+    genre_labels = []
+    genre_values = []
+
+    for item in genre_data:
+
+        genre = item["book__genre"] or "Unknown"
+
+        genre_labels.append(genre)
+        genre_values.append(item["total"])
+
+    # --------------------------------
+    # CURRENT YEAR GOAL
+    # --------------------------------
+
+    current_year = today.year
+
+    goal = ReadingGoal.objects.filter(
+        user=user,
+        year=current_year
+    ).first()
+
+    goal_pages = 0
+    goal_books = 0
+    page_goal_percentage = 0
+    book_goal_percentage = 0
+
+    if goal:
+
+        goal_pages = goal.target_numpages
+        goal_books = goal.target_numbooks
+
+        page_goal_percentage = (
+            total_pages / goal_pages * 100
+            if goal_pages > 0
+            else 0
+        )
+
+        book_goal_percentage = (
+            completed_books / goal_books * 100
+            if goal_books > 0
+            else 0
+        )
+
+    context = {
+        "total_pages": total_pages,
+        "total_logs": total_logs,
+        "total_books_logged": total_books_logged,
+        "completed_books": completed_books,
+
+        "goal": goal,
+        "goal_pages": goal_pages,
+        "goal_books": goal_books,
+        "page_goal_percentage": min(page_goal_percentage, 100),
+        "book_goal_percentage": min(book_goal_percentage, 100),
+
+        "daily_labels": daily_labels,
+        "daily_pages": daily_pages,
+
+        "weekly_labels": weekly_labels,
+        "weekly_pages": weekly_pages,
+
+        "monthly_labels": monthly_labels,
+        "monthly_pages": monthly_pages,
+
+        "genre_labels": genre_labels,
+        "genre_values": genre_values,
+    }
+
+    return render(
+        request,
+        "catalog/analytics.html",
+        context
+    )
