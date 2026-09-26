@@ -56,3 +56,45 @@ urlpatterns = [
 from django.urls import path
 
 from . import views
+
+path(
+    "reading-logs/",
+    views.reading_log_list,
+    name="reading_log_list"
+),
+
+path(
+    "reading-logs/add/",
+    views.reading_log_create,
+    name="reading_log_create"
+),
+
+path(
+    "reading-logs/<int:log_id>/",
+    views.reading_log_detail,
+    name="reading_log_detail"
+),
+
+path(
+    "reading-logs/<int:log_id>/edit/",
+    views.reading_log_update,
+    name="reading_log_update"
+),
+
+path(
+    "reading-logs/<int:log_id>/delete/",
+    views.reading_log_delete,
+    name="reading_log_delete"
+),
+
+path(
+    "reading-goal/",
+    views.reading_goal,
+    name="reading_goal"
+),
+
+path(
+    "analytics/",
+    views.analytics_dashboard,
+    name="analytics_dashboard"
+),
