@@ -111,31 +111,52 @@ body.shelves-background {
 .book-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 24px;
+    align-items: flex-start;
 }
 
 .book-item {
-    width: 100px;
+    width: 140px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+/* Force book covers and placeholders to a uniform, neat size */
+.book-item img, 
 .book-cover-placeholder {
-    width: 80px;
-    height: 110px;
-    background: #8c6d53;
-    color: white;
-    font-size: 2rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 120px;
+    height: 180px;
+    object-fit: cover;
     border-radius: 6px;
-    margin: 0 auto 8px;
+    margin-bottom: 8px;
 }
 
 .book-title {
     font-size: 0.85rem;
-    margin: 0;
+    margin: 4px 0;
+    width: 100%;
+    /* Remove nowrap and overflow hidden so titles wrap properly */
+    word-wrap: break-word;
+    text-align: center;
+}
+
+/* Keep the dropdown form neatly contained */
+.book-item form {
+    width: 100%;
+    margin-top: 4px;
+}
+
+
+.book-item select {
+    width: 100%;
+    padding: 4px;
+    font-size: 0.75rem;
+    font-family: 'Georgia', serif;
+    border: 1px solid #d9c9a3;
+    border-radius: 4px;
+    background: white;
 }
 
 .book-status {

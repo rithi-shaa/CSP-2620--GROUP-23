@@ -1,0 +1,61 @@
+/* Google Books Search - Direct Styling */
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #ede8dc !important;
+    font-family: Georgia, serif !important;
+    color: #2c2c2c;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+h1 {
+    color: #3b2b1e !important;
+    font-size: 2rem;
+    font-family: Georgia, serif;
+    margin-bottom: 20px;
+}
+
+/* Style the search form input */
+form input[type="text"] {
+    padding: 12px 18px;
+    font-size: 1rem;
+    font-family: Georgia, serif;
+    border: 1px solid #d4cebe;
+    border-radius: 25px;
+    background-color: #ffffff;
+    color: #2c2c2c;
+    outline: none;
+    width: 300px;
+}
+
+form input[type="text"]:focus {
+    border-color: #8c6d53;
+    box-shadow: 0 0 0 3px rgba(140, 109, 83, 0.12);
+}
+
+/* Style the search submit button */
+form button[type="submit"] {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: Georgia, serif;
+    color: #ffffff;
+    background-color: #4a3525;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+form button[type="submit"]:hover {
+    background-color: #3b2b1e;
+}
+
+/* Links */
+a {
+    color: #8c6d53;
+    font-family: Georgia, serif;
+    font-style: italic;
+}
