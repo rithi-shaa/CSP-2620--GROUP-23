@@ -702,3 +702,30 @@ def reading_log_detail(request, log_id):
             "log": log
         }
     )
+
+@login_required
+def reading_log_delete(request, log_id):
+
+    log = get_object_or_404(
+        ReadingLog,
+        log_id=log_id,
+        user=request.user
+    )
+
+    if request.method == "POST":
+        log.delete()
+
+        messages.success(
+            request,
+            "Reading log deleted successfully."
+        )
+
+        return redirect("reading_log_list")
+
+    return render(
+        request,
+        "catalog/reading_log_confirm_delete.html",
+        {
+            "log": log
+        }
+    )
