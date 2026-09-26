@@ -647,3 +647,41 @@ def reading_log_create(request):
             "title": "Add Reading Log",
         }
     )
+
+@login_required
+def reading_log_update(request, log_id):
+
+    log = get_object_or_404(
+        ReadingLog,
+        log_id=log_id,
+        user=request.user
+    )
+
+    if request.method == "POST":
+        form = ReadingLogForm(
+            request.POST,
+            instance=log
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(
+                request,
+                "Reading log updated successfully."
+            )
+
+            return redirect("reading_log_list")
+
+    else:
+        form = ReadingLogForm(instance=log)
+
+    return render(
+        request,
+        "catalog/reading_log_form.html",
+        {
+            "form": form,
+            "title": "Edit Reading Log",
+            "log": log,
+        }
+    )
