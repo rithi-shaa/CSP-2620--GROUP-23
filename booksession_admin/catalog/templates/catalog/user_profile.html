@@ -30,11 +30,11 @@
         </div>
 
         {% if messages %}
-            <ul class="flash-messages">
+            <div class="flash-messages">
                 {% for message in messages %}
-                    <li>{{ message }}</li>
+                    <div class="flash-messages">{{ message }}</div>
                 {% endfor %}
-            </ul>
+            </div>
         {% endif %}
 
         <div class="bio-section">

@@ -12,11 +12,11 @@
         <h2>Admin Login</h2>
 
         {% if messages %}
-            <ul class="flash-messages">
+            <dic class="flash-messages">
                 {% for message in messages %}
-                <li>{{ message }}</li>
+                <div class="flash-messages">{{ message }}</div>
                 {% endfor %}
-            </ul>
+            </div>
         {% endif %}
 
         <form method="POST" action="{% url 'admin_login' %}">

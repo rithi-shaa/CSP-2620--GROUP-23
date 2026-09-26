@@ -146,4 +146,10 @@ body.book-background {
     border-radius: 4px;
     margin-bottom: 15px;
     font-size: 0.85rem;
+    animation: disappear 1.3s forwards;
+    @keyframes disappear {
+        0% {opacity: 1;}
+        75% {opacity: 1;}
+        100% {opacity: 0; visibility: hidden}
+    }
 }

@@ -29,16 +29,16 @@
                 <div class="login-card register-card">
                     <h2>Register</h2>
 
-                    <!-- Django Messages Framework -->
+                    <!-- django messages pop up-->
                     {% if messages %}
-                        <ul class="flash-messages">
+                        <div class="flash-messages">
                             {% for message in messages %}
-                                <li>{{ message }}</li>
+                                <div class="flash-messages">{{ message }}</div>
                             {% endfor %}
-                        </ul>
+                        </div>
                     {% endif %}
 
-                    <!-- Django Form Action and CSRF Token -->
+                    <!-- django form action and CSRF token -->
                     <form method="POST" action="{% url 'user_register' %}" onsubmit="return checkPasswords()">
                         {% csrf_token %}
                         <input type="text" name="username" placeholder="Username" required>

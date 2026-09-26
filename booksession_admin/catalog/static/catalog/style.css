@@ -337,4 +337,10 @@ body p {
     max-width: 90%;
     text-align: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: disappear 1.3s forwards;
+    @keyframes disappear {
+        0% {opacity: 1;}
+        75% {opacity: 1;}
+        100% {opacity: 0; visibility: hidden}
+    }
 }
