@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Review</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'catalog/style.css' %}">
+    <style>
+        body {
+            background-color: #ede8dc;
+            font-family: 'Georgia', serif;
+            color: #2c2c2c;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .book-card {
+            width: 100%;
+            max-width: 600px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        textarea, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="book-card">
+        <h2>Edit Your Review</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="rating" class="form-label">Rating (1-5)</label>
+                <select name="rating" id="rating" class="form-select" required>
+                    <option value="1" {% if review.rating == 1 %}selected{% endif %}>1 - Poor</option>
+                    <option value="2" {% if review.rating == 2 %}selected{% endif %}>2 - Average</option>
+                    <option value="3" {% if review.rating == 3 %}selected{% endif %}>3 - Good</option>
+                    <option value="4" {% if review.rating == 4 %}selected{% endif %}>4 - Very Good</option>
+                    <option value="5" {% if review.rating == 5 %}selected{% endif %}>5 - Excellent</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="comment" class="form-label">Review Comment</label>
+                <textarea name="comment" id="comment" rows="3" class="form-control" required>{{ review.comment }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Review</button>
+            <a href="{% url 'book_detail' review.book.pk %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

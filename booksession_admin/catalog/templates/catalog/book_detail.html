@@ -1,4 +1,42 @@
-<div class="reviews-section mt-5">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ book.title }} - Book Detail</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'catalog/style.css' %}">
+
+<style>
+    body {
+        background-color: #ede8dc;
+        font-family: 'Georgia', serif;
+        color: #2c2c2c;
+        margin: 0;
+        padding: 40px 20px;
+        display: flex;
+        justify-content: center;
+    }
+    .book-card {
+        width: 100%;
+        max-width: 750px;
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+    textarea, select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+</style>
+</head>
+<body>
+    <div class="book-card">
+
+    <div class="reviews-section mt-5">
+
     <h3>Ratings & Reviews</h3>
     
     <!-- Average Rating Display -->
@@ -44,8 +82,8 @@
                 
                 {% if review.user == request.user %}
                 <div class="mt-2">
-                 <a href="{% url 'catalog:edit_review' review.pk %}" class="btn btn-sm btn-secondary">Edit</a>
-                 <button type="button" class="btn btn-sm btn-danger" data-url="{% url 'catalog:delete_review' review.pk %}" onclick="confirmDelete(this)">Delete</button>
+                 <a href="{% url 'edit_review' review.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+                 <button type="button" class="btn btn-sm btn-danger" data-url="{% url 'delete_review' review.pk %}" onclick="confirmDelete(this)">Delete</button>
                 </div>
                 {% endif %}
             </div>
@@ -62,3 +100,5 @@ function confirmDelete(deleteUrl) {
     }
 }
 </script>
+</body>
+</html>

@@ -33,9 +33,9 @@
 <form method="POST" action="{% url 'update_reading_status' collection.shelf_id item.book.pk %}">
     {% csrf_token %}
     <select name="reading_status" onchange="this.form.submit()" class="status-dropdown">
-        <option value="Want to Read" {% if item.reading_status == "Want to Read" or item.reading_status == "to_read" %}selected{% endif %}>Want to Read</option>
-        <option value="Currently Reading" {% if item.reading_status == "Currently Reading" or item.reading_status == "currently_reading" %}selected{% endif %}>Currently Reading</option>
-        <option value="Completed" {% if item.reading_status == "Completed" or item.reading_status == "completed" %}selected{% endif %}>Completed</option>
+    <option value="Want to Read" {% if item.reading_status == "to_read" or item.reading_status == "Want to Read" %}selected{% endif %}>Want to Read</option>
+    <option value="Currently Reading" {% if item.reading_status == "reading" or item.reading_status == "Currently Reading" %}selected{% endif %}>Currently Reading</option>
+    <option value="Completed" {% if item.reading_status == "finished" or item.reading_status == "Completed" %}selected{% endif %}>Completed</option>
     </select>
 </form>
     </div>
@@ -62,25 +62,38 @@ document.querySelectorAll('.filter-tabs').forEach(tabGroup => {
             let filter = 'all';
             
             if (buttonText.includes('want to read')) {
-                filter = 'want to read';
-            } else if (buttonText.includes('currently reading')) {
-                filter = 'currently reading';
-            } else if (buttonText.includes('completed')) {
-                filter = 'completed';
-            }
+            filter = 'to_read';
+        } else if (buttonText.includes('currently reading')) {
+            filter = 'reading';
+        } else if (buttonText.includes('completed')) {
+            filter = 'finished';
+        }
+            
 
             grid.querySelectorAll('.book-item').forEach(item => {
-                const itemStatus = (item.dataset.status || '').trim().toLowerCase();
+            const itemStatus = (item.dataset.status || '').trim().toLowerCase();
 
-                if (filter === 'all' || itemStatus === filter) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
+            let matches = false;
+            if (filter === 'all') {
+                matches = true;
+            } else if (filter === 'to_read' && (itemStatus === 'to_read' || itemStatus === 'want to read')) {
+                matches = true;
+            } else if (filter === 'reading' && (itemStatus === 'reading' || itemStatus === 'currently reading')) {
+                matches = true;
+            } else if (filter === 'finished' && (itemStatus === 'finished' || itemStatus === 'completed')) {
+                matches = true;
+            }
+
+            if (matches) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+                });
             });
         });
     });
-});
+                
 </script>
 
 </body>

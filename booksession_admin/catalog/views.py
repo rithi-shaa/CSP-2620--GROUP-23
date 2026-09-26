@@ -517,7 +517,7 @@ def add_review(request, book_id):
                 book=book,
                 user=request.user,
                 rating=rating,
-                review_text=review_text
+                comment=review_text
             )
             messages.success(request, "Your review has been added successfully.")
     return redirect('book_detail', book_id=book.book_id)
@@ -534,7 +534,7 @@ def edit_review(request, review_id):
         review_text = request.POST.get('comment')
         if rating and review_text:
             review.rating = rating
-            review.review_text = review_text
+            review.comment = review_text
             review.save()
             messages.success(request, "Your review has been updated.")
             return redirect('book_detail', book_id=review.book.book_id)
