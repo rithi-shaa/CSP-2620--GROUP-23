@@ -615,3 +615,35 @@ def reading_log_list(request):
         "catalog/reading_log_list.html",
         context
     )
+
+@login_required
+def reading_log_create(request):
+
+    if request.method == "POST":
+        form = ReadingLogForm(request.POST)
+
+        if form.is_valid():
+            reading_log = form.save(commit=False)
+
+            reading_log.user = request.user
+
+            reading_log.save()
+
+            messages.success(
+                request,
+                "Reading log added successfully."
+            )
+
+            return redirect("reading_log_list")
+
+    else:
+        form = ReadingLogForm()
+
+    return render(
+        request,
+        "catalog/reading_log_form.html",
+        {
+            "form": form,
+            "title": "Add Reading Log",
+        }
+    )
