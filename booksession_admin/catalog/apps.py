@@ -1,12 +1,45 @@
-from django.apps import AppConfig
+from django.contrib import admin
+
+from .models import ReadingLog, ReadingGoal
 
 
-class CatalogConfig(AppConfig):
-    name = 'catalog'
+@admin.register(ReadingLog)
+class ReadingLogAdmin(admin.ModelAdmin):
 
-from django.apps import AppConfig
+    list_display = (
+        "log_id",
+        "user",
+        "book",
+        "pages_read",
+        "log_date",
+        "created_at",
+    )
+
+    list_filter = (
+        "log_date",
+    )
+
+    search_fields = (
+        "user__username",
+        "book__title",
+    )
 
 
-class ReadingLogsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'reading_logs'
+@admin.register(ReadingGoal)
+class ReadingGoalAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "goal_id",
+        "user",
+        "year",
+        "target_numpages",
+        "target_numbooks",
+    )
+
+    list_filter = (
+        "year",
+    )
+
+    search_fields = (
+        "user__username",
+    )

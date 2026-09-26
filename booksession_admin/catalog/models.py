@@ -90,8 +90,8 @@ class ReadingLog(models.Model):
         return f"{self.user} - {self.book} - {self.pages_read} pages"
 
     
-    class ReadingGoal(models.Model):
-        goal_id = models.AutoField(primary_key=True)
+class ReadingGoal(models.Model):
+    goal_id = models.AutoField(primary_key=True)
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
