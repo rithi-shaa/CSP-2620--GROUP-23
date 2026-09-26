@@ -590,3 +590,28 @@ from django.utils import timezone
 
 from .forms import ReadingLogForm, ReadingGoalForm
 from .models import ReadingLog, ReadingGoal, Book, ShelfBook
+
+
+@login_required
+def reading_log_list(request):
+    logs = ReadingLog.objects.filter(
+        user=request.user
+    ).select_related("book")
+
+    total_pages = logs.aggregate(
+        total=Sum("pages_read")
+    )["total"] or 0
+
+    total_logs = logs.count()
+
+    context = {
+        "logs": logs,
+        "total_pages": total_pages,
+        "total_logs": total_logs,
+    }
+
+    return render(
+        request,
+        "catalog/reading_log_list.html",
+        context
+    )
