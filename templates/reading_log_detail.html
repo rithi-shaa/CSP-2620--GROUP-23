@@ -1,42 +1,65 @@
-{% extends 'reading_logs/base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
 
-<div class="reading-logs-container">
+<div class="reading-container">
 
-    <h1>Reading Log Details</h1>
+    <div class="page-header">
 
-    <p>
-        <strong>Book:</strong>
-        {{ log.book.title }}
-    </p>
+        <h1>Reading Log Details</h1>
 
-    <p>
-        <strong>Pages Read:</strong>
-        {{ log.pages_read }}
-    </p>
+        <a
+            href="{% url 'reading_log_list' %}"
+            class="secondary-btn"
+        >
+            Back
+        </a>
 
-    <p>
-        <strong>Reading Date:</strong>
-        {{ log.log_date }}
-    </p>
+    </div>
 
-    <p>
-        <strong>Created At:</strong>
-        {{ log.created_at }}
-    </p>
+    <div class="detail-card">
 
-    <br>
+        <h2>{{ log.book.title }}</h2>
 
-    <a href="{% url 'reading_logs' %}">
-        Back to Reading Logs
-    </a>
+        <div class="detail-item">
+            <strong>Author:</strong>
+            {{ log.book.author }}
+        </div>
 
-    |
+        <div class="detail-item">
+            <strong>Date:</strong>
+            {{ log.log_date|date:"d M Y" }}
+        </div>
 
-    <a href="{% url 'reading_log_delete' log.log_id %}">
-        Delete
-    </a>
+        <div class="detail-item">
+            <strong>Pages Read:</strong>
+            {{ log.pages_read }}
+        </div>
+
+        <div class="detail-item">
+            <strong>Created:</strong>
+            {{ log.created_at|date:"d M Y H:i" }}
+        </div>
+
+        <div class="action-buttons">
+
+            <a
+                href="{% url 'reading_log_update' log.log_id %}"
+                class="primary-btn"
+            >
+                Edit
+            </a>
+
+            <a
+                href="{% url 'reading_log_delete' log.log_id %}"
+                class="danger-btn"
+            >
+                Delete
+            </a>
+
+        </div>
+
+    </div>
 
 </div>
 
