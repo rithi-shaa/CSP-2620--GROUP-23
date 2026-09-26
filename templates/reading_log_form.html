@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="reading-container">
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+
+        <a href="{% url 'reading_log_list' %}" class="secondary-btn">
+            Back to Reading Logs
+        </a>
+    </div>
+
+    <div class="form-card">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="error-box">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+
+                <label for="{{ form.book.id_for_label }}">
+                    Book
+                </label>
+
+                {{ form.book }}
+
+                {% if form.book.errors %}
+                    <div class="field-error">
+                        {{ form.book.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="{{ form.pages_read.id_for_label }}">
+                    Pages Read
+                </label>
+
+                {{ form.pages_read }}
+
+                {% if form.pages_read.errors %}
+                    <div class="field-error">
+                        {{ form.pages_read.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="{{ form.log_date.id_for_label }}">
+                    Reading Date
+                </label>
+
+                {{ form.log_date }}
+
+                {% if form.log_date.errors %}
+                    <div class="field-error">
+                        {{ form.log_date.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <button type="submit" class="primary-btn">
+                Save Reading Log
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
