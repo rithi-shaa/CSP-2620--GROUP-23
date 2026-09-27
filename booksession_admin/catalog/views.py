@@ -211,15 +211,18 @@ def index(request):
     books = Book.objects.all()
     return render(request, 'catalog/index.html', {'books': books})
 
-#admin
+
 @login_required(login_url='login')
 def collections(request):
     """Displays the main collections overview page (just the blocks)."""
     my_collections = Shelf.objects.filter(user=request.user)
+
+    profile = UserProfile.objects.get_or_create(user=request.user)[0]
     
     context = {
         'collections': my_collections,
-        'username': request.user.username
+        'username': request.user.username,
+        'profile': profile,
     }
     return render(request, 'catalog/collections.html', context)
 
