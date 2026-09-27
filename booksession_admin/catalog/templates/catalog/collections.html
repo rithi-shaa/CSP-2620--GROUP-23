@@ -8,11 +8,15 @@
 </head>
 <body class="shelves-background">
 
+    <div class="shelves-header">
+
     {% if profile.profile_picture %}
     <img src="{{ profile.profile_picture.url }}" class="avatar-circle" alt="Profile Picture">
+    
     {% else %}
-    <div class="shelves-header">
+
         <div class="avatar-circle">{{ username.0|upper }}</div>
+    {% endif %}
         
         <h2>MY COLLECTIONS</h2>
     </div>

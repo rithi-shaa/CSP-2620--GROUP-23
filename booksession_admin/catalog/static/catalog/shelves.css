@@ -24,6 +24,7 @@ body.shelves-background {
     align-items: center;
     justify-content: center;
     margin: 0 auto 10px;
+    object-fit: cover;
 }
 
 .add-shelf-form {
