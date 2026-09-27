@@ -157,13 +157,14 @@ def admin_home(request):
 
     total_books = Book.objects.count()
     total_users = User.objects.count()
-    login_logs = UserLoginLog.objects.all().order_by('-login_time')[:5] # Adjust based on how you fetch logs
+    login_logs = UserLoginLog.objects.all().order_by('-login_time')[:5] #fetching logs
 
-    print(f"DEBUG COUNTS -> Books: {total_books}, Users: {total_users}") # Add this line
+    print(f"DEBUG COUNTS -> Books: {total_books}, Users: {total_users}")
 
     context = {
         'total_books': total_books,
         'total_users': total_users,
+        'login_logs': login_logs,
     }
 
     return render(request, 'catalog/admin_home.html', context)
@@ -319,11 +320,6 @@ def logout_view(request):
 
 
 #search function
-@login_required
-def admin_home(request):
-    logs = UserLoginLog.objects.all().order_by('-login_time')
-    return render(request, 'catalog/admin_home.html', {'logs': logs})
-
 def search_google_books(request):
     print("=== SEARCH VIEW HIT ===")
     query = request.GET.get('q', '')
