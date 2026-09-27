@@ -1,4 +1,4 @@
-body.book-background {
+body.profile-background {
     margin: 0;
     height: 100vh;
     width: 100vw;
@@ -6,7 +6,7 @@ body.book-background {
     justify-content: center;
     align-items: center;
     font-family: 'Georgia', serif;
-    background-color: #ede8dc;
+    background-color: #d9c9a3;
 }
 
 .profile-card {

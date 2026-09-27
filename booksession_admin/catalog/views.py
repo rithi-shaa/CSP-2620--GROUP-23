@@ -108,7 +108,7 @@ def reset_password_view(request, uidb64, token):
             messages.success(request, "Your password has been successfully reset. You can now login.")
             return redirect('login')
 
-        return render(request, 'catalog/reset_password.html', {'token': token})
+        return render(request, 'catalog/reset_password.html', {'uidb64': uidb64, 'token': token})
     else:
         messages.error(request, "The password reset link is invalid or has expired.")
         return redirect('reset_password')

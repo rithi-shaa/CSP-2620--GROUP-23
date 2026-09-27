@@ -214,7 +214,7 @@ body.book-background-plain {
 .body {
     margin: 0;
     font-family: 'Georgia', serif;
-    background-color: #ede8dc;
+    background-color: #d9c9a3;
     color: #2c2c2c;
     padding: 40px 60px;
     box-sizing: border-box;
@@ -321,7 +321,7 @@ body.homepage-background {
     width: 100%;
     font-family: 'Georgia', serif;
     color: #2c2c2c;
-    background-color: #ede8dc;
+    background-color: #d9c9a3;
     box-sizing: border-box;
     padding: 40px 60px;
 }
