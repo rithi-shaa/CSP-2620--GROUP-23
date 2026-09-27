@@ -31,11 +31,11 @@
 
                     <!-- django messages pop up-->
                     {% if messages %}
-                        <div class="flash-messages">
+                        <ul class="flash-messages">
                             {% for message in messages %}
-                                <div class="flash-messages">{{ message }}</div>
+                                <li>{{ message }}</li>
                             {% endfor %}
-                        </div>
+                        </ul>
                     {% endif %}
 
                     <!-- django form action and CSRF token -->
