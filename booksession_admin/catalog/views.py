@@ -149,22 +149,21 @@ def admin_login(request):
 
     return render(request, 'catalog/admin_login.html')
             
-
 def admin_home(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         messages.error(request, "Unauthorized access.")
         return redirect('admin_login')
 
     total_books = Book.objects.count()
-    total_users = User.objects.count()
-    login_logs = UserLoginLog.objects.all().order_by('-login_time')[:5] #fetching logs
+    total_users = User.objects.filter(is_staff=False).count()
+    admin_login_logs = UserLoginLog.objects.filter(user__is_staff=True).order_by('-login_time')[:5] #fetching logs
 
     print(f"DEBUG COUNTS -> Books: {total_books}, Users: {total_users}")
 
     context = {
         'total_books': total_books,
         'total_users': total_users,
-        'login_logs': login_logs,
+        'login_logs': admin_login_logs,
     }
 
     return render(request, 'catalog/admin_home.html', context)
