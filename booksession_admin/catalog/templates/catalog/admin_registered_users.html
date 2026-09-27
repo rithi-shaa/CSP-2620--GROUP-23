@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registered Users</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'catalog/style.css' %}">
+</head>
+
+<body class="book-background-plain">
+
+    <div class="admin-container">
+
+        <h1>Registered Users</h1>
+
+        <nav>
+            <a href="{% url 'admin_home' %}">Dashboard</a>
+            <a href="{% url 'admin_genre_shelves' %}">Genre Shelves</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+
+        <h2>Registered Users</h2>
+
+        <ul>
+            {% for user in registered_users %}
+                <li>
+                    <strong>{{ user.username }}</strong>
+                    — {{ user.email }}
+                </li>
+            {% empty %}
+                <li>No registered users found.</li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+</body>
+</html>

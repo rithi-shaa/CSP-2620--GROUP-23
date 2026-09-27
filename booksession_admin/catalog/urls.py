@@ -28,6 +28,7 @@ urlpatterns = [
     path('review/<int:review_id>/delete/', views.delete_review, name='delete_review'),
 
     #admin
+    path('admin/registered-users/', views.admin_registered_users, name='admin_registered_users'),
     path('admin/genre-shelves/', views.admin_genre_shelves, name='admin_genre_shelves'),
     path('admin/add-book/', views.manual_book_entry, name='add_book'),
     

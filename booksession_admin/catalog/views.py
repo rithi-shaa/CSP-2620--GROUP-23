@@ -169,6 +169,17 @@ def admin_home(request):
     return render(request, 'catalog/admin_home.html', context)
 
 @staff_member_required(login_url='admin_login')
+def admin_registered_users(request):
+    registered_users = User.objects.filter(is_staff=False).order_by('username')
+
+    context = {
+        'registered_users': registered_users,
+        }
+
+    return render(request, 'catalog/admin_registered_users.html', context)
+
+
+@staff_member_required(login_url='admin_login')
 def admin_genre_shelves(request):
     """Admin view to see books organized into shelves by genre."""
     #get all genre available in db
