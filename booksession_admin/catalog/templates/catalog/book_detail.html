@@ -71,6 +71,7 @@
     margin: 10px 0 15px 0;
 }
 
+
 </style>
 </head>
 <body>
@@ -121,7 +122,7 @@
     <div class="list-group">
         {% for review in reviews %}
             <div class="list-group-item list-group-item-action flex-column align-items-start mb-2">
-                <div class="d-flex w-100 justify-content-between">
+                <div class="d-flex w-100 justify-content-between review-header"> 
                     <h5 class="mb-1">{{ review.user.username }}</h5>
                     <small>Rating: {{ review.rating }}/5</small>
                 </div>
