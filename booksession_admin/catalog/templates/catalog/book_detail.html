@@ -126,7 +126,7 @@
                     <h5 class="mb-1">{{ review.user.username }}</h5>
                     <small>Rating: {{ review.rating }}/5</small>
                 </div>
-                <p class="mb-1">{{ review.comment }}</p>
+                <p class="mb-1 review-comment">{{ review.comment }}</p> 
                 <small class="text-muted">Posted on {{ review.created_at|date:"M d, Y" }}</small>
                 
                 {% if review.user == request.user %}
