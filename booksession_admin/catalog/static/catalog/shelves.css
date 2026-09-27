@@ -113,6 +113,28 @@ body.shelves-background {
     font-family: 'Georgia', serif;
 }
 
+.shelves-header nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.shelves-header nav a {
+    display: inline-block;
+    padding: 10px 22px;
+    background-color: #4a3525;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.shelves-header nav a:hover {
+    background-color: #8c6d53;
+}
+
 .book-grid {
     display: flex;
     flex-wrap: wrap;
