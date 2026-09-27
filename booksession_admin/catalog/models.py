@@ -59,6 +59,18 @@ class ShelfBook(models.Model):
     def __str__(self):
         return f"{self.book.title} on {self.shelf.shelf_name}"
 
+class Review(models.Model):
+    review_id = models.AutoField(primary_key=True)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.IntegerField()
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.book.title}"
+
 
 class ReadingLog(models.Model):
     log_id = models.AutoField(primary_key=True)

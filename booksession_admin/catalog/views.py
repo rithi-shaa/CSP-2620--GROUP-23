@@ -12,8 +12,13 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.utils import timezone
+from django.db.models import Sum, Count
+from django.db.models.functions import TruncDate, TruncWeek, TruncMonth
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import ReadingLog, UserProfile, Book, Shelf, ShelfBook, UserLoginLog, User, Review
+from .models import UserProfile, Book, Shelf, ShelfBook, UserLoginLog, User, Review, ReadingLog, ReadingGoal
+from datetime import date, timedelta
+from .forms import ReadingLogForm, ReadingGoalForm
 from django.db.models import Q
 
 def register_view(request):
@@ -575,22 +580,6 @@ def delete_review(request, review_id):
         return redirect('book_detail', book_id=review.book.book_id)
 
     return redirect('book_detail', book_id=book_id)
-
-
-
-from datetime import date, timedelta
-
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.db.models import Sum, Count
-from django.db.models.functions import TruncDate, TruncWeek, TruncMonth
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.utils import timezone
-
-from .forms import ReadingLogForm, ReadingGoalForm
-from .models import ReadingLog, ReadingGoal, Book, ShelfBook
-
 
 @login_required
 def reading_log_list(request):
