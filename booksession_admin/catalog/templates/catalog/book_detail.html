@@ -124,6 +124,20 @@
     display: flex;
     gap: 6px;
 }
+.container a:first-child, 
+.back-link {
+    color: #5c4033;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.container a:first-child:hover, 
+.back-link:hover {
+    color: #3b281f;
+    text-decoration: underline;
+}
+
 
 
 </style>
@@ -131,7 +145,7 @@
 <body>
     <div class="book-card">
         <div class="mb-3">
-        <a href="{% url 'index' %}" class="btn btn-secondary btn-sm">← Back to Home</a>
+        <a href="{% url 'index' %}" class="btn btn-sm custom-back-btn">← Back to Home</a>
     </div>
     
     <div class="reviews-section mt-5">
