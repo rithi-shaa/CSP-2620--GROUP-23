@@ -168,12 +168,12 @@
                     <span class="badge bg-secondary">Rating: {{ review.rating }}/5</span>
                 </div>
                 <p class="mb-1 review-comment">{{ review.comment }}</p> 
-                <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                <div class="review-footer">
                 <small class="text-muted">Posted on {{ review.created_at|date:"M d, Y" }}</small>
-    {% if review.user == request.user %}
-                <div>
-        <a href="{% url 'edit_review' review.pk %}" class="btn btn-sm me-1">Edit</a>
-        <button type="button" class="btn btn-sm" data-url="{% url 'delete_review' review.pk %}" onclick="confirmDelete(this)">Delete</button>
+        {% if review.user == request.user %}
+    <div class="review-actions">
+                <a href="{% url 'edit_review' review.pk %}" class="btn btn-sm">Edit</a>
+                <button type="button" class="btn btn-sm" data-url="{% url 'delete_review' review.pk %}" onclick="confirmDelete(this)">Delete</button>
     </div>
     {% endif %}
 </div>
