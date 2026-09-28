@@ -162,9 +162,13 @@
     <h3>Ratings & Reviews</h3>
     
     <!-- Average Rating Display -->
-    <div class="mb-3">
-        <span class="fs-4 fw-bold">Average Rating: {{ book.average_rating|default:"No ratings yet" }}</span>
-    </div>
+    <p>Average Rating: 
+    {% if avg_rating %}
+        {{ avg_rating|floatformat:1 }} / 5
+    {% else %}
+        No ratings yet
+    {% endif %}
+    </p>
 
     <!-- Review Form -->
     {% if user.is_authenticated %}
@@ -200,7 +204,12 @@
         {% for review in reviews %}
             <div class="list-group-item list-group-item-action flex-column align-items-start mb-2">
                 <div class="d-flex w-100 justify-content-between review-header"> 
-                    <h5 class="mb-1">{{ review.user.username }}</h5>
+                    <div class="d-flex align-items-center">
+        {% if review.user.userprofile.profile_picture %}
+        <img src="{{ review.user.userprofile.profile_picture.url }}" alt="{{ review.user.username }}" class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+    {% endif %}
+                <h5 class="mb-0 fw-bold">{{ review.user.username }}</h5>
+            </div>
                     <span class="badge bg-secondary">Rating: {{ review.rating }}/5</span>
                 </div>
                 <p class="mb-1 review-comment">{{ review.comment }}</p> 

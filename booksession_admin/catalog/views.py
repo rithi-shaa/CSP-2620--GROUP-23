@@ -20,6 +20,7 @@ from .models import UserProfile, Book, Shelf, ShelfBook, UserLoginLog, User, Rev
 from datetime import date, timedelta
 from .forms import ReadingLogForm, ReadingGoalForm
 from django.db.models import Q
+from django.db.models import Sum, Count, Avg
 
 def register_view(request):
     if request.method == 'POST':
@@ -517,6 +518,9 @@ def book_detail(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     reviews = Review.objects.filter(book=book)
 
+    # Calculate average rating
+    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+
     # Check if the current user has already reviewed this book
     user_has_reviewed = False
     if request.user.is_authenticated:
@@ -525,6 +529,7 @@ def book_detail(request, book_id):
     context = {
         'book': book,
         'reviews': reviews,
+        'avg_rating': avg_rating,
         'user_has_reviewed': user_has_reviewed,
     }
     return render(request, 'catalog/book_detail.html', context)
