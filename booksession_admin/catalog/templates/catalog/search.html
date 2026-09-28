@@ -5,14 +5,30 @@
     <title>Search Books</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'catalog.css' %}">
-</head>
-<body>
+
+    <!-- Bootstrap CSS for card/container layout styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+   
+    <!-- add this line here: Custom theme styling to match homepage background and buttons -->
+    <style> 
+        body { background-color: #d6c59b !important; } 
+        .btn-custom-brown { background-color: #5c3a21; color: white; border: none; }  
+        .btn-custom-brown:hover { background-color: #432a18; color: white; }  
+    </style>  
+ </head>
+ <body  
+
+    Centered card container wrapper 
+    <div class="container my-5" style="max-width: 850px;"> 
+        <div class="card shadow-sm p-4 bg-white rounded"> 
+
+
     <h1>Search Books (Google Books API)</h1>
 
     <!-- Search Form -->
     <form method="GET" action="{% url 'search_google_books' %}">
-        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search title or author..." required>
-        <button type="submit">Search</button>
+        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search title or author..." required class="form-control d-inline-block w-75 me-2">
+        <button type="submit" class="btn btn-custom-brown">Search</button>
     </form>
 
 {% if debug_info %}
@@ -32,7 +48,7 @@
 <!-- Results List -->
 {% if books %}
     <h2>Results:</h2>
-    <ul>
+    <ul class="list-unstyled">
         {% for book in books %}
             <li style="margin-bottom: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px;">
         {% if book.cover_image_url %}
@@ -51,7 +67,7 @@
                     <input type="hidden" name="published_date" value="{{ book.published_date }}">
                     <input type="hidden" name="genre" value="{{ book.genre }}">
                     <input type="hidden" name="cover_image_url" value="{{ book.cover_image_url }}">
-                    <button type="submit" class="btn btn-sm btn-secondary" style="padding: 6px 12px;">Add to Catalog</button>
+                    <button type="submit" class="btn btn-sm btn-custom-brown" style="padding: 6px 12px;">Add to Catalog</button> 
                 </form>
             </li>
         {% endfor %}
@@ -63,7 +79,13 @@
 
 <br>
 {% if request.user.is_staff %}
-    <a href="{% url 'admin_home' %}">Back to Dashboard</a>
+    <a href="{% url 'admin_home' %}" class="btn btn-custom-brown btn-sm" style="padding: 6px 12px; text-decoration: none;">&larr; Back to Dashboard</a> <!-- add this line here -->
 {% else %}
-    <a href="{% url 'index' %}">Back to Home</a>
+    <a href="{% url 'index' %}" class="btn btn-custom-brown btn-sm" style="padding: 6px 12px; text-decoration: none;">&larr; Back to Home</a>
 {% endif %}
+
+      </div> 
+    </div> 
+
+</body>
+</html>
