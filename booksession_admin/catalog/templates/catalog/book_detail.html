@@ -125,15 +125,25 @@
     gap: 6px;
 }
 .custom-back-btn {
+    display: inline-block !important;
     background-color: #5c4033 !important;
-    color: #fff !important;
+    color: #ffffff !important;
+    padding: 8px 16px !important;
+    border-radius: 4px !important;
     border: 1px solid #5c4033 !important;
-    transition: all 0.2s ease;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 20px !important;
+    line-height: 1.5 !important;
+    transition: all 0.2s ease !important;
 }
 
 .custom-back-btn:hover {
     background-color: #3b281f !important;
     border-color: #3b281f !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
 }
 
 
@@ -144,7 +154,7 @@
 <body>
     <div class="book-card">
         <div class="mb-3">
-        <a href="{% url 'index' %}" class="btn btn-sm custom-back-btn">← Back to Home</a>
+        <a href="{% url 'index' %}" class="custom-back-btn">Back to Home</a>
     </div>
     
     <div class="reviews-section mt-5">
