@@ -157,6 +157,7 @@ def admin_home(request):
 
     total_books = Book.objects.count()
     total_users = User.objects.filter(is_staff=False).count()
+    genre_counts = (Book.objects.exclude(genre__isnull=True).exclude(genre__exact='').values('genre').annotate(total=Count('book_id')).order_by('genre'))
     admin_login_logs = UserLoginLog.objects.filter(user__is_staff=True).order_by('-login_time')[:5] #fetching logs
 
     print(f"DEBUG COUNTS -> Books: {total_books}, Users: {total_users}")
@@ -164,6 +165,7 @@ def admin_home(request):
     context = {
         'total_books': total_books,
         'total_users': total_users,
+        'genre_counts': genre_counts,
         'login_logs': admin_login_logs,
     }
 

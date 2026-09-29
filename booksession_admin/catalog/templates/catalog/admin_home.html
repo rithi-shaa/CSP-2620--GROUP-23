@@ -10,17 +10,32 @@
     <div class="admin-container">
     <h1>Admin Homepage</h1>
 
-    <div class="stats-container">
-        <p><strong>Total Books:</strong> {{ total_books }}</p>
-        <p><strong>Total Users:</strong> {{ total_users }}</p>
-    </div>
-
     <nav>
         <a href="{% url 'search_google_books' %}">Add Book</a>
         <a href="{% url 'admin_registered_users' %}">Registered Users</a>
         <a href="{% url 'admin_genre_shelves' %}">Genre Shelves</a>
         <a href="{% url 'logout' %}">Logout</a>
     </nav>
+
+    <div class="stats-container">
+        <p><strong>Total Books:</strong> {{ total_books }}</p>
+        <p><strong>Total Users:</strong> {{ total_users }}</p>
+    </div>
+
+    <div class="genre-container">
+        <h2>Books by genre</h2>
+
+        <div class="genre-list">
+          {% for genre in genre_counts %}
+            <div class="genre-card">
+                <h3>{{ genre.genre }}</h3>
+                <p>{{ genre.total }}</p>
+            </div>
+          {% empty %}
+            <p>No genres available.</p>
+          {% endfor %}
+        </div>
+    </div>
 
     <h2>Recent Login History</h2>
     <ul>

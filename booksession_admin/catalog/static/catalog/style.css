@@ -315,6 +315,49 @@ body p {
     font-size: 16px;
 }
 
+.genre-container {
+    width: 100%;
+    margin-top: 30px;
+}
+
+.genre-container h2 {
+    margin-bottom: 15px;
+}
+
+.genre-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.genre-card {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: white;
+    border: 1px solid #d8cfc0;
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.genre-card h3 {
+    margin: 0;
+    color: #3b2b1e;
+    font-size: 1rem;
+}
+
+.genre-card p {
+    margin: 0;
+    color: #3b2b1e;
+    font-style: normal;
+    text-align: right;
+    font-weight: bold;
+}
+
 body.homepage-background {
     margin: 0;
     min-height: 100vh;
