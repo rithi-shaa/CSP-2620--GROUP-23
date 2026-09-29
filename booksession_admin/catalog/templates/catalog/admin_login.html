@@ -27,7 +27,7 @@
     </div>
     <div class="input-wrapper">
         <input type="password" name="password" id="password" placeholder="Password" required>
-        <span class="input-icon toggle-password" onclick="togglePassword()">👁️</span>
+        <span class="input-icon toggle-password" onclick="togglePassword()">🙈</span>
     </div>
             <button type="submit" class="submit-btn">Login</button>
         </form>
@@ -39,10 +39,10 @@ function togglePassword() {
 
     if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
-        icon.textContent = '🙈';
+        icon.textContent = '👁️';
     } else {
         passwordInput.type = 'password';
-        icon.textContent = '👁️';
+        icon.textContent = '🙈';
     }
 }
 </script>
