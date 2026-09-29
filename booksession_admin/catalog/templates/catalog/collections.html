@@ -29,7 +29,6 @@
         </ul>
     {% endif %}
 
-    <!-- Add Collection Form -->
     <form action="{% url 'add_shelf' %}" method="POST" class="add-shelf-form">
         {% csrf_token %}
         <input type="text" name="shelf_name" placeholder="New collection name" required>
@@ -38,7 +37,7 @@
 
     <div class="shelves-list">
         {% for collection in collections %}
-            <!-- this block navigates to its detail page -->
+            <!-- to its detail page -->
             <div class="shelf-card" style="cursor: pointer;" onclick="location.href=`{% url 'collection_detail' collection.shelf_id %}`">
                 <div class="shelf-header">
                     <h3>{{ collection.shelf_name }}</h3>
