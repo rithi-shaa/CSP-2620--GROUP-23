@@ -30,7 +30,11 @@
                     <div class="book-grid">
                         {% for book in shelf.books %}
                             <div class="book-item">
+                                {% if book.cover_image_url %}
+                                    <img src="{{ book.cover_image_url }}" alt="{{ book.title }}" class="book-cover-placeholder">
+                                {% else %}
                                 <div class="book-cover-placeholder">{{ book.title.0|upper }}</div>
+                                {% endif %}
                                 <p class="book-title">{{ book.title }}</p>
                                 <p class="book-status">Author: {{ book.author }}</p>
                             </div>
