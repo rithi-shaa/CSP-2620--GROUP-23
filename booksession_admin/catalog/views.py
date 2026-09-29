@@ -499,8 +499,6 @@ def delete_book(request, pk):
     return redirect('book_catalog')
 
 
-# Review Management
-
 # USER FEATURE: Add Book to Collection/Shelf
 @login_required
 def add_to_shelf(request, book_pk):
@@ -513,7 +511,10 @@ def add_to_shelf(request, book_pk):
         
         # Create the relationship using the explicit ShelfBook model
         ShelfBook.objects.get_or_create(shelf=shelf, book=book)
-        
+
+        # ADD THIS LINE TO TRIGGER THE SUCCESS MESSAGE:
+        messages.success(request, f'Successfully added "{book.title}" to {shelf}!')
+
     return redirect('book_catalog')
 
 def book_detail(request, book_id):
