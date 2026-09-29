@@ -79,7 +79,7 @@
 
 <br>
 {% if request.user.is_staff %}
-    <a href="{% url 'admin_home' %}" class="btn btn-custom-brown btn-sm" style="padding: 6px 12px; text-decoration: none;">&larr; Back to Dashboard</a> <!-- add this line here -->
+    <a href="{% url 'admin_home' %}" class="btn btn-custom-brown btn-sm" style="padding: 6px 12px; text-decoration: none;">&larr; Back to Homepage</a> <!-- add this line here -->
 {% else %}
     <a href="{% url 'index' %}" class="btn btn-custom-brown btn-sm" style="padding: 6px 12px; text-decoration: none;">&larr; Back to Home</a>
 {% endif %}
