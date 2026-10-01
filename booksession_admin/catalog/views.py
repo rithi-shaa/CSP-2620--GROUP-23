@@ -348,7 +348,8 @@ def search_google_books(request):
     if query:
         api_url = "https://www.googleapis.com/books/v1/volumes"
         try:
-            response = requests.get(api_url, params={'q': f"inauthor:{query}", 'key': os.getenv('GOOGLE_API_KEY')})
+            print(f"--- FETCHING API FOR QUERY: {query} ---")
+            response = requests.get(api_url, params={'q': query, 'key': os.getenv('GOOGLE_API_KEY')})
             print("--- API STATUS:", response.status_code)
             response.raise_for_status()
             data = response.json()

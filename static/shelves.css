@@ -109,18 +109,26 @@ body.shelves-background {
 }
 
 .book-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 24px;
-    align-items: flex-start;
+    padding: 20px 0;
+    justify-content: center;
 }
-
 .book-item {
-    width: 140px;
-    text-align: center;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 8px rgba(74, 53, 37, 0.08);
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.book-item:hover {
+    transform: translateY(-4px);
 }
 
 /* Force book covers and placeholders to a uniform, neat size */
