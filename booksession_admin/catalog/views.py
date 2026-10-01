@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()  # Load environment variables from .env
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -203,9 +204,11 @@ def admin_genre_shelves(request):
     }
     return render(request, 'catalog/admin_genre_shelves.html', context)
 
+@never_cache
 def login_view(request):
+    username = ''
     if request.method == 'POST':
-        username = request.POST.get('username')
+        username = request.POST.get('username', '')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         

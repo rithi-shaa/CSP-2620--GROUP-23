@@ -39,7 +39,20 @@
 </form>
 
 <script>
-function togglePassword() {
+  const form = document.querySelector('form');
+  const userInput = document.querySelector('input[name="username"]');
+
+  form.addEventListener('submit', () => {
+    sessionStorage.setItem('lastUsername', userInput.value);
+  });
+
+  window.addEventListener('pageshow', () => {
+    if (!userInput.value) {
+      userInput.value = sessionStorage.getItem('lastUsername') || '';
+    }
+  });
+
+   function togglePassword() {
     const passwordInput = document.getElementById('password');
     const icon = document.querySelector('.toggle-password');
 
