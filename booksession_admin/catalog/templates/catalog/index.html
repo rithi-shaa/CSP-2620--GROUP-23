@@ -9,6 +9,14 @@
 
 <body class="homepage-background">
 
+    {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <div class="homepage-container">
 
         <h1>Welcome to the Booksession's Homepage!</h1>
