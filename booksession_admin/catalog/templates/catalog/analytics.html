@@ -1,6 +1,22 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reading Analytics - Booksession</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'catalog/style.css' %}">
+    <link rel="stylesheet" href="{% static 'catalog/reading_log.css' %}">
+
+</head>
+
+
+<body>
 
 <div class="reading-container">
 
@@ -8,6 +24,7 @@
 
         <div>
             <h1>Reading Analytics</h1>
+
             <p>
                 Monitor your reading habits and progress.
             </p>
@@ -28,23 +45,46 @@
     <div class="stats-row">
 
         <div class="stat-card">
+
             <h3>Total Pages</h3>
-            <p>{{ total_pages }}</p>
+
+            <p>
+                {{ total_pages }}
+            </p>
+
         </div>
 
+
         <div class="stat-card">
+
             <h3>Reading Logs</h3>
-            <p>{{ total_logs }}</p>
+
+            <p>
+                {{ total_logs }}
+            </p>
+
         </div>
 
+
         <div class="stat-card">
+
             <h3>Books Tracked</h3>
-            <p>{{ total_books_logged }}</p>
+
+            <p>
+                {{ total_books_logged }}
+            </p>
+
         </div>
 
+
         <div class="stat-card">
+
             <h3>Books Completed</h3>
-            <p>{{ completed_books }}</p>
+
+            <p>
+                {{ completed_books }}
+            </p>
+
         </div>
 
     </div>
@@ -56,27 +96,35 @@
 
     <div class="analytics-card">
 
-        <h2>{{ goal.year }} Reading Goal</h2>
+        <h2>
+            {{ goal.year }} Reading Goal
+        </h2>
+
 
         <div class="goal-progress-grid">
+
 
             <div>
 
                 <h3>Pages Goal</h3>
 
                 <div class="progress-bar">
+
                     <div
                         class="progress-fill"
                         data-progress="{{ page_goal_percentage|default:0 }}"
                     ></div>
+
                 </div>
 
                 <p>
+
                     {{ total_pages }}
                     /
                     {{ goal_pages }}
                     pages
                     ({{ page_goal_percentage|floatformat:1 }}%)
+
                 </p>
 
             </div>
@@ -87,18 +135,22 @@
                 <h3>Books Goal</h3>
 
                 <div class="progress-bar">
+
                     <div
                         class="progress-fill"
                         data-progress="{{ book_goal_percentage|default:0 }}"
                     ></div>
+
                 </div>
 
                 <p>
+
                     {{ completed_books }}
                     /
                     {{ goal_books }}
                     books
                     ({{ book_goal_percentage|floatformat:1 }}%)
+
                 </p>
 
             </div>
@@ -114,7 +166,9 @@
 
     <div class="analytics-card">
 
-        <h2>Daily Reading Progress</h2>
+        <h2>
+            Daily Reading Progress
+        </h2>
 
         <canvas id="dailyChart"></canvas>
 
@@ -125,7 +179,9 @@
 
     <div class="analytics-card">
 
-        <h2>Weekly Reading Progress</h2>
+        <h2>
+            Weekly Reading Progress
+        </h2>
 
         <canvas id="weeklyChart"></canvas>
 
@@ -136,7 +192,9 @@
 
     <div class="analytics-card">
 
-        <h2>Monthly Reading Progress</h2>
+        <h2>
+            Monthly Reading Progress
+        </h2>
 
         <canvas id="monthlyChart"></canvas>
 
@@ -147,7 +205,9 @@
 
     <div class="analytics-card">
 
-        <h2>Genre Distribution</h2>
+        <h2>
+            Genre Distribution
+        </h2>
 
         <div class="chart-container">
 
@@ -160,18 +220,27 @@
 </div>
 
 
+<!-- CHART.JS -->
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
+<!-- DJANGO JSON DATA -->
+
 {{ daily_labels|json_script:"daily-labels" }}
+
 {{ daily_pages|json_script:"daily-pages" }}
 
 {{ weekly_labels|json_script:"weekly-labels" }}
+
 {{ weekly_pages|json_script:"weekly-pages" }}
 
 {{ monthly_labels|json_script:"monthly-labels" }}
+
 {{ monthly_pages|json_script:"monthly-pages" }}
 
 {{ genre_labels|json_script:"genre-labels" }}
+
 {{ genre_values|json_script:"genre-values" }}
 
 
@@ -221,7 +290,9 @@
         );
 
 
+    // =========================================
     // DAILY CHART
+    // =========================================
 
     new Chart(
         document.getElementById("dailyChart"),
@@ -229,6 +300,7 @@
             type: "bar",
 
             data: {
+
                 labels: dailyLabels,
 
                 datasets: [
@@ -240,27 +312,40 @@
                         borderWidth: 1
                     }
                 ]
+
             },
 
             options: {
+
                 responsive: true,
 
                 scales: {
+
                     y: {
+
                         beginAtZero: true,
 
                         title: {
+
                             display: true,
+
                             text: "Pages"
+
                         }
+
                     }
+
                 }
+
             }
+
         }
     );
 
 
+    // =========================================
     // WEEKLY CHART
+    // =========================================
 
     new Chart(
         document.getElementById("weeklyChart"),
@@ -268,6 +353,7 @@
             type: "line",
 
             data: {
+
                 labels: weeklyLabels,
 
                 datasets: [
@@ -283,27 +369,40 @@
                         fill: false
                     }
                 ]
+
             },
 
             options: {
+
                 responsive: true,
 
                 scales: {
+
                     y: {
+
                         beginAtZero: true,
 
                         title: {
+
                             display: true,
+
                             text: "Pages"
+
                         }
+
                     }
+
                 }
+
             }
+
         }
     );
 
 
+    // =========================================
     // MONTHLY CHART
+    // =========================================
 
     new Chart(
         document.getElementById("monthlyChart"),
@@ -311,6 +410,7 @@
             type: "line",
 
             data: {
+
                 labels: monthlyLabels,
 
                 datasets: [
@@ -326,27 +426,40 @@
                         fill: false
                     }
                 ]
+
             },
 
             options: {
+
                 responsive: true,
 
                 scales: {
+
                     y: {
+
                         beginAtZero: true,
 
                         title: {
+
                             display: true,
+
                             text: "Pages"
+
                         }
+
                     }
+
                 }
+
             }
+
         }
     );
 
 
+    // =========================================
     // GENRE CHART
+    // =========================================
 
     new Chart(
         document.getElementById("genreChart"),
@@ -354,6 +467,7 @@
             type: "doughnut",
 
             data: {
+
                 labels: genreLabels,
 
                 datasets: [
@@ -365,14 +479,20 @@
                         borderWidth: 1
                     }
                 ]
+
             },
 
             options: {
+
                 responsive: true
+
             }
+
         }
     );
 
 </script>
 
-{% endblock %}
+
+</body>
+</html>

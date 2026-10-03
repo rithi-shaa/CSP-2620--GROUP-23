@@ -1,6 +1,18 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block content %}
+    <title>{{ title }} - Booksession</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'catalog/style.css' %}">
+    <link rel="stylesheet" href="{% static 'catalog/reading_log.css' %}">
+</head>
+
+<body>
 
 <div class="reading-container">
 
@@ -82,4 +94,5 @@
 
 </div>
 
-{% endblock %}
+</body>
+</html>

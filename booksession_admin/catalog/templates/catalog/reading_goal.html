@@ -1,13 +1,30 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ current_year }} Reading Goal - Booksession</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'catalog/style.css' %}">
+    <link rel="stylesheet" href="{% static 'catalog/reading_goal.css' %}">
+</head>
+
+<body>
 
 <div class="reading-container">
 
     <div class="page-header">
+
         <div>
             <h1>{{ current_year }} Reading Goal</h1>
-            <p>Set and monitor your annual reading target.</p>
+
+            <p>
+                Set and monitor your annual reading target.
+            </p>
         </div>
 
         <a
@@ -16,6 +33,7 @@
         >
             View Analytics
         </a>
+
     </div>
 
 
@@ -30,7 +48,9 @@
                 {% csrf_token %}
 
                 <div class="form-group">
+
                     <label>Year</label>
+
                     {{ form.year }}
 
                     {% if form.year.errors %}
@@ -38,10 +58,14 @@
                             {{ form.year.errors }}
                         </div>
                     {% endif %}
+
                 </div>
 
+
                 <div class="form-group">
+
                     <label>Target Pages</label>
+
                     {{ form.target_numpages }}
 
                     {% if form.target_numpages.errors %}
@@ -49,10 +73,14 @@
                             {{ form.target_numpages.errors }}
                         </div>
                     {% endif %}
+
                 </div>
 
+
                 <div class="form-group">
+
                     <label>Target Books</label>
+
                     {{ form.target_numbooks }}
 
                     {% if form.target_numbooks.errors %}
@@ -60,9 +88,14 @@
                             {{ form.target_numbooks.errors }}
                         </div>
                     {% endif %}
+
                 </div>
 
-                <button type="submit" class="primary-btn">
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
                     Save Goal
                 </button>
 
@@ -78,19 +111,25 @@
             <div class="progress-section">
 
                 <div class="progress-label">
+
                     <span>Pages</span>
+
                     <span>
                         {{ pages_read }} /
                         {{ goal.target_numpages }}
                     </span>
+
                 </div>
 
+
                 <div class="progress-bar">
+
                     <div
                         class="progress-fill"
                         data-progress="{{ page_percentage|default:0 }}"
                         style="width: 0%;"
                     ></div>
+
                 </div>
 
                 <p>
@@ -103,19 +142,25 @@
             <div class="progress-section">
 
                 <div class="progress-label">
+
                     <span>Books</span>
+
                     <span>
                         {{ completed_books }} /
                         {{ goal.target_numbooks }}
                     </span>
+
                 </div>
 
+
                 <div class="progress-bar">
+
                     <div
                         class="progress-fill"
                         data-progress="{{ book_percentage|default:0 }}"
                         style="width: 0%;"
                     ></div>
+
                 </div>
 
                 <p>
@@ -130,13 +175,22 @@
 
 </div>
 
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+
         document.querySelectorAll('.progress-fill').forEach(function (bar) {
-            const progress = parseFloat(bar.dataset.progress || 0);
+
+            const progress = parseFloat(
+                bar.dataset.progress || 0
+            );
+
             bar.style.width = progress + '%';
+
         });
+
     });
 </script>
 
-{% endblock %}
+</body>
+</html>
