@@ -26,6 +26,12 @@ urlpatterns = [
     path('book/<int:book_id>/review/add/', views.add_review, name='add_review'),
     path('review/<int:review_id>/edit/', views.edit_review, name='edit_review'),
     path('review/<int:review_id>/delete/', views.delete_review, name='delete_review'),
+    path('reading-logs/', views.reading_log_list, name='reading_log_list'),
+    path('reading-logs/add/', views.reading_log_create, name='reading_log_create'),
+    path('reading-logs/<int:log_id>/edit/', views.reading_log_update, name='reading_log_update'),
+    path('reading-logs/<int:log_id>/delete/', views.reading_log_delete, name='reading_log_delete'),
+    path('reading-goal/', views.reading_goal, name='reading_goal'),
+    path('analytics/', views.analytics_dashboard, name='analytics_dashboard'),
 
     #admin
     path('admin/registered-users/', views.admin_registered_users, name='admin_registered_users'),
@@ -38,14 +44,10 @@ urlpatterns = [
     path('books/', views.book_catalog, name='book_catalog'),
     path('books/<int:pk>/edit/', views.edit_book, name='edit_book'),
     path('books/<int:pk>/delete/', views.delete_book, name='delete_book'),
+    path('reading-logs/<int:log_id>/', views.reading_log_detail, name='reading_log_detail'),
 
     # path('api/log-login/', views.log_login, name='log_login'),
 ]
-
-# path('api/log-login/', views.log_login, name='log_login'),
-
-#from django.contrib import admin
-#from django.urls import path, include
 
 
 #urlpatterns = [
@@ -54,48 +56,3 @@ urlpatterns = [
     #path('', include('reading_logs.urls')),
 #]
 
-from django.urls import path
-
-from . import views
-
-path(
-    "reading-logs/",
-    views.reading_log_list,
-    name="reading_log_list"
-),
-
-path(
-    "reading-logs/add/",
-    views.reading_log_create,
-    name="reading_log_create"
-),
-
-path(
-    "reading-logs/<int:log_id>/",
-    views.reading_log_detail,
-    name="reading_log_detail"
-),
-
-path(
-    "reading-logs/<int:log_id>/edit/",
-    views.reading_log_update,
-    name="reading_log_update"
-),
-
-path(
-    "reading-logs/<int:log_id>/delete/",
-    views.reading_log_delete,
-    name="reading_log_delete"
-),
-
-path(
-    "reading-goal/",
-    views.reading_goal,
-    name="reading_goal"
-),
-
-path(
-    "analytics/",
-    views.analytics_dashboard,
-    name="analytics_dashboard"
-),
