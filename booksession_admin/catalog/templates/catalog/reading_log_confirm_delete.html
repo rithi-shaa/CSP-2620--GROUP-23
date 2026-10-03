@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="reading-container">
+
+    <div class="confirmation-card">
+
+        <h1>Delete Reading Log?</h1>
+
+        <p>
+            Are you sure you want to delete this reading log?
+        </p>
+
+        <div class="delete-info">
+
+            <p>
+                <strong>Book:</strong>
+                {{ log.book.title }}
+            </p>
+
+            <p>
+                <strong>Date:</strong>
+                {{ log.log_date|date:"d M Y" }}
+            </p>
+
+            <p>
+                <strong>Pages:</strong>
+                {{ log.pages_read }}
+            </p>
+
+        </div>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <button type="submit" class="danger-btn">
+                Yes, Delete
+            </button>
+
+            <a
+                href="{% url 'reading_log_list' %}"
+                class="secondary-btn"
+            >
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

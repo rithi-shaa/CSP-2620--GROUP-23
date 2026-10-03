@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="reading-container">
+
+    <div class="page-header">
+
+        <h1>Reading Log Details</h1>
+
+        <a
+            href="{% url 'reading_log_list' %}"
+            class="secondary-btn"
+        >
+            Back
+        </a>
+
+    </div>
+
+    <div class="detail-card">
+
+        <h2>{{ log.book.title }}</h2>
+
+        <div class="detail-item">
+            <strong>Author:</strong>
+            {{ log.book.author }}
+        </div>
+
+        <div class="detail-item">
+            <strong>Date:</strong>
+            {{ log.log_date|date:"d M Y" }}
+        </div>
+
+        <div class="detail-item">
+            <strong>Pages Read:</strong>
+            {{ log.pages_read }}
+        </div>
+
+        <div class="detail-item">
+            <strong>Created:</strong>
+            {{ log.created_at|date:"d M Y H:i" }}
+        </div>
+
+        <div class="action-buttons">
+
+            <a
+                href="{% url 'reading_log_update' log.log_id %}"
+                class="primary-btn"
+            >
+                Edit
+            </a>
+
+            <a
+                href="{% url 'reading_log_delete' log.log_id %}"
+                class="danger-btn"
+            >
+                Delete
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

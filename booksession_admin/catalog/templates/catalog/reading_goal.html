@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="reading-container">
+
+    <div class="page-header">
+        <div>
+            <h1>{{ current_year }} Reading Goal</h1>
+            <p>Set and monitor your annual reading target.</p>
+        </div>
+
+        <a
+            href="{% url 'analytics_dashboard' %}"
+            class="secondary-btn"
+        >
+            View Analytics
+        </a>
+    </div>
+
+
+    <div class="goal-grid">
+
+        <div class="goal-card">
+
+            <h2>Update Goal</h2>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>Year</label>
+                    {{ form.year }}
+
+                    {% if form.year.errors %}
+                        <div class="field-error">
+                            {{ form.year.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label>Target Pages</label>
+                    {{ form.target_numpages }}
+
+                    {% if form.target_numpages.errors %}
+                        <div class="field-error">
+                            {{ form.target_numpages.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label>Target Books</label>
+                    {{ form.target_numbooks }}
+
+                    {% if form.target_numbooks.errors %}
+                        <div class="field-error">
+                            {{ form.target_numbooks.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="primary-btn">
+                    Save Goal
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <div class="goal-card">
+
+            <h2>Current Progress</h2>
+
+            <div class="progress-section">
+
+                <div class="progress-label">
+                    <span>Pages</span>
+                    <span>
+                        {{ pages_read }} /
+                        {{ goal.target_numpages }}
+                    </span>
+                </div>
+
+                <div class="progress-bar">
+                    <div
+                        class="progress-fill"
+                        data-progress="{{ page_percentage|default:0 }}"
+                        style="width: 0%;"
+                    ></div>
+                </div>
+
+                <p>
+                    {{ page_percentage|floatformat:1 }}%
+                </p>
+
+            </div>
+
+
+            <div class="progress-section">
+
+                <div class="progress-label">
+                    <span>Books</span>
+                    <span>
+                        {{ completed_books }} /
+                        {{ goal.target_numbooks }}
+                    </span>
+                </div>
+
+                <div class="progress-bar">
+                    <div
+                        class="progress-fill"
+                        data-progress="{{ book_percentage|default:0 }}"
+                        style="width: 0%;"
+                    ></div>
+                </div>
+
+                <p>
+                    {{ book_percentage|floatformat:1 }}%
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.progress-fill').forEach(function (bar) {
+            const progress = parseFloat(bar.dataset.progress || 0);
+            bar.style.width = progress + '%';
+        });
+    });
+</script>
+
+{% endblock %}
