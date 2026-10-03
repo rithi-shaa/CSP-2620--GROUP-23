@@ -1,0 +1,344 @@
+/* =========================================
+   BOOKSESSION - READING GOAL
+   ========================================= */
+
+
+/* =========================================
+   PAGE
+   ========================================= */
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background-color: #f3ede1 !important;
+
+    color: #3f2a1f;
+
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+   ========================================= */
+
+.goal-container {
+
+    width: 100%;
+    max-width: 1450px;
+
+    margin: 0 auto;
+
+    padding: 55px 42px 70px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.goal-header {
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    text-align: center;
+
+    margin-bottom: 35px;
+}
+
+
+/* MAIN TITLE */
+
+.goal-header h1 {
+
+    margin: 0 0 12px;
+
+    color: #4a2f20;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 4rem;
+
+    font-weight: bold;
+
+    line-height: 1.1;
+}
+
+
+/* SUBTITLE */
+
+.goal-header p {
+
+    margin: 0 0 28px;
+
+    color: #765f4f;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 1.35rem;
+
+    font-style: italic;
+}
+
+
+/* =========================================
+   VIEW ANALYTICS BUTTON
+   ========================================= */
+
+.analytics-btn {
+
+    display: inline-block;
+
+    padding: 14px 30px;
+
+    background-color: #5b3927;
+
+    color: #ffffff;
+
+    border-radius: 30px;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 1rem;
+
+    font-weight: bold;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.analytics-btn:hover {
+
+    background-color: #43291d;
+
+    color: #ffffff;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 6px 14px rgba(70, 45, 30, 0.18);
+}
+
+
+/* =========================================
+   WHITE FORM CARD
+   ========================================= */
+
+.goal-card {
+
+    width: 100%;
+
+    background-color: #ffffff;
+
+    border-radius: 22px;
+
+    padding: 38px 38px 32px;
+
+    box-sizing: border-box;
+
+    box-shadow: 0 10px 28px rgba(70, 50, 35, 0.10);
+}
+
+
+/* =========================================
+   CARD TITLE
+   ========================================= */
+
+.goal-card h2 {
+
+    margin: 0 0 28px;
+
+    color: #4a2f20;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 1.9rem;
+
+    font-weight: bold;
+}
+
+
+/* =========================================
+   FORM GROUP
+   ========================================= */
+
+.form-group {
+
+    width: 100%;
+
+    margin-bottom: 18px;
+}
+
+
+/* LABEL */
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #4a2f20;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 1.05rem;
+
+    font-weight: bold;
+}
+
+
+/* =========================================
+   INPUTS
+   ========================================= */
+
+.form-group input {
+
+    width: 100%;
+
+    height: 50px;
+
+    padding: 12px 15px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #d8cfc3;
+
+    border-radius: 12px;
+
+    background-color: #faf8f3;
+
+    color: #3f2a1f;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 1rem;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+
+/* INPUT FOCUS */
+
+.form-group input:focus {
+
+    border-color: #8c674f;
+
+    background-color: #ffffff;
+
+    box-shadow: 0 0 0 3px rgba(91, 57, 39, 0.08);
+}
+
+
+/* =========================================
+   SAVE BUTTON
+   ========================================= */
+
+.save-goal-btn {
+
+    margin-top: 10px;
+
+    padding: 14px 30px;
+
+    border: none;
+
+    border-radius: 30px;
+
+    background-color: #5b3927;
+
+    color: #ffffff;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 1rem;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.save-goal-btn:hover {
+
+    background-color: #43291d;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 6px 14px rgba(70, 45, 30, 0.18);
+}
+
+
+/* =========================================
+   FORM ERRORS
+   ========================================= */
+
+.form-group ul.errorlist {
+
+    margin: 6px 0 0;
+
+    padding: 0;
+
+    list-style: none;
+
+    color: #9a4b3f;
+
+    font-size: 0.9rem;
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 768px) {
+
+    .goal-container {
+
+        padding: 35px 18px 50px;
+    }
+
+
+    .goal-header h1 {
+
+        font-size: 2.8rem;
+    }
+
+
+    .goal-header p {
+
+        font-size: 1.05rem;
+    }
+
+
+    .goal-card {
+
+        padding: 28px 20px;
+    }
+
+
+    .goal-card h2 {
+
+        font-size: 1.6rem;
+    }
+
+}
