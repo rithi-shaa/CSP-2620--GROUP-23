@@ -1,0 +1,43 @@
+{% extends 'reading_logs/base.html' %}
+
+{% block content %}
+
+<div class="reading-logs-container">
+
+    <h1>Reading Log Details</h1>
+
+    <p>
+        <strong>Book:</strong>
+        {{ log.book.title }}
+    </p>
+
+    <p>
+        <strong>Pages Read:</strong>
+        {{ log.pages_read }}
+    </p>
+
+    <p>
+        <strong>Reading Date:</strong>
+        {{ log.log_date }}
+    </p>
+
+    <p>
+        <strong>Created At:</strong>
+        {{ log.created_at }}
+    </p>
+
+    <br>
+
+    <a href="{% url 'reading_logs' %}">
+        Back to Reading Logs
+    </a>
+
+    |
+
+    <a href="{% url 'reading_log_delete' log.log_id %}">
+        Delete
+    </a>
+
+</div>
+
+{% endblock %}
