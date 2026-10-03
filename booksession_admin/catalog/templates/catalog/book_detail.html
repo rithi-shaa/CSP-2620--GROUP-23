@@ -204,12 +204,17 @@
     <div class="list-group">
         {% for review in reviews %}
             <div class="list-group-item list-group-item-action flex-column align-items-start mb-2">
-                <div class="d-flex w-100 justify-content-between review-header"> 
-                    <div class="d-flex align-items-center">
+                <div class="review-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div style="display: flex; align-items: center; gap: 10px;">
         {% if review.user.userprofile.profile_picture %}
         <img src="{{ review.user.userprofile.profile_picture.url }}" alt="{{ review.user.username }}" class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;">
-    {% endif %}
-                <h5 class="mb-0 fw-bold">{{ review.user.username }}</h5>
+        {% else %}
+        <!-- Default fallback icon or placeholder -->
+        <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #d1c7bd; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #fff; font-size: 0.8rem;">
+            {{ review.user.username|make_list|first|upper }}
+        </div>
+        {% endif %}
+                <h5 style="margin: 0; font-weight: bold; font-size: 1rem;">{{ review.user.username }}</h5>
             </div>
                     <span class="badge bg-secondary">Rating: {{ review.rating }}/5</span>
                 </div>
