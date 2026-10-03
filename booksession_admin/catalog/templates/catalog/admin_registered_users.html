@@ -24,9 +24,9 @@
         <ul>
             {% for user in registered_users %}
                 <li>
-                    <strong>{{ user.username }}</strong>
-                    — {{ user.email }}
-                    — {{ user.date_joined|date: "d M Y" }}
+                    <strong class="user-name">{{ user.username }}</strong>
+                    <span class="user-email">{{ user.email }}</span>
+                    <span class="user-date">{{ user.date_joined|date:"d M Y" }}</span>
                 </li>
             {% empty %}
                 <li>No registered users found.</li>

@@ -273,16 +273,32 @@ h2 {
 }
 
 .admin-container ul li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     background: white;
     border: 1px solid #d8cfc0;
     border-radius: 10px;
     padding: 14px 20px;
     margin-bottom: 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    font-variant-numeric: lining-nums;
 }
 
-.admin-container ul li strong {
+.admin-container ul li .user-name {
+    flex:0 0 180px;
     color: #3b2b1e;
+}
+
+.admin-container ul li .user-email {
+    flex: 1;
+    color: #5a4a3f;
+}
+
+.admin-container ul li .user-date {
+    color: #8a7968;
+    font-size: 0.9em;
+    white-space: nowrap;
 }
 
 body p {
