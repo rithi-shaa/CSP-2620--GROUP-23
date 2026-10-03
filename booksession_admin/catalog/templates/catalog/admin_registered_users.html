@@ -26,6 +26,7 @@
                 <li>
                     <strong>{{ user.username }}</strong>
                     — {{ user.email }}
+                    — {{ user.date_joined|date: "d M Y" }}
                 </li>
             {% empty %}
                 <li>No registered users found.</li>

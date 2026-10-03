@@ -174,7 +174,7 @@ def admin_home(request):
 
 @staff_member_required(login_url='admin_login')
 def admin_registered_users(request):
-    registered_users = User.objects.filter(is_staff=False).order_by('username')
+    registered_users = User.objects.filter(is_staff=False).order_by('-date_joined')
 
     context = {
         'registered_users': registered_users,
