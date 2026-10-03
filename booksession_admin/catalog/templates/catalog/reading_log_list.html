@@ -1,66 +1,126 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>My Reading Logs</title>
-
-    {% load static %}
+    <title>My Reading Logs - Booksession</title>
 
     <link rel="stylesheet" href="{% static 'catalog/style.css' %}">
-    <link rel="stylesheet" href="{% static 'catalog/reading_logs.css' %}">
-    <link rel="stylesheet" href="{% static 'catalog/reading_goal.css' %}">
+    <link rel="stylesheet" href="{% static 'catalog/reading_log.css' %}">
+
 </head>
 
-<body class="book-background-plain">
 
-    <div class="reading-container">
+<body>
 
-        <div class="page-header">
+<div class="reading-container">
+
+
+    <!-- =========================
+         PAGE HEADER
+         ========================= -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>My Reading Logs</h1>
+
+            <p>
+                Track your daily reading progress.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'reading_log_create' %}"
+            class="primary-btn"
+        >
+            + Add Reading Log
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         STATISTICS
+         ========================= -->
+
+    <div class="reading-stats">
+
+        <div class="stat-card">
+
+            <h3>Total Pages</h3>
+
+            <p>
+                {{ total_pages }}
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>Total Logs</h3>
+
+            <p>
+                {{ total_logs }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         READING LOG TABLE
+         ========================= -->
+
+    <div class="logs-card">
+
+        <div class="logs-card-header">
 
             <div>
-                <h1>My Reading Logs</h1>
-                <p>Track your daily reading progress.</p>
-            </div>
 
-            <a href="{% url 'reading_log_create' %}" class="primary-btn">
-                + Add Reading Log
-            </a>
+                <h2>Reading History</h2>
 
-        </div>
+                <p>
+                    Your recent reading activity
+                </p>
 
-
-        <div class="stats-row">
-
-            <div class="stat-card">
-                <h3>Total Pages</h3>
-                <p>{{ total_pages }}</p>
-            </div>
-
-            <div class="stat-card">
-                <h3>Total Logs</h3>
-                <p>{{ total_logs }}</p>
             </div>
 
         </div>
 
 
-        <div class="table-card">
+        {% if logs %}
 
-            {% if logs %}
+        <div class="table-wrapper">
 
-            <table>
+            <table class="reading-table">
 
                 <thead>
+
                     <tr>
+
                         <th>Date</th>
+
                         <th>Book</th>
+
                         <th>Pages Read</th>
+
                         <th>Actions</th>
+
                     </tr>
+
                 </thead>
+
 
                 <tbody>
 
@@ -68,34 +128,61 @@
 
                     <tr>
 
-                        <td>
-                            {{ log.log_date|date:"d M Y" }}
+                        <td data-label="Date">
+
+                            <span class="date-text">
+                                {{ log.log_date|date:"d M Y" }}
+                            </span>
+
                         </td>
 
-                        <td>
-                            {{ log.book.title }}
+
+                        <td data-label="Book">
+
+                            <span class="book-name">
+                                {{ log.book.title }}
+                            </span>
+
                         </td>
 
-                        <td>
-                            {{ log.pages_read }}
+
+                        <td data-label="Pages Read">
+
+                            <span class="pages-badge">
+                                {{ log.pages_read }} pages
+                            </span>
+
                         </td>
 
-                        <td>
 
-                            <a href="{% url 'reading_log_detail' log.log_id %}">
-                                View
-                            </a>
+                        <td data-label="Actions">
 
-                            <a href="{% url 'reading_log_update' log.log_id %}">
-                                Edit
-                            </a>
+                            <div class="action-buttons">
 
-                            <a
-                                href="{% url 'reading_log_delete' log.log_id %}"
-                                class="danger-link"
-                            >
-                                Delete
-                            </a>
+                                <a
+                                    href="{% url 'reading_log_detail' log.log_id %}"
+                                    class="action-btn view-btn"
+                                >
+                                    View
+                                </a>
+
+
+                                <a
+                                    href="{% url 'reading_log_update' log.log_id %}"
+                                    class="action-btn edit-btn"
+                                >
+                                    Edit
+                                </a>
+
+
+                                <a
+                                    href="{% url 'reading_log_delete' log.log_id %}"
+                                    class="action-btn delete-btn"
+                                >
+                                    Delete
+                                </a>
+
+                            </div>
 
                         </td>
 
@@ -107,25 +194,38 @@
 
             </table>
 
-            {% else %}
+        </div>
 
-                <div class="empty-state">
-                    <h3>No reading logs yet</h3>
-                    <p>Start tracking your reading progress.</p>
 
-                    <a
-                        href="{% url 'reading_log_create' %}"
-                        class="primary-btn"
-                    >
-                        Add Your First Log
-                    </a>
-                </div>
+        {% else %}
 
-            {% endif %}
+        <div class="empty-logs">
+
+            <div class="empty-icon">
+                📖
+            </div>
+
+            <h3>No reading logs yet</h3>
+
+            <p>
+                Start tracking your reading progress by adding your first log.
+            </p>
+
+            <a
+                href="{% url 'reading_log_create' %}"
+                class="primary-btn"
+            >
+                + Add Reading Log
+            </a>
 
         </div>
 
+        {% endif %}
+
     </div>
+
+
+</div>
 
 </body>
 
