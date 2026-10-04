@@ -8,6 +8,14 @@
 </head>
 <body class="shelves-background">
 
+    {% if messages %}
+            <ul class="flash-messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
     <div class="shelves-header">
         <h2>{{ collection.shelf_name }}</h2>
     </div>
