@@ -24,6 +24,14 @@ class BookAdmin(admin.ModelAdmin):
 from .models import ReadingLog, ReadingGoal
 
 
+from django.contrib import admin
+
+from .models import (
+    ReadingLog,
+    ReadingGoal,
+)
+
+
 @admin.register(ReadingLog)
 class ReadingLogAdmin(admin.ModelAdmin):
 

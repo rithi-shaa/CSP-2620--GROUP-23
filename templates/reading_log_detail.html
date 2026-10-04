@@ -1,50 +1,59 @@
 {% extends "base.html" %}
 
+{% block title %}
+Reading Log Details - Booksession
+{% endblock %}
+
 {% block content %}
 
 <div class="reading-container">
 
     <div class="page-header">
 
-        <h1>Reading Log Details</h1>
+        <div>
 
-        <a
-            href="{% url 'reading_log_list' %}"
-            class="secondary-btn"
-        >
-            Back
-        </a>
+            <h1>Reading Log Details</h1>
+
+            <p>
+                View your reading progress.
+            </p>
+
+        </div>
 
     </div>
 
+
     <div class="detail-card">
 
-        <h2>{{ log.book.title }}</h2>
+        <h2>
+            {{ log.book.title }}
+        </h2>
 
-        <div class="detail-item">
+        <p>
             <strong>Author:</strong>
             {{ log.book.author }}
-        </div>
+        </p>
 
-        <div class="detail-item">
-            <strong>Date:</strong>
-            {{ log.log_date|date:"d M Y" }}
-        </div>
-
-        <div class="detail-item">
+        <p>
             <strong>Pages Read:</strong>
             {{ log.pages_read }}
-        </div>
+        </p>
 
-        <div class="detail-item">
+        <p>
+            <strong>Reading Date:</strong>
+            {{ log.log_date|date:"d M Y" }}
+        </p>
+
+        <p>
             <strong>Created:</strong>
-            {{ log.created_at|date:"d M Y H:i" }}
-        </div>
+            {{ log.created_at|date:"d M Y, h:i A" }}
+        </p>
 
-        <div class="action-buttons">
+
+        <div class="card-actions">
 
             <a
-                href="{% url 'reading_log_update' log.log_id %}"
+                href="{% url 'reading_log_edit' log.log_id %}"
                 class="primary-btn"
             >
                 Edit
@@ -55,6 +64,13 @@
                 class="danger-btn"
             >
                 Delete
+            </a>
+
+            <a
+                href="{% url 'reading_log_list' %}"
+                class="secondary-btn"
+            >
+                Back
             </a>
 
         </div>

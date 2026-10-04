@@ -22,6 +22,30 @@ from datetime import date, timedelta
 from .forms import ReadingLogForm, ReadingGoalForm
 from django.db.models import Q
 from django.db.models import Sum, Count, Avg
+from datetime import timedelta, date
+from calendar import monthrange
+
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum, Count
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404,
+)
+from django.contrib import messages
+from django.utils import timezone
+
+from .models import (
+    ReadingLog,
+    ReadingGoal,
+    Book,
+    ShelfBook,
+)
+
+from .forms import (
+    ReadingLogForm,
+    ReadingGoalForm,
+)
 
 def register_view(request):
     if request.method == 'POST':
@@ -604,38 +628,49 @@ def delete_review(request, review_id):
 
     return redirect('book_detail', book_id=book_id)
 
+# =========================================================
+# READING LOG LIST
+# =========================================================
+
 @login_required
 def reading_log_list(request):
+
     logs = ReadingLog.objects.filter(
         user=request.user
-    ).select_related("book")
-
-    total_pages = logs.aggregate(
-        total=Sum("pages_read")
-    )["total"] or 0
-
-    total_logs = logs.count()
-
-    context = {
-        "logs": logs,
-        "total_pages": total_pages,
-        "total_logs": total_logs,
-    }
+    ).select_related(
+        "book"
+    ).order_by(
+        "-log_date",
+        "-created_at"
+    )
 
     return render(
         request,
         "catalog/reading_log_list.html",
-        context
+        {
+            "logs": logs
+        }
     )
+
+# =========================================================
+# CREATE READING LOG
+# =========================================================
 
 @login_required
 def reading_log_create(request):
 
     if request.method == "POST":
-        form = ReadingLogForm(request.POST)
+
+        form = ReadingLogForm(
+            request.POST,
+            user=request.user
+        )
 
         if form.is_valid():
-            reading_log = form.save(commit=False)
+
+            reading_log = form.save(
+                commit=False
+            )
 
             reading_log.user = request.user
 
@@ -646,22 +681,32 @@ def reading_log_create(request):
                 "Reading log added successfully."
             )
 
-            return redirect("reading_log_list")
+            return redirect(
+                "reading_log_list"
+            )
 
     else:
-        form = ReadingLogForm()
+
+        form = ReadingLogForm(
+            user=request.user
+        )
 
     return render(
         request,
         "catalog/reading_log_form.html",
         {
             "form": form,
-            "title": "Add Reading Log",
+            "page_title": "Add Reading Log",
+            "button_text": "Save Reading Log",
         }
     )
 
+# =========================================================
+# EDIT READING LOG
+# =========================================================
+
 @login_required
-def reading_log_update(request, log_id):
+def reading_log_edit(request, log_id):
 
     log = get_object_or_404(
         ReadingLog,
@@ -670,12 +715,15 @@ def reading_log_update(request, log_id):
     )
 
     if request.method == "POST":
+
         form = ReadingLogForm(
             request.POST,
-            instance=log
+            instance=log,
+            user=request.user
         )
 
         if form.is_valid():
+
             form.save()
 
             messages.success(
@@ -683,26 +731,36 @@ def reading_log_update(request, log_id):
                 "Reading log updated successfully."
             )
 
-            return redirect("reading_log_list")
+            return redirect(
+                "reading_log_list"
+            )
 
     else:
-        form = ReadingLogForm(instance=log)
+
+        form = ReadingLogForm(
+            instance=log,
+            user=request.user
+        )
 
     return render(
         request,
         "catalog/reading_log_form.html",
         {
             "form": form,
-            "title": "Edit Reading Log",
-            "log": log,
+            "page_title": "Edit Reading Log",
+            "button_text": "Update Reading Log",
         }
     )
+
+# =========================================================
+# READING LOG DETAIL
+# =========================================================
 
 @login_required
 def reading_log_detail(request, log_id):
 
     log = get_object_or_404(
-        ReadingLog,
+        ReadingLog.objects.select_related("book"),
         log_id=log_id,
         user=request.user
     )
@@ -715,6 +773,10 @@ def reading_log_detail(request, log_id):
         }
     )
 
+# =========================================================
+# DELETE READING LOG
+# =========================================================
+
 @login_required
 def reading_log_delete(request, log_id):
 
@@ -725,6 +787,7 @@ def reading_log_delete(request, log_id):
     )
 
     if request.method == "POST":
+
         log.delete()
 
         messages.success(
@@ -732,7 +795,9 @@ def reading_log_delete(request, log_id):
             "Reading log deleted successfully."
         )
 
-        return redirect("reading_log_list")
+        return redirect(
+            "reading_log_list"
+        )
 
     return render(
         request,
@@ -742,68 +807,108 @@ def reading_log_delete(request, log_id):
         }
     )
 
+# =========================================================
+# READING GOAL
+# =========================================================
+
 @login_required
 def reading_goal(request):
 
-    current_year = timezone.now().year
+    current_year = timezone.localdate().year
 
-    goal, created = ReadingGoal.objects.get_or_create(
+    goal = ReadingGoal.objects.filter(
         user=request.user,
-        year=current_year,
-        defaults={
-            "target_numpages": 10000,
-            "target_numbooks": 20,
-        }
-    )
+        year=current_year
+    ).first()
 
     if request.method == "POST":
 
-        form = ReadingGoalForm(
-            request.POST,
-            instance=goal
-        )
+        if goal:
+
+            form = ReadingGoalForm(
+                request.POST,
+                instance=goal
+            )
+
+        else:
+
+            form = ReadingGoalForm(
+                request.POST
+            )
 
         if form.is_valid():
 
-            updated_goal = form.save(commit=False)
-            updated_goal.user = request.user
-            updated_goal.save()
+            reading_goal_obj = form.save(
+                commit=False
+            )
+
+            reading_goal_obj.user = request.user
+
+            reading_goal_obj.save()
 
             messages.success(
                 request,
-                "Reading goal updated successfully."
+                "Reading goal saved successfully."
             )
 
-            return redirect("reading_goal")
+            return redirect(
+                "reading_goal"
+            )
 
     else:
-        form = ReadingGoalForm(instance=goal)
+
+        if goal:
+
+            form = ReadingGoalForm(
+                instance=goal
+            )
+
+        else:
+
+            form = ReadingGoalForm(
+                initial={
+                    "year": current_year
+                }
+            )
+
+    # -----------------------------------------------------
+    # CURRENT PROGRESS
+    # -----------------------------------------------------
 
     logs = ReadingLog.objects.filter(
         user=request.user,
         log_date__year=current_year
     )
 
-    pages_read = logs.aggregate(
+    total_pages = logs.aggregate(
         total=Sum("pages_read")
     )["total"] or 0
 
     completed_books = ShelfBook.objects.filter(
         shelf__user=request.user,
-        reading_status="Completed"
-    ).values("book").distinct().count()
+        reading_status="finished"
+    ).values(
+        "book"
+    ).distinct().count()
 
-    page_percentage = (
-        pages_read / goal.target_numpages * 100
-        if goal.target_numpages > 0
-        else 0
-    )
+    pages_progress = 0
+    books_progress = 0
 
-    book_percentage = (
-        completed_books / goal.target_numbooks * 100
-        if goal.target_numbooks > 0
-        else 0
-    )
+    if goal:
+
+        pages_progress = min(
+            round(
+                (total_pages / goal.target_numpages) * 100
+            ),
+            100
+        )
+
+        books_progress = min(
+            round(
+                (completed_books / goal.target_numbooks) * 100
+            ),
+            100
+        )
 
     return render(
         request,
@@ -811,28 +916,38 @@ def reading_goal(request):
         {
             "form": form,
             "goal": goal,
-            "pages_read": pages_read,
-            "completed_books": completed_books,
-            "page_percentage": min(page_percentage, 100),
-            "book_percentage": min(book_percentage, 100),
             "current_year": current_year,
+            "total_pages": total_pages,
+            "completed_books": completed_books,
+            "pages_progress": pages_progress,
+            "books_progress": books_progress,
         }
     )
+
+# =========================================================
+# ANALYTICS DASHBOARD
+# =========================================================
 
 @login_required
 def analytics_dashboard(request):
 
     user = request.user
 
-    logs = ReadingLog.objects.filter(
-        user=user
-    ).select_related("book")
-
     today = timezone.localdate()
 
-    # --------------------------------
+    # =====================================================
+    # ALL USER READING LOGS
+    # =====================================================
+
+    logs = ReadingLog.objects.filter(
+        user=user
+    ).select_related(
+        "book"
+    )
+
+    # =====================================================
     # BASIC STATISTICS
-    # --------------------------------
+    # =====================================================
 
     total_pages = logs.aggregate(
         total=Sum("pages_read")
@@ -844,29 +959,69 @@ def analytics_dashboard(request):
         "book"
     ).distinct().count()
 
-    # --------------------------------
+    # =====================================================
     # COMPLETED BOOKS
-    # --------------------------------
+    # =====================================================
 
     completed_books = ShelfBook.objects.filter(
         shelf__user=user,
-        reading_status="Completed"
+        reading_status="finished"
     ).values(
         "book"
     ).distinct().count()
 
-    # --------------------------------
-    # DAILY DATA - LAST 7 DAYS
-    # --------------------------------
+    # =====================================================
+    # READING GOAL
+    # =====================================================
+
+    current_year = today.year
+
+    goal = ReadingGoal.objects.filter(
+        user=user,
+        year=current_year
+    ).first()
+
+    yearly_pages = logs.filter(
+        log_date__year=current_year
+    ).aggregate(
+        total=Sum("pages_read")
+    )["total"] or 0
+
+    if goal:
+
+        page_goal_progress = min(
+            round(
+                (yearly_pages / goal.target_numpages) * 100
+            ),
+            100
+        )
+
+        book_goal_progress = min(
+            round(
+                (completed_books / goal.target_numbooks) * 100
+            ),
+            100
+        )
+
+    else:
+
+        page_goal_progress = 0
+        book_goal_progress = 0
+
+    # =====================================================
+    # DAILY READING — LAST 7 DAYS
+    # =====================================================
 
     daily_labels = []
-    daily_pages = []
+    daily_data = []
 
     for i in range(6, -1, -1):
 
-        current_date = today - timedelta(days=i)
+        current_date = today - timedelta(
+            days=i
+        )
 
-        pages = logs.filter(
+        total = logs.filter(
             log_date=current_date
         ).aggregate(
             total=Sum("pages_read")
@@ -876,26 +1031,33 @@ def analytics_dashboard(request):
             current_date.strftime("%d %b")
         )
 
-        daily_pages.append(pages)
+        daily_data.append(total)
 
-    # --------------------------------
-    # WEEKLY DATA - LAST 8 WEEKS
-    # --------------------------------
+    # =====================================================
+    # WEEKLY READING — LAST 8 WEEKS
+    # =====================================================
 
     weekly_labels = []
-    weekly_pages = []
+    weekly_data = []
+
+    current_week_start = (
+        today -
+        timedelta(days=today.weekday())
+    )
 
     for i in range(7, -1, -1):
 
-        week_end = today - timedelta(
-            days=today.weekday()
-        ) - timedelta(
-            weeks=i
-        ) + timedelta(days=6)
+        week_start = (
+            current_week_start -
+            timedelta(days=i * 7)
+        )
 
-        week_start = week_end - timedelta(days=6)
+        week_end = (
+            week_start +
+            timedelta(days=6)
+        )
 
-        pages = logs.filter(
+        total = logs.filter(
             log_date__range=[
                 week_start,
                 week_end
@@ -905,146 +1067,135 @@ def analytics_dashboard(request):
         )["total"] or 0
 
         weekly_labels.append(
-            f"{week_start.strftime('%d %b')} - "
-            f"{week_end.strftime('%d %b')}"
+            week_start.strftime("%d %b")
         )
 
-        weekly_pages.append(pages)
+        weekly_data.append(total)
 
-    # --------------------------------
-    # MONTHLY DATA - LAST 12 MONTHS
-    # --------------------------------
+    # =====================================================
+    # MONTHLY READING — LAST 12 MONTHS
+    # =====================================================
 
     monthly_labels = []
-    monthly_pages = []
+    monthly_data = []
+
+    year = today.year
+    month = today.month
+
+    months = []
 
     for i in range(11, -1, -1):
 
-        year = today.year
-        month = today.month - i
+        current_month = month - i
+        current_year = year
 
-        while month <= 0:
-            month += 12
-            year -= 1
+        while current_month <= 0:
 
-        month_start = date(
-            year,
-            month,
+            current_month += 12
+            current_year -= 1
+
+        months.append(
+            (
+                current_year,
+                current_month
+            )
+        )
+
+    for current_year, current_month in months:
+
+        first_day = date(
+            current_year,
+            current_month,
             1
         )
 
-        if month == 12:
-            next_month = date(
-                year + 1,
-                1,
-                1
-            )
-        else:
-            next_month = date(
-                year,
-                month + 1,
-                1
-            )
+        last_day = date(
+            current_year,
+            current_month,
+            monthrange(
+                current_year,
+                current_month
+            )[1]
+        )
 
-        month_end = next_month - timedelta(days=1)
-
-        pages = logs.filter(
+        total = logs.filter(
             log_date__range=[
-                month_start,
-                month_end
+                first_day,
+                last_day
             ]
         ).aggregate(
             total=Sum("pages_read")
         )["total"] or 0
 
         monthly_labels.append(
-            month_start.strftime("%b %Y")
+            first_day.strftime("%b %Y")
         )
 
-        monthly_pages.append(pages)
+        monthly_data.append(total)
 
-    # --------------------------------
+    # =====================================================
     # GENRE DISTRIBUTION
-    # --------------------------------
+    # =====================================================
 
-    genre_data = (
-        logs.values("book__genre")
-        .annotate(
-            total=Count("book", distinct=True)
+    genre_data = ShelfBook.objects.filter(
+        shelf__user=user
+    ).values(
+        "book__genre"
+    ).annotate(
+        total=Count(
+            "book",
+            distinct=True
         )
-        .order_by("-total")
+    ).order_by(
+        "-total"
     )
 
     genre_labels = []
-    genre_values = []
+    genre_counts = []
 
     for item in genre_data:
 
-        genre = item["book__genre"] or "Unknown"
+        genre = item["book__genre"]
 
-        genre_labels.append(genre)
-        genre_values.append(item["total"])
+        if not genre:
+            genre = "Unknown"
 
-    # --------------------------------
-    # CURRENT YEAR GOAL
-    # --------------------------------
-
-    current_year = today.year
-
-    goal = ReadingGoal.objects.filter(
-        user=user,
-        year=current_year
-    ).first()
-
-    goal_pages = 0
-    goal_books = 0
-    page_goal_percentage = 0
-    book_goal_percentage = 0
-
-    if goal:
-
-        goal_pages = goal.target_numpages
-        goal_books = goal.target_numbooks
-
-        page_goal_percentage = (
-            total_pages / goal_pages * 100
-            if goal_pages > 0
-            else 0
+        genre_labels.append(
+            genre
         )
 
-        book_goal_percentage = (
-            completed_books / goal_books * 100
-            if goal_books > 0
-            else 0
+        genre_counts.append(
+            item["total"]
         )
 
-    context = {
-        "total_pages": total_pages,
-        "total_logs": total_logs,
-        "total_books_logged": total_books_logged,
-        "completed_books": completed_books,
-
-        "goal": goal,
-        "goal_pages": goal_pages,
-        "goal_books": goal_books,
-        "page_goal_percentage": min(page_goal_percentage, 100),
-        "book_goal_percentage": min(book_goal_percentage, 100),
-
-        "daily_labels": daily_labels,
-        "daily_pages": daily_pages,
-
-        "weekly_labels": weekly_labels,
-        "weekly_pages": weekly_pages,
-
-        "monthly_labels": monthly_labels,
-        "monthly_pages": monthly_pages,
-
-        "genre_labels": genre_labels,
-        "genre_values": genre_values,
-    }
+    # =====================================================
+    # RENDER
+    # =====================================================
 
     return render(
         request,
         "catalog/analytics.html",
-        context
+        {
+            "total_pages": total_pages,
+            "total_logs": total_logs,
+            "total_books_logged": total_books_logged,
+            "completed_books": completed_books,
+
+            "goal": goal,
+            "yearly_pages": yearly_pages,
+            "page_goal_progress": page_goal_progress,
+            "book_goal_progress": book_goal_progress,
+
+            "daily_labels": daily_labels,
+            "daily_data": daily_data,
+
+            "weekly_labels": weekly_labels,
+            "weekly_data": weekly_data,
+
+            "monthly_labels": monthly_labels,
+            "monthly_data": monthly_data,
+
+            "genre_labels": genre_labels,
+            "genre_counts": genre_counts,
+        }
     )

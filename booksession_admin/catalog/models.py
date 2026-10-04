@@ -72,8 +72,15 @@ class Review(models.Model):
         return f"{self.user.username} - {self.book.title}"
 
 
+# ==============================
+# READING LOG
+# ==============================
+
 class ReadingLog(models.Model):
-    log_id = models.AutoField(primary_key=True)
+
+    log_id = models.AutoField(
+        primary_key=True
+    )
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -82,28 +89,36 @@ class ReadingLog(models.Model):
     )
 
     book = models.ForeignKey(
-        "Book",
+        Book,
         on_delete=models.CASCADE,
         related_name="reading_logs"
     )
 
     pages_read = models.PositiveIntegerField(
-        validators=[MinValueValidator(0)]
+        validators=[
+            MinValueValidator(0)
+        ]
     )
 
     log_date = models.DateField()
 
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["-log_date", "-created_at"]
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
 
     def __str__(self):
-        return f"{self.user} - {self.book} - {self.pages_read} pages"
+        return f"{self.user.username} - {self.book.title} - {self.log_date}"
 
-    
+
+# ==============================
+# READING GOAL
+# ==============================
+
 class ReadingGoal(models.Model):
-    goal_id = models.AutoField(primary_key=True)
+
+    goal_id = models.AutoField(
+        primary_key=True
+    )
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -114,11 +129,15 @@ class ReadingGoal(models.Model):
     year = models.PositiveIntegerField()
 
     target_numpages = models.PositiveIntegerField(
-        validators=[MinValueValidator(1)]
+        validators=[
+            MinValueValidator(1)
+        ]
     )
 
     target_numbooks = models.PositiveIntegerField(
-        validators=[MinValueValidator(1)]
+        validators=[
+            MinValueValidator(1)
+        ]
     )
 
     class Meta:
@@ -128,7 +147,6 @@ class ReadingGoal(models.Model):
                 name="unique_reading_goal_per_user_year"
             )
         ]
-        ordering = ["-year"]
 
     def __str__(self):
-        return f"{self.user} - {self.year} Reading Goal"
+        return f"{self.user.username} - {self.year}"

@@ -1,84 +1,114 @@
 {% extends "base.html" %}
 
+{% block title %}
+{{ page_title }} - Booksession
+{% endblock %}
+
 {% block content %}
 
 <div class="reading-container">
 
     <div class="page-header">
-        <h1>{{ title }}</h1>
 
-        <a href="{% url 'reading_log_list' %}" class="secondary-btn">
-            Back to Reading Logs
-        </a>
+        <div>
+
+            <h1>{{ page_title }}</h1>
+
+            <p>
+                Record your reading progress.
+            </p>
+
+        </div>
+
     </div>
 
-    <div class="form-card">
 
-        <form method="POST">
+    <form method="POST" class="reading-form">
 
-            {% csrf_token %}
+        {% csrf_token %}
 
-            {% if form.non_field_errors %}
-                <div class="error-box">
-                    {{ form.non_field_errors }}
+
+        {% if form.non_field_errors %}
+
+            <div class="form-errors">
+
+                {{ form.non_field_errors }}
+
+            </div>
+
+        {% endif %}
+
+
+        <div class="form-group">
+
+            <label for="{{ form.book.id_for_label }}">
+                Book
+            </label>
+
+            {{ form.book }}
+
+            {% if form.book.errors %}
+                <div class="field-error">
+                    {{ form.book.errors }}
                 </div>
             {% endif %}
 
-            <div class="form-group">
+        </div>
 
-                <label for="{{ form.book.id_for_label }}">
-                    Book
-                </label>
 
-                {{ form.book }}
+        <div class="form-group">
 
-                {% if form.book.errors %}
-                    <div class="field-error">
-                        {{ form.book.errors }}
-                    </div>
-                {% endif %}
+            <label for="{{ form.pages_read.id_for_label }}">
+                Pages Read
+            </label>
 
-            </div>
+            {{ form.pages_read }}
 
-            <div class="form-group">
+            {% if form.pages_read.errors %}
+                <div class="field-error">
+                    {{ form.pages_read.errors }}
+                </div>
+            {% endif %}
 
-                <label for="{{ form.pages_read.id_for_label }}">
-                    Pages Read
-                </label>
+        </div>
 
-                {{ form.pages_read }}
 
-                {% if form.pages_read.errors %}
-                    <div class="field-error">
-                        {{ form.pages_read.errors }}
-                    </div>
-                {% endif %}
+        <div class="form-group">
 
-            </div>
+            <label for="{{ form.log_date.id_for_label }}">
+                Reading Date
+            </label>
 
-            <div class="form-group">
+            {{ form.log_date }}
 
-                <label for="{{ form.log_date.id_for_label }}">
-                    Reading Date
-                </label>
+            {% if form.log_date.errors %}
+                <div class="field-error">
+                    {{ form.log_date.errors }}
+                </div>
+            {% endif %}
 
-                {{ form.log_date }}
+        </div>
 
-                {% if form.log_date.errors %}
-                    <div class="field-error">
-                        {{ form.log_date.errors }}
-                    </div>
-                {% endif %}
 
-            </div>
+        <div class="form-actions">
 
-            <button type="submit" class="primary-btn">
-                Save Reading Log
+            <button
+                type="submit"
+                class="primary-btn"
+            >
+                {{ button_text }}
             </button>
 
-        </form>
+            <a
+                href="{% url 'reading_log_list' %}"
+                class="secondary-btn"
+            >
+                Cancel
+            </a>
 
-    </div>
+        </div>
+
+    </form>
 
 </div>
 

@@ -1,115 +1,130 @@
 from django import forms
-from django.utils import timezone
 
-from .models import ReadingLog, ReadingGoal
+from .models import (
+    ReadingLog,
+    ReadingGoal,
+    Book,
+    ShelfBook,
+)
 
+
+# =========================================================
+# READING LOG FORM
+# =========================================================
 
 class ReadingLogForm(forms.ModelForm):
 
     class Meta:
+
         model = ReadingLog
-        fields = ["book", "pages_read", "log_date"]
+
+        fields = [
+            "book",
+            "pages_read",
+            "log_date",
+        ]
 
         widgets = {
-            "book": forms.Select(
-                attrs={
-                    "class": "form-control"
-                }
-            ),
 
             "pages_read": forms.NumberInput(
                 attrs={
-                    "class": "form-control",
-                    "min": "0",
+                    "min": 0,
                     "placeholder": "Enter pages read"
                 }
             ),
 
             "log_date": forms.DateInput(
                 attrs={
-                    "class": "form-control",
                     "type": "date"
                 }
             ),
         }
 
-    def clean_pages_read(self):
-        pages = self.cleaned_data.get("pages_read")
+    def __init__(self, *args, **kwargs):
 
-        if pages is None:
-            raise forms.ValidationError(
-                "Please enter the number of pages read."
-            )
+        user = kwargs.pop("user", None)
 
-        if pages < 0:
-            raise forms.ValidationError(
-                "Pages read cannot be negative."
-            )
+        super().__init__(*args, **kwargs)
 
-        return pages
+        # -------------------------------------------------
+        # ONLY SHOW BOOKS FROM THE USER'S COLLECTION
+        # -------------------------------------------------
 
-    def clean_log_date(self):
-        log_date = self.cleaned_data.get("log_date")
+        if user:
 
-        if not log_date:
-            raise forms.ValidationError(
-                "Please enter a valid reading date."
-            )
+            book_ids = ShelfBook.objects.filter(
+                shelf__user=user
+            ).values_list(
+                "book_id",
+                flat=True
+            ).distinct()
 
-        return log_date
+            self.fields["book"].queryset = Book.objects.filter(
+                pk__in=book_ids
+            ).order_by("title")
 
+        else:
+
+            self.fields["book"].queryset = Book.objects.none()
+
+
+# =========================================================
+# READING GOAL FORM
+# =========================================================
 
 class ReadingGoalForm(forms.ModelForm):
 
     class Meta:
+
         model = ReadingGoal
+
         fields = [
             "year",
             "target_numpages",
-            "target_numbooks"
+            "target_numbooks",
         ]
 
         widgets = {
+
             "year": forms.NumberInput(
                 attrs={
-                    "class": "form-control",
-                    "min": "2000"
+                    "min": 2000
                 }
             ),
 
             "target_numpages": forms.NumberInput(
                 attrs={
-                    "class": "form-control",
-                    "min": "1",
-                    "placeholder": "Example: 10000"
+                    "min": 1,
+                    "placeholder": "Target pages"
                 }
             ),
 
             "target_numbooks": forms.NumberInput(
                 attrs={
-                    "class": "form-control",
-                    "min": "1",
-                    "placeholder": "Example: 20"
+                    "min": 1,
+                    "placeholder": "Target books"
                 }
             ),
         }
 
     def clean_target_numpages(self):
-        pages = self.cleaned_data.get("target_numpages")
 
-        if pages is None or pages <= 0:
+        value = self.cleaned_data["target_numpages"]
+
+        if value <= 0:
             raise forms.ValidationError(
-                "Your annual page goal must be greater than zero."
+                "The annual page goal must be greater than zero."
             )
 
-        return pages
+        return value
 
     def clean_target_numbooks(self):
-        books = self.cleaned_data.get("target_numbooks")
 
-        if books is None or books <= 0:
+        value = self.cleaned_data["target_numbooks"]
+
+        if value <= 0:
             raise forms.ValidationError(
-                "Your annual book goal must be greater than zero."
+                "The annual book goal must be greater than zero."
             )
 
-        return books
+        return value

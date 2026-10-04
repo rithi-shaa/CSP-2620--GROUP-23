@@ -1,41 +1,40 @@
 {% extends "base.html" %}
 
+{% block title %}
+Delete Reading Log - Booksession
+{% endblock %}
+
 {% block content %}
 
 <div class="reading-container">
 
-    <div class="confirmation-card">
+    <div class="detail-card">
 
         <h1>Delete Reading Log?</h1>
 
         <p>
-            Are you sure you want to delete this reading log?
+            Are you sure you want to delete your reading log for:
         </p>
 
-        <div class="delete-info">
+        <h2>
+            {{ log.book.title }}
+        </h2>
 
-            <p>
-                <strong>Book:</strong>
-                {{ log.book.title }}
-            </p>
+        <p>
+            {{ log.pages_read }} pages
+            on
+            {{ log.log_date|date:"d M Y" }}
+        </p>
 
-            <p>
-                <strong>Date:</strong>
-                {{ log.log_date|date:"d M Y" }}
-            </p>
-
-            <p>
-                <strong>Pages:</strong>
-                {{ log.pages_read }}
-            </p>
-
-        </div>
 
         <form method="POST">
 
             {% csrf_token %}
 
-            <button type="submit" class="danger-btn">
+            <button
+                type="submit"
+                class="danger-btn"
+            >
                 Yes, Delete
             </button>
 
