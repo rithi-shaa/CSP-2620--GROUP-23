@@ -514,11 +514,13 @@ def add_to_shelf(request, book_pk):
         shelf = get_object_or_404(Shelf, pk=shelf_id, user=request.user)
         
         # Create the relationship using the explicit ShelfBook model
-        ShelfBook.objects.get_or_create(shelf=shelf, book=book)
+        if ShelfBook.objects.filter(shelf=shelf, book=book).exists():
+           messages.error(request,"This book is already in this shelf.")
 
-        # ADD THIS LINE TO TRIGGER THE SUCCESS MESSAGE:
-        messages.success(request, f'Successfully added "{book.title}" to {shelf}!')
-
+        else:
+            ShelfBook.objects.create(shelf=shelf, book=book)
+            messages.success(request, f'Successfully added "{book.title}" to {shelf}!')
+    
     return redirect('book_catalog')
 
 def book_detail(request, book_id):
