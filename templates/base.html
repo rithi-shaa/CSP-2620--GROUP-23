@@ -5,25 +5,131 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Book Session</title>
+    <title>
+        {% block title %}
+        Booksession
+        {% endblock %}
+    </title>
 
     {% load static %}
 
-    <link rel="stylesheet"
-          href="{% static 'reading_logs/style.css' %}">
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ede8dc;
+            color: #2f2a25;
+        }
+
+        nav {
+            width: 100%;
+            background: #3f342c;
+            padding: 16px 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+        }
+
+        .nav-brand {
+            color: #fff;
+            font-size: 22px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .nav-links a:hover {
+            color: #e7d7bd;
+        }
+
+        main {
+            width: 100%;
+        }
+
+        .logout-btn {
+            background: #8b5e3c;
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+
+        .logout-btn:hover {
+            background: #6f492f;
+            color: white !important;
+        }
+
+    </style>
+
+    {% block extra_css %}
+    {% endblock %}
 
 </head>
+
 
 <body>
 
     <nav>
 
-        <a href="{% url 'reading_logs' %}">
-            Reading Logs
+        <a href="{% url 'index' %}" class="nav-brand">
+            Booksession
         </a>
+
+
+        <div class="nav-links">
+
+            <a href="{% url 'index' %}">
+                Home
+            </a>
+
+            <a href="{% url 'collections' %}">
+                Collections
+            </a>
+
+            <a href="{% url 'reading_log_list' %}">
+                Reading Logs
+            </a>
+
+            <a href="{% url 'reading_goal' %}">
+                Reading Goal
+            </a>
+
+            <a href="{% url 'analytics_dashboard' %}">
+                Analytics
+            </a>
+
+            <a href="{% url 'book_catalog' %}">
+                Books
+            </a>
+
+            <a href="{% url 'user_profile' %}">
+                Profile
+            </a>
+
+            <a href="{% url 'logout' %}" class="logout-btn">
+                Logout
+            </a>
+
+        </div>
 
     </nav>
 
@@ -34,6 +140,10 @@
         {% endblock %}
 
     </main>
+
+
+    {% block extra_js %}
+    {% endblock %}
 
 </body>
 

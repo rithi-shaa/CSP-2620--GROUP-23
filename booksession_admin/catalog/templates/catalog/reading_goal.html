@@ -46,29 +46,26 @@
              PAGE HEADER
         ========================================== -->
 
-        <div class="page-header">
+<div class="page-header">
 
-            <div>
+    <div>
+        <h1>{{ year }} Reading Goal</h1>
+        <p>Set and monitor your annual reading target.</p>
+    </div>
 
-                <h1>
-                    {{ current_year }} Reading Goal
-                </h1>
+    <div class="header-buttons">
 
-                <p>
-                    Set and monitor your annual reading target.
-                </p>
+        <a href="{% url 'index' %}" class="secondary-btn">
+            ← Back to Home
+        </a>
 
-            </div>
+        <a href="{% url 'analytics_dashboard' %}" class="secondary-btn">
+            View Analytics
+        </a>
 
+    </div>
 
-            <a
-                href="{% url 'analytics_dashboard' %}"
-                class="secondary-btn"
-            >
-                View Analytics
-            </a>
-
-        </div>
+</div>
 
 
 

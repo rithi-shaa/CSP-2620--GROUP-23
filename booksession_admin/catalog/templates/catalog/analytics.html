@@ -1,68 +1,176 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
+{% load static %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}
+    Reading Analytics - Booksession
+{% endblock %}
 
-    <title>Reading Analytics - Booksession</title>
+{% block content %}
 
-    {% load static %}
+<style>
 
-    <link rel="stylesheet" href="{% static 'catalog/style.css' %}">
-    <link rel="stylesheet" href="{% static 'catalog/reading_log.css' %}">
-    <link rel="stylesheet" href="{% static 'catalog/reading_goal.css' %}">
+    .analytics-container {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 20px;
+    }
 
-</head>
+    .analytics-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .analytics-header h1 {
+        font-size: 36px;
+        margin-bottom: 8px;
+        color: #4b2e20;
+    }
+
+    .analytics-header p {
+        color: #777;
+        font-size: 16px;
+    }
+
+    /* =========================
+       STATISTICS
+       ========================= */
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 35px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .stat-card h3 {
+        margin-bottom: 15px;
+        color: #4b2e20;
+        font-size: 18px;
+    }
+
+    .stat-number {
+        font-size: 32px;
+        font-weight: bold;
+        color: #7a4b35;
+    }
+
+    /* =========================
+       CHART CARDS
+       ========================= */
+
+    .chart-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .chart-card h2 {
+        color: #4b2e20;
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .chart-wrapper {
+        position: relative;
+        width: 100%;
+        height: 350px;
+    }
+
+    .chart-wrapper.small {
+        height: 300px;
+    }
+
+    /* =========================
+       TWO COLUMN CHARTS
+       ========================= */
+
+    .two-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+    }
+
+    /* =========================
+       MOBILE
+       ========================= */
+
+    @media (max-width: 900px) {
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .two-column {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .analytics-container {
+            padding: 15px;
+        }
+    }
+
+</style>
 
 
-<body>
+<div class="analytics-container">
 
-<div class="reading-container">
+    <!-- =========================
+         HEADER
+         ========================= -->
 
-    <div class="page-header">
+    <div class="analytics-header">
 
-        <div>
-            <h1>Reading Analytics</h1>
+        <h1>Reading Analytics</h1>
 
-            <p>
-                Monitor your reading habits and progress.
-            </p>
-        </div>
-
-        <a
-            href="{% url 'reading_log_create' %}"
-            class="primary-btn"
-        >
-            + Add Reading Log
-        </a>
+        <p>
+            Track and understand your reading progress.
+        </p>
 
     </div>
 
 
-    <!-- STATISTICS -->
+    <!-- =========================
+         STATISTICS
+         ========================= -->
 
-    <div class="stats-row">
+    <div class="stats-grid">
 
         <div class="stat-card">
 
             <h3>Total Pages</h3>
 
-            <p>
+            <div class="stat-number">
                 {{ total_pages }}
-            </p>
+            </div>
 
         </div>
 
 
         <div class="stat-card">
 
-            <h3>Reading Logs</h3>
+            <h3>Total Logs</h3>
 
-            <p>
+            <div class="stat-number">
                 {{ total_logs }}
-            </p>
+            </div>
 
         </div>
 
@@ -71,9 +179,9 @@
 
             <h3>Books Tracked</h3>
 
-            <p>
-                {{ total_books_logged }}
-            </p>
+            <div class="stat-number">
+                {{ total_books }}
+            </div>
 
         </div>
 
@@ -82,135 +190,83 @@
 
             <h3>Books Completed</h3>
 
-            <p>
-                {{ completed_books }}
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- GOAL PROGRESS -->
-
-    {% if goal %}
-
-    <div class="analytics-card">
-
-        <h2>
-            {{ goal.year }} Reading Goal
-        </h2>
-
-
-        <div class="goal-progress-grid">
-
-
-            <div>
-
-                <h3>Pages Goal</h3>
-
-                <div class="progress-bar">
-
-                    <div
-                        class="progress-fill"
-                        data-progress="{{ page_goal_percentage|default:0 }}"
-                    ></div>
-
-                </div>
-
-                <p>
-
-                    {{ total_pages }}
-                    /
-                    {{ goal_pages }}
-                    pages
-                    ({{ page_goal_percentage|floatformat:1 }}%)
-
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <h3>Books Goal</h3>
-
-                <div class="progress-bar">
-
-                    <div
-                        class="progress-fill"
-                        data-progress="{{ book_goal_percentage|default:0 }}"
-                    ></div>
-
-                </div>
-
-                <p>
-
-                    {{ completed_books }}
-                    /
-                    {{ goal_books }}
-                    books
-                    ({{ book_goal_percentage|floatformat:1 }}%)
-
-                </p>
-
+            <div class="stat-number">
+                0
             </div>
 
         </div>
 
     </div>
 
-    {% endif %}
 
+    <!-- =========================
+         DAILY
+         ========================= -->
 
-    <!-- DAILY -->
-
-    <div class="analytics-card">
+    <div class="chart-card">
 
         <h2>
             Daily Reading Progress
         </h2>
 
-        <canvas id="dailyChart"></canvas>
+        <div class="chart-wrapper">
+
+            <canvas id="dailyChart"></canvas>
+
+        </div>
 
     </div>
 
 
-    <!-- WEEKLY -->
+    <!-- =========================
+         WEEKLY + MONTHLY
+         ========================= -->
 
-    <div class="analytics-card">
+    <div class="two-column">
 
-        <h2>
-            Weekly Reading Progress
-        </h2>
+        <div class="chart-card">
 
-        <canvas id="weeklyChart"></canvas>
+            <h2>
+                Weekly Reading Progress
+            </h2>
+
+            <div class="chart-wrapper small">
+
+                <canvas id="weeklyChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-card">
+
+            <h2>
+                Monthly Reading Progress
+            </h2>
+
+            <div class="chart-wrapper small">
+
+                <canvas id="monthlyChart"></canvas>
+
+            </div>
+
+        </div>
 
     </div>
 
 
-    <!-- MONTHLY -->
+    <!-- =========================
+         GENRE
+         ========================= -->
 
-    <div class="analytics-card">
-
-        <h2>
-            Monthly Reading Progress
-        </h2>
-
-        <canvas id="monthlyChart"></canvas>
-
-    </div>
-
-
-    <!-- GENRE -->
-
-    <div class="analytics-card">
+    <div class="chart-card">
 
         <h2>
             Genre Distribution
         </h2>
 
-        <div class="chart-container">
+        <div class="chart-wrapper">
 
             <canvas id="genreChart"></canvas>
 
@@ -221,40 +277,44 @@
 </div>
 
 
-<!-- CHART.JS -->
+<!-- =========================================================
+     CHART.JS
+     ========================================================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
-<!-- DJANGO JSON DATA -->
+<!-- =========================================================
+     DJANGO DATA
+     ========================================================= -->
 
 {{ daily_labels|json_script:"daily-labels" }}
-
-{{ daily_pages|json_script:"daily-pages" }}
+{{ daily_values|json_script:"daily-values" }}
 
 {{ weekly_labels|json_script:"weekly-labels" }}
-
-{{ weekly_pages|json_script:"weekly-pages" }}
+{{ weekly_values|json_script:"weekly-values" }}
 
 {{ monthly_labels|json_script:"monthly-labels" }}
-
-{{ monthly_pages|json_script:"monthly-pages" }}
+{{ monthly_values|json_script:"monthly-values" }}
 
 {{ genre_labels|json_script:"genre-labels" }}
-
 {{ genre_values|json_script:"genre-values" }}
 
 
 <script>
+
+    /* =====================================================
+       GET DATA FROM DJANGO
+       ===================================================== */
 
     const dailyLabels =
         JSON.parse(
             document.getElementById("daily-labels").textContent
         );
 
-    const dailyPages =
+    const dailyValues =
         JSON.parse(
-            document.getElementById("daily-pages").textContent
+            document.getElementById("daily-values").textContent
         );
 
 
@@ -263,9 +323,9 @@
             document.getElementById("weekly-labels").textContent
         );
 
-    const weeklyPages =
+    const weeklyValues =
         JSON.parse(
-            document.getElementById("weekly-pages").textContent
+            document.getElementById("weekly-values").textContent
         );
 
 
@@ -274,9 +334,9 @@
             document.getElementById("monthly-labels").textContent
         );
 
-    const monthlyPages =
+    const monthlyValues =
         JSON.parse(
-            document.getElementById("monthly-pages").textContent
+            document.getElementById("monthly-values").textContent
         );
 
 
@@ -291,14 +351,14 @@
         );
 
 
-    // =========================================
-    // DAILY CHART
-    // =========================================
+    /* =====================================================
+       DAILY CHART
+       ===================================================== */
 
     new Chart(
         document.getElementById("dailyChart"),
         {
-            type: "bar",
+            type: "line",
 
             data: {
 
@@ -308,50 +368,54 @@
                     {
                         label: "Pages Read",
 
-                        data: dailyPages,
+                        data: dailyValues,
 
-                        borderWidth: 1
+                        borderWidth: 3,
+
+                        tension: 0.3,
+
+                        fill: false
                     }
                 ]
-
             },
 
             options: {
 
                 responsive: true,
 
+                maintainAspectRatio: false,
+
                 scales: {
 
                     y: {
-
                         beginAtZero: true,
 
                         title: {
-
                             display: true,
-
                             text: "Pages"
-
                         }
+                    },
 
+                    x: {
+                        title: {
+                            display: true,
+                            text: "Date"
+                        }
                     }
-
                 }
-
             }
-
         }
     );
 
 
-    // =========================================
-    // WEEKLY CHART
-    // =========================================
+    /* =====================================================
+       WEEKLY CHART
+       ===================================================== */
 
     new Chart(
         document.getElementById("weeklyChart"),
         {
-            type: "line",
+            type: "bar",
 
             data: {
 
@@ -361,54 +425,43 @@
                     {
                         label: "Pages Read",
 
-                        data: weeklyPages,
+                        data: weeklyValues,
 
-                        borderWidth: 2,
-
-                        tension: 0.3,
-
-                        fill: false
+                        borderWidth: 1
                     }
                 ]
-
             },
 
             options: {
 
                 responsive: true,
 
+                maintainAspectRatio: false,
+
                 scales: {
 
                     y: {
-
                         beginAtZero: true,
 
                         title: {
-
                             display: true,
-
                             text: "Pages"
-
                         }
-
                     }
-
                 }
-
             }
-
         }
     );
 
 
-    // =========================================
-    // MONTHLY CHART
-    // =========================================
+    /* =====================================================
+       MONTHLY CHART
+       ===================================================== */
 
     new Chart(
         document.getElementById("monthlyChart"),
         {
-            type: "line",
+            type: "bar",
 
             data: {
 
@@ -418,49 +471,38 @@
                     {
                         label: "Pages Read",
 
-                        data: monthlyPages,
+                        data: monthlyValues,
 
-                        borderWidth: 2,
-
-                        tension: 0.3,
-
-                        fill: false
+                        borderWidth: 1
                     }
                 ]
-
             },
 
             options: {
 
                 responsive: true,
 
+                maintainAspectRatio: false,
+
                 scales: {
 
                     y: {
-
                         beginAtZero: true,
 
                         title: {
-
                             display: true,
-
                             text: "Pages"
-
                         }
-
                     }
-
                 }
-
             }
-
         }
     );
 
 
-    // =========================================
-    // GENRE CHART
-    // =========================================
+    /* =====================================================
+       GENRE CHART
+       ===================================================== */
 
     new Chart(
         document.getElementById("genreChart"),
@@ -480,20 +522,24 @@
                         borderWidth: 1
                     }
                 ]
-
             },
 
             options: {
 
-                responsive: true
+                responsive: true,
 
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        position: "right"
+                    }
+                }
             }
-
         }
     );
 
 </script>
 
-
-</body>
-</html>
+{% endblock %}

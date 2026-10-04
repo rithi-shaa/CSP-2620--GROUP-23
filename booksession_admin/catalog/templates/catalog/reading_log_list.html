@@ -1,64 +1,461 @@
-{% load static %}
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>My Reading Logs - Booksession</title>
-
-    <link rel="stylesheet" href="{% static 'catalog/style.css' %}">
-    <link rel="stylesheet" href="{% static 'catalog/reading_log.css' %}">
-
-</head>
+{% block title %}
+My Reading Logs - Booksession
+{% endblock %}
 
 
-<body>
+{% block extra_css %}
+
+<style>
+
+    /* =========================================
+       MAIN CONTAINER
+    ========================================= */
+
+    .reading-container {
+        width: 90%;
+        max-width: 1100px;
+        margin: 45px auto;
+        color: #3f342c;
+    }
+
+
+    /* =========================================
+       PAGE HEADER
+    ========================================= */
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 30px;
+    }
+
+
+    .page-header h1 {
+        margin: 0;
+
+        font-size: 34px;
+
+        color: #3f342c;
+    }
+
+
+    .page-header p {
+        margin-top: 8px;
+
+        color: #75695f;
+
+        font-size: 15px;
+        font-style: italic;
+    }
+
+
+    /* =========================================
+       BUTTONS
+    ========================================= */
+
+    .btn {
+        display: inline-block;
+
+        padding: 11px 18px;
+
+        border-radius: 7px;
+
+        text-decoration: none;
+
+        font-size: 14px;
+
+        font-weight: bold;
+
+        border: none;
+
+        cursor: pointer;
+
+        transition: 0.2s ease;
+    }
+
+
+    .primary-btn {
+        background: #5b4030;
+
+        color: white;
+    }
+
+
+    .primary-btn:hover {
+        background: #3f2c21;
+
+        color: white;
+
+        transform: translateY(-1px);
+    }
+
+
+    .secondary-btn {
+        background: #e8ded2;
+
+        color: #4a382c;
+    }
+
+
+    .secondary-btn:hover {
+        background: #d8cabb;
+
+        color: #3f2c21;
+    }
+
+
+    .edit-btn {
+        background: #d9c6ad;
+
+        color: #3f342c;
+    }
+
+
+    .edit-btn:hover {
+        background: #cbb59b;
+
+        color: #2f241d;
+    }
+
+
+    .delete-btn {
+        background: #ead1cc;
+
+        color: #7a3028;
+    }
+
+
+    .delete-btn:hover {
+        background: #dfbbb5;
+
+        color: #67231e;
+    }
+
+
+    .analytics-btn {
+        background: #75604e;
+
+        color: white;
+    }
+
+
+    .analytics-btn:hover {
+        background: #5c493a;
+
+        color: white;
+    }
+
+
+    /* =========================================
+       STATISTICS
+    ========================================= */
+
+    .stats-grid {
+        display: grid;
+
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 20px;
+
+        margin-bottom: 35px;
+    }
+
+
+    .stat-card {
+        background: white;
+
+        border-radius: 14px;
+
+        padding: 28px;
+
+        text-align: center;
+
+        border: 1px solid #e5ddd4;
+
+        box-shadow:
+            0 5px 18px rgba(0, 0, 0, 0.07);
+    }
+
+
+    .stat-card h2 {
+        margin: 0;
+
+        padding-bottom: 12px;
+
+        border-bottom: 2px solid #6b4b38;
+
+        font-size: 20px;
+
+        color: #3f342c;
+    }
+
+
+    .stat-number {
+        margin: 25px 0 0;
+
+        font-size: 34px;
+
+        font-style: italic;
+
+        color: #6b5849;
+    }
+
+
+    /* =========================================
+       HISTORY SECTION
+    ========================================= */
+
+    .history-section {
+        background: white;
+
+        border-radius: 14px;
+
+        padding: 28px;
+
+        border: 1px solid #e5ddd4;
+
+        box-shadow:
+            0 5px 18px rgba(0, 0, 0, 0.07);
+    }
+
+
+    .history-header {
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        margin-bottom: 10px;
+    }
+
+
+    .history-header h2 {
+        margin: 0;
+
+        font-size: 23px;
+
+        color: #3f342c;
+    }
+
+
+    .history-header p {
+        margin: 5px 0 20px;
+
+        color: #8a7d70;
+
+        font-size: 14px;
+
+        font-style: italic;
+    }
+
+
+    /* =========================================
+       TABLE
+    ========================================= */
+
+    .table-wrapper {
+        width: 100%;
+
+        overflow-x: auto;
+    }
+
+
+    .reading-table {
+        width: 100%;
+
+        border-collapse: collapse;
+
+        margin-top: 15px;
+    }
+
+
+    .reading-table th {
+        text-align: left;
+
+        padding: 15px 12px;
+
+        border-bottom: 2px solid #6b4b38;
+
+        color: #3f342c;
+
+        font-size: 14px;
+    }
+
+
+    .reading-table td {
+        padding: 17px 12px;
+
+        border-bottom: 1px solid #e8e0d8;
+
+        color: #51463e;
+
+        font-size: 14px;
+    }
+
+
+    .reading-table tr:hover {
+        background: #faf7f3;
+    }
+
+
+    /* =========================================
+       ACTION BUTTONS
+    ========================================= */
+
+    .action-buttons {
+        display: flex;
+
+        gap: 7px;
+
+        flex-wrap: wrap;
+    }
+
+
+    .action-buttons .btn {
+        padding: 7px 12px;
+
+        font-size: 12px;
+    }
+
+
+    /* =========================================
+       EMPTY STATE
+    ========================================= */
+
+    .empty-state {
+        text-align: center;
+
+        padding: 45px 20px;
+
+        color: #75695f;
+    }
+
+
+    .empty-state h3 {
+        margin-bottom: 10px;
+
+        color: #4b3c32;
+    }
+
+
+    .empty-state p {
+        margin-bottom: 20px;
+    }
+
+
+    /* =========================================
+       BOTTOM BUTTONS
+    ========================================= */
+
+    .bottom-actions {
+        display: flex;
+
+        justify-content: center;
+
+        gap: 12px;
+
+        margin-top: 30px;
+    }
+
+
+    /* =========================================
+       MOBILE
+    ========================================= */
+
+    @media (max-width: 700px) {
+
+        .reading-container {
+            width: 94%;
+        }
+
+
+        .page-header {
+            flex-direction: column;
+
+            align-items: flex-start;
+
+            gap: 18px;
+        }
+
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+
+        .history-section {
+            padding: 18px;
+        }
+
+
+        .action-buttons {
+            flex-direction: column;
+
+            align-items: flex-start;
+        }
+
+
+        .bottom-actions {
+            flex-direction: column;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
 
 <div class="reading-container">
 
 
-    <!-- =========================
+    <!-- =====================================
          PAGE HEADER
-         ========================= -->
+    ====================================== -->
 
-    <div class="page-header">
+<div class="page-header">
 
-        <div>
-
-            <h1>My Reading Logs</h1>
-
-            <p>
-                Track your daily reading progress.
-            </p>
-
-        </div>
-
-
-        <a
-            href="{% url 'reading_log_create' %}"
-            class="primary-btn"
-        >
-            + Add Reading Log
-        </a>
-
+    <div>
+        <h1>My Reading Logs</h1>
+        <p>Track your daily reading progress.</p>
     </div>
 
+<div class="reading-actions">
+    <a href="{% url 'index' %}" class="back-home-btn">
+        ← Back to Home
+    </a>
 
-    <!-- =========================
+    <a href="{% url 'reading_log_create' %}" class="add-log-btn">
+        + Add Reading Log
+    </a>
+</div>
+
+</div>
+
+</div>
+
+    <!-- =====================================
          STATISTICS
-         ========================= -->
+    ====================================== -->
 
-    <div class="reading-stats">
+    <div class="stats-grid">
+
 
         <div class="stat-card">
 
-            <h3>Total Pages</h3>
+            <h2>
+                Total Pages
+            </h2>
 
-            <p>
+            <p class="stat-number">
                 {{ total_pages }}
             </p>
 
@@ -67,28 +464,33 @@
 
         <div class="stat-card">
 
-            <h3>Total Logs</h3>
+            <h2>
+                Total Logs
+            </h2>
 
-            <p>
+            <p class="stat-number">
                 {{ total_logs }}
             </p>
 
         </div>
 
+
     </div>
 
+    <!-- =====================================
+         READING HISTORY
+    ====================================== -->
 
-    <!-- =========================
-         READING LOG TABLE
-         ========================= -->
+    <div class="history-section">
 
-    <div class="logs-card">
 
-        <div class="logs-card-header">
+        <div class="history-header">
 
             <div>
 
-                <h2>Reading History</h2>
+                <h2>
+                    Reading History
+                </h2>
 
                 <p>
                     Your recent reading activity
@@ -99,7 +501,9 @@
         </div>
 
 
+
         {% if logs %}
+
 
         <div class="table-wrapper">
 
@@ -109,13 +513,21 @@
 
                     <tr>
 
-                        <th>Date</th>
+                        <th>
+                            Date
+                        </th>
 
-                        <th>Book</th>
+                        <th>
+                            Book
+                        </th>
 
-                        <th>Pages Read</th>
+                        <th>
+                            Pages Read
+                        </th>
 
-                        <th>Actions</th>
+                        <th>
+                            Actions
+                        </th>
 
                     </tr>
 
@@ -124,44 +536,51 @@
 
                 <tbody>
 
+
                     {% for log in logs %}
 
                     <tr>
 
-                        <td data-label="Date">
 
-                            <span class="date-text">
-                                {{ log.log_date|date:"d M Y" }}
-                            </span>
+                        <!-- DATE -->
+
+                        <td>
+
+                            {{ log.log_date|date:"d M Y" }}
 
                         </td>
 
 
-                        <td data-label="Book">
+                        <!-- BOOK -->
 
-                            <span class="book-name">
+                        <td>
+
+                            <strong>
                                 {{ log.book.title }}
-                            </span>
+                            </strong>
 
                         </td>
 
 
-                        <td data-label="Pages Read">
+                        <!-- PAGES -->
 
-                            <span class="pages-badge">
-                                {{ log.pages_read }} pages
-                            </span>
+                        <td>
+
+                            {{ log.pages_read }} pages
 
                         </td>
 
 
-                        <td data-label="Actions">
+                        <!-- ACTIONS -->
+
+                        <td>
 
                             <div class="action-buttons">
 
+
                                 <a
                                     href="{% url 'reading_log_detail' log.log_id %}"
-                                    class="action-btn view-btn"
+                                    class="btn secondary-btn"
                                 >
                                     View
                                 </a>
@@ -169,7 +588,7 @@
 
                                 <a
                                     href="{% url 'reading_log_update' log.log_id %}"
-                                    class="action-btn edit-btn"
+                                    class="btn edit-btn"
                                 >
                                     Edit
                                 </a>
@@ -177,18 +596,21 @@
 
                                 <a
                                     href="{% url 'reading_log_delete' log.log_id %}"
-                                    class="action-btn delete-btn"
+                                    class="btn delete-btn"
                                 >
                                     Delete
                                 </a>
+
 
                             </div>
 
                         </td>
 
+
                     </tr>
 
                     {% endfor %}
+
 
                 </tbody>
 
@@ -199,34 +621,66 @@
 
         {% else %}
 
-        <div class="empty-logs">
 
-            <div class="empty-icon">
-                📖
-            </div>
+        <div class="empty-state">
 
-            <h3>No reading logs yet</h3>
+            <h3>
+                No Reading Logs Yet
+            </h3>
 
             <p>
-                Start tracking your reading progress by adding your first log.
+                Start tracking your reading progress by adding your first reading log.
             </p>
 
             <a
                 href="{% url 'reading_log_create' %}"
-                class="primary-btn"
+                class="btn primary-btn"
             >
-                + Add Reading Log
+                + Add Your First Reading Log
             </a>
 
         </div>
 
+
         {% endif %}
+
+
+
+        <!-- =====================================
+             BOTTOM ACTIONS
+        ====================================== -->
+
+        <div class="bottom-actions">
+
+            <a
+                href="{% url 'reading_log_create' %}"
+                class="btn primary-btn"
+            >
+                + Add Reading Log
+            </a>
+
+
+            <a
+                href="{% url 'reading_goal' %}"
+                class="btn secondary-btn"
+            >
+                Reading Goal
+            </a>
+
+
+            <a
+                href="{% url 'analytics_dashboard' %}"
+                class="btn analytics-btn"
+            >
+                View Analytics
+            </a>
+
+        </div>
+
 
     </div>
 
 
 </div>
 
-</body>
-
-</html>
+{% endblock %}

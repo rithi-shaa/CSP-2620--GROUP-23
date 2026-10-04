@@ -198,3 +198,46 @@ body.book-background-plain {
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 
 }
+
+/* Reading Log action buttons */
+.reading-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.back-home-btn,
+.add-log-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+/* Back to Home */
+.back-home-btn {
+    background-color: #ffffff;
+    color: #5a3825;
+    border: 1px solid #5a3825;
+}
+
+.back-home-btn:hover {
+    background-color: #5a3825;
+    color: #ffffff;
+}
+
+/* Add Reading Log */
+.add-log-btn {
+    background-color: #5a3825;
+    color: #ffffff;
+    border: 1px solid #5a3825;
+}
+
+.add-log-btn:hover {
+    background-color: #7a5138;
+}

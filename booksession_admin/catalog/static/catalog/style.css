@@ -561,3 +561,178 @@ body.homepage-background {
             visibility: hidden
         }
     }
+
+/* =========================================
+   PAGE HEADER BUTTONS
+========================================= */
+
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-buttons a {
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Back to Home button */
+.secondary-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid #6b4936;
+    color: #6b4936;
+    background: #ffffff;
+    transition: 0.2s ease;
+}
+
+.secondary-btn:hover {
+    background: #6b4936;
+    color: #ffffff;
+}
+
+/* Add Reading Log button */
+.primary-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid #6b4936;
+    color: #ffffff;
+    background: #6b4936;
+    transition: 0.2s ease;
+}
+
+.primary-btn:hover {
+    background: #4f3426;
+}
+
+/* ================================
+   READING LOG HEADER BUTTONS
+================================ */
+
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Back to Home */
+.home-btn {
+    display: inline-block;
+    padding: 11px 18px;
+    background-color: #ffffff;
+    color: #5b3a29;
+    border: 2px solid #5b3a29;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.home-btn:hover {
+    background-color: #5b3a29;
+    color: #ffffff;
+}
+
+/* Add Reading Log */
+.primary-btn {
+    display: inline-block;
+    padding: 11px 18px;
+    background-color: #5b3a29;
+    color: #ffffff;
+    border: 2px solid #5b3a29;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.primary-btn:hover {
+    background-color: #3f281d;
+    border-color: #3f281d;
+}
+
+/* Reading Log action buttons */
+.reading-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.back-home-btn,
+.add-log-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+/* Back to Home */
+.back-home-btn {
+    background-color: #ffffff;
+    color: #5a3825;
+    border: 1px solid #5a3825;
+}
+
+.back-home-btn:hover {
+    background-color: #5a3825;
+    color: #ffffff;
+}
+
+/* Add Reading Log */
+.add-log-btn {
+    background-color: #5a3825;
+    color: #ffffff;
+    border: 1px solid #5a3825;
+}
+
+.add-log-btn:hover {
+    background-color: #7a5138;
+}
+
+/* ================================
+   READING LOG ACTION BUTTONS
+   ================================ */
+
+.reading-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.back-home-btn,
+.add-log-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    background-color: #5a3825;
+    color: white !important;
+    border: 1px solid #5a3825;
+    border-radius: 8px;
+    text-decoration: none !important;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.back-home-btn:hover,
+.add-log-btn:hover {
+    background-color: #7a5138;
+    color: white !important;
+}
