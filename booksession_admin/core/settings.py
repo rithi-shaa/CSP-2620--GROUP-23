@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': r'C:\Users\HP\OneDrive\Desktop\projects\Mini_It\booksession_admin\db.sqlite3',
     }
 }
 
